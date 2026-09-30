@@ -127,14 +127,23 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .close{float:right;font-family:var(--ui);font-size:13px;background:transparent;border:1.5px solid var(--line);padding:4px 10px}
 
 /* 표지 */
-.title{position:fixed;inset:0;z-index:50;display:grid;place-items:start center;padding:calc(6vh + env(safe-area-inset-top,0px)) 16px 16px;background:linear-gradient(180deg,rgba(20,18,14,.55) 0%,rgba(20,18,14,.15) 45%,rgba(20,18,14,.75) 100%),url(art/cover.jpg) center 70%/cover no-repeat,#1b1a17;overflow:auto}
+.title{position:fixed;inset:0;z-index:50;display:grid;place-items:start center;padding:calc(13vh + env(safe-area-inset-top,0px)) 16px 16px;background:linear-gradient(180deg,rgba(20,18,14,.55) 0%,rgba(20,18,14,.15) 45%,rgba(20,18,14,.75) 100%),url(art/cover.jpg) center 70%/cover no-repeat,#1b1a17;overflow:auto}
 .tcard{text-align:center;color:var(--paper);max-width:760px}
 .tcard .eb{font-family:var(--ui);font-size:13px;letter-spacing:.3em;color:#e3c27a}
 .tcard h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,10vw,88px);margin:6px 0 4px;line-height:1.1;word-break:keep-all;text-shadow:0 4px 0 #000,0 0 24px rgba(0,0,0,.6);letter-spacing:.04em}
 .tcard .sub{font-size:18px;margin:0 0 26px;color:#efe3c6}
 .tcard .acts{display:grid;gap:10px;justify-items:center}
 .tcard .acts .btn{min-width:240px}
-.tcard .credit{font-family:var(--ui);font-size:12px;color:#cbbd9c;margin-top:22px;line-height:1.8}
+.tcard .credit{font-family:var(--ui);font-size:12.5px;color:#f1e6cc;margin-top:22px;line-height:1.85;display:inline-block;background:rgba(20,16,12,.8);border:1px solid rgba(227,194,122,.35);padding:10px 16px;border-radius:4px}
+.tcard .sub{text-shadow:0 2px 6px rgba(0,0,0,.85),0 0 2px #000}
+#panel{z-index:70}
+.dajim{background:#fbf5e4 repeating-linear-gradient(#fbf5e4 0 30px,#efe3c4 30px 31px);border:2px solid var(--ink2);padding:14px 18px;margin:10px 0;font-size:16.5px;line-height:1.9}
+.dajim p{margin:4px 0;opacity:.55}.dajim p.cur{opacity:1;background:#fff3d6}
+.dajim b{font-weight:700;color:var(--muted)}.dajim b.ok{color:var(--indigo)}.dajim p:has(b.ok){opacity:1}
+.seal-s{display:inline-grid;place-items:center;width:22px;height:22px;border:2px solid var(--seal);color:var(--seal);font-family:var(--display);font-size:11px;transform:rotate(-8deg)}
+.dajim .sign{opacity:1;margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.sgn{font-style:normal;font-family:var(--display);color:var(--seal);border:2px solid var(--seal);padding:0 6px;margin-left:6px;display:inline-block;transform:rotate(-6deg)}
+.tcard .btn:not(.pri){color:var(--text);background:rgba(241,234,216,.95)}
 .tcard .credit i{font-style:normal;display:inline-block;border:1.5px solid #e06a5c;color:#e06a5c;font-family:var(--display);padding:0 4px;margin:0 2px;transform:rotate(-6deg)}
 
 /* 논박전 */
@@ -638,6 +647,12 @@ function loadSave(){try{return JSON.parse(localStorage.getItem(SAVEKEY)||"null")
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 function writeSave(){try{const s=loadSave()||{};s.route=G.route;s.ch=G.ch;s.rec=G.rec;s.tips=G.tips;s.gloss=G.gloss;localStorage.setItem(SAVEKEY,JSON.stringify(s))}catch(e){}}
 
 function npc(id,look,name,x,y,dir,talk,opt){return Object.assign({id,look,name,tx:x,ty:y,hx:x,hy:y,dir:dir||"d",talk,moving:false,prog:0,queue:[],step:0,ph:Math.random()*10,wt:Math.random()*3},opt||{})}
@@ -690,7 +705,7 @@ async function run(fn){if(G.busy)return;G.busy=true;try{await fn()}catch(err){co
 const STEP=0.2;
 function tryMove(ent,dir){
   ent.dir=dir;const [dx,dy]=DIRV[dir];const nx=ent.tx+dx,ny=ent.ty+dy;
-  if(blocked(nx,ny,ent))return false;ent.moving=true;ent.prog=0;ent.nx=nx;ent.ny=ny;ent.step++;
+  if(blocked(nx,ny,ent))return false;ent.moving=true;ent.prog=0;ent.nx=nx;ent.ny=ny;ent.step++;if(ent===G.player&&ent.step%2)sfx("step");
   if(ent.look!=="chicken"&&!G.night&&Math.random()<(ent===G.player?0.9:0.4))for(let k=0;k<2;k++)addPart({k:"dust",x:ent.tx*T+8+(Math.random()*6-3),y:ent.ty*T+15,vx:-dx*6+(Math.random()*8-4),vy:-4-Math.random()*4,life:0.45});
   return true;
 }
@@ -755,7 +770,7 @@ function draw(t){
   const mw=m.w*T,mh=m.h*T;
   let cx=mw<=VW?(mw-VW)/2:Math.max(0,Math.min(mw-VW,fx-VW/2));
   let cy=mh<=VH?(mh-VH)/2:Math.max(-24,Math.min(mh-VH,fy-VH/2));
-  cx=Math.round(cx);cy=Math.round(cy);G.cam={x:cx,y:cy};
+  cx=Math.round(cx);cy=Math.round(cy);if(G.shake>0){cx+=Math.round((Math.random()-.5)*G.shake*2);cy+=Math.round((Math.random()-.5)*G.shake*2)}G.cam={x:cx,y:cy};
   const x0=Math.max(0,Math.floor(cx/T)),y0=Math.max(0,Math.floor(cy/T)),x1=Math.min(m.w-1,Math.ceil((cx+VW)/T)),y1=Math.min(m.h-1,Math.ceil((cy+VH)/T));
   const dr=[];
   for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const ch=m.g[y][x];drawTile(ch,x,y,x*T-cx,y*T-cy,t);if(ch==="T")dr.push({y:(y+1)*T,f:()=>drawTree(x*T-cx,y*T-cy,t,x*0.9+y*1.7)})}
@@ -765,7 +780,7 @@ function draw(t){
   LABELS.length=0;
   const ents=m.npcs.filter(visible).concat(G.demo?[]:[G.player]);
   for(const e of ents){const [px,py]=entPos(e);dr.push({y:py+T+0.5,f:()=>{
-    const sx=Math.round(px-cx),sy=Math.round(py-cy),ph=e.ph||0;
+    let sx=Math.round(px-cx);const sy=Math.round(py-cy),ph=e.ph||0;if(e.hurt>0){e.hurt-=1/60;sx+=Math.round(Math.sin(t*70)*2)}
     const av=AV[AVA_OF[e.look]];let topY;
     if(av)topY=drawAvatar(e,av,sx,sy,t);
     else{
@@ -778,7 +793,7 @@ function draw(t){
     }
     if(e!==G.player&&!G.demo)LABELS.push({x:sx+8,y:topY,name:e.name&&e.look!=="chicken"?e.name:"",mark:!!(e.mark&&!G.busy&&e.mark())});
   }})}
-  dr.sort((a,b)=>a.y-b.y).forEach(d=>d.f());drawParts(t);
+  dr.sort((a,b)=>a.y-b.y).forEach(d=>d.f());drawParts(t);drawFX(t);
   if(G.night){ctx.fillStyle=G.snow?"rgba(30,40,70,.42)":"rgba(18,24,48,.5)";ctx.fillRect(0,0,VW,VH);
     for(const L of (G.lights||[])){const hx=L[0]*T-cx+8,hy=L[1]*T-cy;const gr=ctx.createRadialGradient(hx,hy,4,hx,hy,80);gr.addColorStop(0,"rgba(255,200,120,.3)");gr.addColorStop(1,"rgba(255,200,120,0)");ctx.fillStyle=gr;ctx.fillRect(hx-90,hy-90,180,180)}}
   if(G.flash>0){ctx.fillStyle=`rgba(255,255,255,${G.flash})`;ctx.fillRect(0,0,VW,VH)}
@@ -793,16 +808,21 @@ function drawLabels(t){
   if(UI.modal&&document.querySelector(".veil"))return;
   octx.font="600 12px 'IBM Plex Sans KR','Malgun Gothic',sans-serif";octx.textAlign="center";octx.textBaseline="middle";
   const near=(l)=>{const p=G.player;const [px,py]=entPos(p);return Math.abs(l.x-(px-G.cam.x+8))<3*T&&Math.abs(l.y-(py-G.cam.y))<4*T};
+  for(const f of FX){if(f.k!=="hit")continue;const p=(t-f.t0)/f.dur;if(p<0||p>=1)continue;const [px,py]=entPos(f.e);const x=(px-G.cam.x+8)*SC,y=(py-G.cam.y-46)*SC-p*26;
+    octx.globalAlpha=1-p;octx.font="800 26px 'Song Myung',serif";octx.lineWidth=5;octx.strokeStyle="#1d1813";octx.strokeText("딱!",x+18,y);octx.fillStyle="#f2c94c";octx.fillText("딱!",x+18,y);
+    if(f.count){octx.font="700 13px 'IBM Plex Sans KR',sans-serif";octx.lineWidth=4;octx.strokeText(f.count+"대",x+18,y+22);octx.fillStyle="#fff";octx.fillText(f.count+"대",x+18,y+22)}octx.globalAlpha=1}
+  octx.font="600 12px 'IBM Plex Sans KR','Malgun Gothic',sans-serif";
   for(const l of LABELS){
     const x=l.x*SC;let y=l.y*SC-6;
     if(l.mark){const b=Math.round(Math.sin(t*5)*3),s=22;const mx=x-s/2,my=y-s-4+b;
       octx.fillStyle="#1d1813";octx.fillRect(mx-2,my-2,s+4,s+4);octx.fillStyle="#f2c94c";octx.fillRect(mx,my,s,s);octx.fillStyle="#1d1813";octx.fillRect(x-2,my+4,4,9);octx.fillRect(x-2,my+15,4,3);
       octx.fillRect(x-2,my+s+2,4,4);y=my-6}
+    if(FX.some(f=>f.k==="hit"&&(performance.now()/1000-f.t0)<f.dur&&Math.abs(entPos(f.e)[0]-G.cam.x+8-l.x)<2))continue;
     if(l.name&&(l.mark||near(l))){const w=octx.measureText(l.name).width+14;octx.fillStyle="rgba(29,24,19,.86)";octx.fillRect(x-w/2,y-20,w,20);octx.fillStyle="#f6efdd";octx.fillText(l.name,x,y-10)}
   }
 }
 let last=performance.now();
-function loop(now){const dt=Math.min(0.05,(now-last)/1000);last=now;if(G.flash>0)G.flash=Math.max(0,G.flash-dt*1.5);if(G.map){update(dt);draw(now/1000)}requestAnimationFrame(loop)}
+function loop(now){const dt=Math.min(0.05,(now-last)/1000);last=now;if(G.flash>0)G.flash=Math.max(0,G.flash-dt*1.5);if(G.shake>0)G.shake=Math.max(0,G.shake-dt*14);if(G.map){update(dt);draw(now/1000)}requestAnimationFrame(loop)}
 requestAnimationFrame(loop);
 
 /* ═════════ UI ═════════ */
@@ -824,7 +844,7 @@ function say(who,text,opt){
     let i=0,done=false;const chars=[...full];
     const tick=()=>{if(done)return;i+=2;tx.textContent=chars.slice(0,i).join("");if(i>=chars.length){finish()}else setTimeout(tick,18)};
     const finish=()=>{done=true;tx.textContent=full;const gl=el.querySelector(".gl");if(gl)gl.hidden=false;if(!el.querySelector(".more"))el.insertAdjacentHTML("beforeend",'<span class="more">▼ 계속</span>')};
-    const next=()=>{if(!done){finish();return}el.remove();UI.modal=false;UI.onKey=null;setBodyTalking(false);res()};
+    const next=()=>{if(!done){finish();return}sfx("blip");el.remove();UI.modal=false;UI.onKey=null;setBodyTalking(false);res()};
     el.addEventListener("click",next);
     UI.onKey=e=>{if(["KeyE","Space","Enter","KeyZ"].includes(e.code)){next();return true}return false};
     if(opt.o)recAdd(who,text);
@@ -841,7 +861,7 @@ function choose(who,text,opts,opt){
     $("#ui").appendChild(el);
     let sel=0;const bs=[...el.querySelectorAll(".chs button")];
     const mark=()=>bs.forEach((b,n)=>b.classList.toggle("sel",n===sel));mark();
-    const pick=n=>{el.remove();UI.modal=false;UI.onKey=null;setBodyTalking(false);res(n)};
+    const pick=n=>{sfx("click");el.remove();UI.modal=false;UI.onKey=null;setBodyTalking(false);res(n)};
     bs.forEach((b,n)=>b.addEventListener("click",()=>pick(n)));
     UI.onKey=e=>{
       if(e.code==="ArrowUp"||e.code==="KeyW"){sel=(sel+bs.length-1)%bs.length;mark();return true}
@@ -852,6 +872,7 @@ function choose(who,text,opts,opt){
   });
 }
 function sheet(html,opts){
+  sfx("page");
   return new Promise(res=>{
     UI.modal=true;setBodyTalking(true);
     const v=document.createElement("div");v.className="veil";v.innerHTML=html;$("#ui").appendChild(v);
@@ -864,12 +885,12 @@ function sheet(html,opts){
 function card(eb,title,body,img){return sheet(`<div class="sheet">${img?`<img class="cimg" src="art/${img}.jpg" alt="" onerror="this.remove()">`:""}<span class="eb">${esc(eb)}</span><h2>${esc(title)}</h2>${body?`<p>${esc(body)}</p>`:""}<div class="row"><button class="btn pri" data-go="1">계속 ▶</button></div></div>`)}
 let tipTimer;
 function tip(text){
-  if(!/방향키|노란 느낌표/.test(text)&&!G.tips.some(x=>x.t===text)){G.tips.push({route:G.route,ch:G.ch,t:text});writeSave();const n=$("#nTip");if(n)n.textContent=G.tips.length;const b=$("#bTip");if(b){b.classList.remove("ping");void b.offsetWidth;b.classList.add("ping")}}
+  if(!/방향키|노란 느낌표/.test(text)&&!G.tips.some(x=>x.t===text)){sfx("tip");G.tips.push({route:G.route,ch:G.ch,t:text});writeSave();const n=$("#nTip");if(n)n.textContent=G.tips.length;const b=$("#bTip");if(b){b.classList.remove("ping");void b.offsetWidth;b.classList.add("ping")}}
   document.querySelectorAll(".tip").forEach(x=>x.remove());
   const el=document.createElement("div");el.className="tip";el.innerHTML=`<i>배움</i><span>${esc(text)}</span>`;$("#ui").appendChild(el);
   el.onclick=()=>el.remove();clearTimeout(tipTimer);tipTimer=setTimeout(()=>el.remove(),10000);
 }
-function toast(title,body){const el=document.createElement("div");el.className="toast";el.innerHTML=`<b>${esc(title)}</b>${esc(body)}`;$("#ui").appendChild(el);setTimeout(()=>el.remove(),2200)}
+function toast(title,body){sfx("gain");const el=document.createElement("div");el.className="toast";el.innerHTML=`<b>${esc(title)}</b>${esc(body)}`;$("#ui").appendChild(el);setTimeout(()=>el.remove(),2200)}
 function setObj(t){G.obj=t;updateHUD()}
 function updateHUD(){
   const names=ROUTES[G.route]?ROUTES[G.route].chapters:[];
@@ -917,7 +938,7 @@ function orderPuzzle(title,ev){
       ${done?`<p class="note">줄거리를 복원했어요.</p><div class="row"><button class="btn pri" data-go="1">다음으로 ▶</button></div>`:`<div class="pool">${order.filter(i=>!got.includes(i)).map(i=>`<button data-e="${i}">${esc(ev[i])}</button>`).join("")}</div>`}</div>`};
     paint();
     v.addEventListener("click",e=>{
-      const b=e.target.closest("[data-e]");if(b){const i=+b.dataset.e;if(i===got.length){got.push(i);paint()}else{b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake")}return}
+      const b=e.target.closest("[data-e]");if(b){const i=+b.dataset.e;if(i===got.length){got.push(i);sfx(got.length===ev.length?"correct":"click");paint()}else{sfx("wrong");b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake")}return}
       if(e.target.closest("[data-go]")){v.remove();UI.modal=false;UI.onKey=null;setBodyTalking(false);res()}});
     UI.onKey=e=>{if(got.length===ev.length&&["Enter","Space","KeyE"].includes(e.code)){v.querySelector("[data-go]").click()}return true};
   });
@@ -941,14 +962,14 @@ function debate(cfg){
       v.innerHTML=`<div class="bt"><div class="top"><div class="pc"><img src="art/${PORT[cfg.look]||""}.jpg" alt="" onerror="this.remove()"></div><div><span class="note" style="letter-spacing:.14em">논박전 · 증거로 변명을 꺾어라</span><div class="who">${esc(cfg.name)}</div>
         <div class="gauge">버팀 ${cfg.claims.map((_,i)=>`<span class="pip${i<ci||(i===ci&&state==="won")?" off":""}"></span>`).join("")}<span style="margin-left:14px">비장의 위엄</span> <span class="heart">${"◆".repeat(hearts)}${"◇".repeat(3-hearts)}</span></div></div></div>
         <div class="claim"><div class="lab"><span>${esc(cfg.name)}의 말</span>${c.o?'<span class="orig" title="원문">原</span>':""}</div>${esc(c.t)}${c.o&&G.gloss&&glossOf(c.t)?`<div class="gl"><b>풀이</b>${esc(glossOf(c.t))}</div>`:""}</div>
-        ${state==="won"?`${c.pre?`<div class="resp win"><b>회계 비장</b> “${esc(c.pre)}”</div>`:""}<div class="resp win">${c.wo?'<span class="orig" style="display:inline-grid;place-items:center;width:24px;height:24px;border:2px solid var(--seal);color:var(--seal);font-family:var(--display);font-size:12px;transform:rotate(-6deg);margin-right:6px">原</span>':""}<b>회계 비장</b> “${esc((c.winBy&&c.winBy[used])||c.win)}”${c.wo&&G.gloss&&glossOf(c.win)?`<div class="gl"><b>풀이</b>${esc(glossOf(c.win))}</div>`:""}</div><div class="row"><button class="btn pri" data-next>${ci===cfg.claims.length-1?"논박 끝 ▶":"다음 변명 ▶"}</button></div>`:
+        ${state==="won"?`${(c.pre||(c.preBy&&c.preBy[used]))?`<div class="resp win"><b>회계 비장</b> “${esc(c.pre||c.preBy[used])}”</div>`:""}<div class="resp win">${c.wo?'<span class="orig" style="display:inline-grid;place-items:center;width:24px;height:24px;border:2px solid var(--seal);color:var(--seal);font-family:var(--display);font-size:12px;transform:rotate(-6deg);margin-right:6px">原</span>':""}<b>회계 비장</b> “${esc((c.winBy&&c.winBy[used])||c.win)}”${c.wo&&G.gloss&&glossOf(c.win)?`<div class="gl"><b>풀이</b>${esc(glossOf(c.win))}</div>`:""}</div><div class="row"><button class="btn pri" data-next>${ci===cfg.claims.length-1?"논박 끝 ▶":"다음 변명 ▶"}</button></div>`:
         `<p class="note" style="margin-top:12px">이 말을 뒤집을 증거를 고르세요.</p><div class="ev">${G.evid.map(id=>`<button data-ev="${id}" class="${wrongs.includes(id)?"no":""}" ${wrongs.includes(id)?"disabled":""}><b>${esc(EVID[id].t)}</b><span>${esc(EVID[id].d)}</span></button>`).join("")}</div>${msg?`<div class="resp">${msg}</div>`:""}`}
       </div>`};
     paint();
     v.addEventListener("click",e=>{const c=cfg.claims[ci];const b=e.target.closest("[data-ev]");
       if(b&&state==="ask"){const id=b.dataset.ev;
-        if(c.ok.includes(id)){used=id;state="won";msg="";if(c.wo)recAdd("bijang",c.win);if(c.o)recAdd(cfg.look,c.t);paint()}
-        else{wrongs.push(id);hearts--;
+        if(c.ok.includes(id)){used=id;state="won";sfx("stamp");sfx("correct");msg="";if(c.wo)recAdd("bijang",c.win);if(c.o)recAdd(cfg.look,c.t);paint()}
+        else{sfx("wrong");wrongs.push(id);hearts--;
           if(hearts<=0){hearts=3;wrongs=[];msg=`사또가 헛기침을 한다. 비장은 정신을 가다듬었다. <b>실마리</b>: ${esc(c.hint)}`}
           else msg=`<b>${esc(cfg.name)}</b> “${esc(c.retort||"그것이 이 일과 무슨 상관이오?")}”<br><b>실마리</b>: ${esc(c.hint)}`;
           paint();v.querySelector(".bt").classList.add("shake")}return}
@@ -1006,7 +1027,7 @@ const GLOSS=[
 ["나 평양 가려 하니","나도 평양에 가려 하는데, 너도 함께 내려가서 춘풍도 찾아보고 구경도 하는 게 어떻겠느냐?"],
 ["소녀는 고사하고 오라비","저는 괜찮습니다. 대신 제게 오라비가 있으니, 비장 자리 하나를 주시기를 바랍니다."],
 ["네 청이야 아니 들을쏘냐","네 부탁이라면 어찌 안 들어주겠느냐?"],
-["대부인이 감사께 통기하니","대부인이 감사(참판)에게 이 일을 알리니, 감사가 허락했다."],
+["하고 감사께 통기하니","그러고는 감사(참판)에게 이 일을 알리니, 감사가 허락하고,"],
 ["제가 비장할 양이면","그 사람이 비장을 하겠다면 서둘러 준비하도록 하라."],
 ["춘풍의 처, 없는 오라비","춘풍의 아내는 없는 오라비가 있다고 해 놓고, 자기가 직접 가려고 여자 옷을 벗고 남자 옷으로 차려입었다."],
 ["전배 비장 거동 보소","행차 앞에 선 비장들의 모습 좀 보시오. 성큼성큼 걷는 백마 등에 비스듬히 올라앉아, 붉은 띠와 갖은 장식을 휘휘 감고 맵시 있게 들어간다."],
@@ -1039,7 +1060,7 @@ const GLOSS=[
 ["소인이 호조 돈을 내어 쓰고","저는 나랏돈을 빌려 평양에 내려와서, 제가 머물던 집 주인 추월이와 일 년을 함께 놀다 보니 한 푼도 남지 않아 이 꼴이 되었습니다. 나리 뜻대로 죽이든 살리든 하십시오."],
 ["비장이 본래 추월이라 하면","비장은 원래 추월이라면 원수처럼 여기던 터라, 이 말을 듣고 이를 갈며 사령에게 명령하기를,"],
 ["네 가서 그년 잡아 오라","가서 그 여자를 잡아 오너라. 서둘러 잡아 오되, 조금이라도 늦으면 네가 큰 벌을 받을 것이다."],
-["이년, 바삐 다짐하여라","이 여자야, 어서 죄를 인정하는 글을 써라. 네 죄를 네가 알겠느냐?"],
+["이년, 바삐 다짐하여라","이 여자야, 어서 죄를 인정하는 글(다짐)을 써라."],
 ["춘풍이 가져온 돈 소녀가","춘풍이 가져온 돈을 제가 어찌 알겠습니까?"],
 ["여담절각이라 하는 말을","‘네 집 담 때문에 내 소뿔이 부러졌다’는 말을 아느냐? (춘풍이 망한 건 네 집 때문이라는 뜻) 급한 나랏돈을 감영이 대신 갚겠느냐, 고을 관아가 갚겠느냐, 백성에게 거두겠느냐? 이 마당에 무슨 변명이냐?"],
 ["군뢰 등이 두 눈을","군졸들이 두 눈을 부릅뜨고 곤장을 높이 들어, 맑은 하늘에 벼락 치듯, 겹겹의 산이 울리듯 크게 호통을 치며"],
@@ -1083,16 +1104,16 @@ const GLOSS=[
 ["제가 본디 계집이라 하면","춘풍은 본래 여자라면 화약을 짊어지고 불구덩이에라도 뛰어들 사람이라, 온 정신이 추월에게 쏠렸다."],
 ["허랑한 이춘풍이 장사에","허황한 이춘풍은 장사에는 뜻이 없고, 그날부터 이천오백 냥을 제멋대로 쓰기 시작했다."],
 ["통한단 쌍문초, 도리불수 능라단, 초록 저고리감만 날 사 주오.","좋은 비단 옷감과 초록 저고리감을 사 주세요."],
-["은죽절 금봉채 가진 노리개","은비녀, 금비녀에 여러 가지 노리개를 해 주세요."],
+["은죽적 금봉채 가진 노리개","은비녀, 금비녀에 여러 가지 노리개를 해 주세요."],
 ["두리소반 주전자 화로","둥근 밥상, 주전자, 화로, 양푼, 대야를 사 주세요."],
 ["동래반상, 안성유기 구첩반상 실굽다리 날 사 주오.","동래와 안성에서 만든 좋은 놋그릇으로 아홉 가지 반찬 그릇이 갖춰진 반상을 사 주세요."],
 ["요강 타구 새옹 냄비","요강, 침 뱉는 그릇, 작은 솥, 냄비, 청동 화로를 사 주세요."],
 ["백통대 은대 금대","백통, 은, 금으로 만든 좋은 담뱃대를 사 주세요."],
 ["문어 전복 편포","술안주로 문어, 전복, 말린 고기를 사 주세요."],
 ["연안배천 상상미로","연안과 배천에서 나는 가장 좋은 쌀로 밥쌀을 사 주세요."],
-["동래 울산 장곽 해의","동래와 울산에서 나는 좋은 미역과 김을 사 주세요."],
+["동래을산 장곽해의","동래와 울산에서 나는 좋은 미역과 김을 사 주세요."],
 ["추월의 거동 보소. 춘풍의 재물","추월의 하는 짓 좀 보시오. 춘풍의 재물을 다 빼앗더니 업신여기며 내쫓으니 춘풍의 모습이 가엾다."],
-["어디로 가려시오","어디로 가시려오? 노잣돈이 모자라면 한 끼 값쯤은 보태 드리지요."],
+["어디로 갈랴시오","어디로 가시려오? 노잣돈이 모자라면 한 끼 값쯤은 보태 드리지요."],
 ["돈 한 돈 내어 주며","돈 한 푼을 내주며 어서 나가라고 재촉하니, 춘풍의 모습 좀 보시오. 분한 마음이 터져 추월에게 하는 말이,"],
 ["우리 둘이 갓 만나서","우리 둘이 처음 만나 한 이불을 덮고 누워, 헤어지지 말자고 태산같이 굳게 약속했잖나. 대동강이 마를 때까지 떠나지 말자더니, 그 깊은 맹세가 농담이었나, 진심이었나? 이제 와서 이게 무슨 말인가."],
 ["이 사람아, 내 말 좀 들어 보소. 청루 물정 몰랐던가. ……","이봐요, 내 말 좀 들어 보시오. 기생집 사정을 몰랐소? 기생은 길가의 버들이나 담 밑의 꽃처럼 누구나 꺾을 수 있는 법이오. 평양 기생 추월의 소문도 못 들었소? 당신이 가져온 돈을 나 혼자 먹었소?"],
@@ -1113,6 +1134,26 @@ const GLOSS=[
 ["간사한 추월이는 회계 비장","간사한 추월은 회계 비장을 홀리려고 교태를 부리며 특별히 진수성찬을 차려 올렸다."],
 ["춘풍이 묵묵부답하고","춘풍은 아무 대답도 못 하고 속으로 생각하기를, ‘그립던 아내를 만났으니 둘이 오붓하게 자 볼까’ 했는데 아내는 온데간데없고 비장은 저렇게 호통을 치니, 참으로 난처하지만 어찌할 도리가 없었다."],
 ["비장이 먹기 싫은 죽을","비장은 먹기 싫은 죽을 조금 먹는 척하다가 춘풍에게 상째로 주며 말하기를,"]
+,
+["전생에 무슨 죄로 여자가","전생에 무슨 죄를 지어 여자로 태어나 남편을 잘못 만나 평생 고생하는가. 여자로 태어나 이런 팔자가 또 있을까."],
+["이를 갈며 하는 말이","이를 갈며 하는 말이,"],
+["희희낙락 즐길 적에","모두 기뻐하며 즐거워할 때, 춘풍의 아내가 대부인께 공손히 아뢰기를,"],
+["이번에 천은으로 평양 감사","이번에 임금님의 은혜로 평양 감사가 되셨으니 이런 경사가 없습니다."],
+["춘풍이 형틀 위에서 울면서","춘풍이 형틀 위에서 울며 아뢰기를,"],
+["하니 사령이 덜미 집어","그러자 사령이 추월의 목덜미를 잡아 끌고 왔다."],
+["형틀 위에 올려 매고 별태장","형틀 위에 묶어 놓고 굵은 곤장을 골라 특히 세게 쳐라. 사령아, 봐주었다가는 네 목숨이 없을 줄 알아라."],
+["하나 치고 고찰하고","한 대 치고 살피고, 두 대 치고 살핀다. 매마다 표시를 하며 열 대 넘게 세게 치며,"],
+["호령을 서리같이 하는 말이","서릿발같이 호통치며 하는 말이,"],
+["네 죄를 네가 아느냐","네가 무슨 죄를 지었는지 알겠느냐?"],
+["추월이 여쭈되","추월이 아뢰기를,"],
+["비장이 이 말 듣고 성을 내어","비장이 이 말을 듣고 화를 내며 명령하기를,"],
+["네가 일정 발명치 못할까","그래도 끝내 변명하겠느냐? 너부터 죽여 버리겠다."],
+["하고 주장대로 찌르면서","그러고는 곤장으로 마구 찌르며 오십 대를 세게 치고,"],
+["바삐 다짐 못 할쏘냐","어서 죄를 인정하는 글을 쓰지 못하겠느냐?"],
+["서리같이 호령하니","서릿발같이 호통치니, 추월은 기가 막혀 넋이 나간 듯 정신이 흐릿한 가운데 겁에 질려, 죽지 않으려고 애걸하며 아뢰기를,"],
+["비장이 하는 말이","비장이 말하기를,"],
+["하고 다짐을 써서 올리거늘","그러고는 죄를 인정하는 글을 써서 올리니, 그제야 비장이 춘풍과 추월을 형틀에서 풀어 주고, 춘풍을 다시 불러 조용히 약속하기를,"],
+["춘풍이 감사하여 내려서서","춘풍이 고마워하며 내려와 아뢰기를,"]
 ];
 function glossOf(t){
   let best=null,len=0;
@@ -1135,7 +1176,7 @@ function stitchGame(len,title){
     const v=mgOpen(`<span class="eb">삯바느질 · 땀 뜨기</span><h2>${esc(title)}</h2><p class="note">화살표가 가리키는 방향키(또는 아래 버튼)를 순서대로 눌러 한 땀씩 꿰매요. 틀리면 한 땀 풀려요.</p>
       <div class="cloth"><div class="seam"></div><div class="thread"></div></div><div class="seq"></div>${PAD4}`);
     const paint=()=>{v.querySelector(".seq").innerHTML=seq.map((a,k)=>`<span class="arr${k<i?" ok":k===i?" cur":""}">${ARG[a]}</span>`).join("");v.querySelector(".thread").style.width=(i/len*100)+"%"};
-    const hit=a=>{if(a===seq[i]){i++;paint();if(i>=len)setTimeout(()=>{mgClose(v);res()},350)}else{i=Math.max(0,i-1);paint();shk(v.querySelector(".cloth"))}};
+    const hit=a=>{if(a===seq[i]){i++;paint();sfx("stitch");if(i>=len){sfx("correct");setTimeout(()=>{mgClose(v);res()},350)}}else{sfx("wrong");i=Math.max(0,i-1);paint();shk(v.querySelector(".cloth"))}};
     paint();v.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b)hit(b.dataset.a)});
     UI.onKey=e=>{const a=ARR[e.code];if(a){hit(a);return true}return true};
   });
@@ -1148,7 +1189,7 @@ function pullGame(title){
       <div class="wellbox"><div class="rope"></div><div class="bucket">🪣</div></div><div class="gauge"><i></i></div><div class="pad2"><button data-a="l">← 왼손</button><button data-a="r">오른손 →</button></div>`);
     const bucket=v.querySelector(".bucket"),bar=v.querySelector(".gauge i"),rope=v.querySelector(".rope");
     const paint=()=>{bar.style.width=g+"%";bucket.style.bottom=(8+g*0.78)+"%";rope.style.height=(84-g*0.78)+"%"};
-    const hit=a=>{if(!alive)return;if(a!=="l"&&a!=="r")return;if(a!==last){g=Math.min(100,g+6);last=a}else{g=Math.max(0,g-2);shk(v.querySelector(".wellbox"))}paint();if(g>=100){alive=false;setTimeout(()=>{mgClose(v);res()},400)}};
+    const hit=a=>{if(!alive)return;if(a!=="l"&&a!=="r")return;if(a!==last){g=Math.min(100,g+6);last=a;sfx("pull")}else{g=Math.max(0,g-2);shk(v.querySelector(".wellbox"))}paint();if(g>=100){alive=false;sfx("splash");setTimeout(()=>{mgClose(v);res()},400)}};
     let lt=performance.now();const tick=now=>{if(!alive)return;const dt=(now-lt)/1000;lt=now;g=Math.max(0,g-dt*9);paint();requestAnimationFrame(tick)};requestAnimationFrame(tick);
     v.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b)hit(b.dataset.a)});
     UI.onKey=e=>{const a=ARR[e.code];if(a){hit(a);return true}return true};
@@ -1162,7 +1203,7 @@ function stirGame(title){
       <div class="pot"><div class="ladle"></div><div class="next"></div></div><div class="gauge"><i></i></div>${PAD4}`);
     const bar=v.querySelector(".gauge i"),lad=v.querySelector(".ladle"),nx=v.querySelector(".next");
     const paint=()=>{bar.style.width=g+"%";lad.style.transform=`rotate(${k*90}deg)`;nx.textContent="다음: "+ARG[ring[k]]};
-    const hit=a=>{if(!alive)return;if(a===ring[k]){k=(k+1)%4;g=Math.min(100,g+5)}else{g=Math.max(0,g-6);shk(v.querySelector(".pot"))}paint();if(g>=100){alive=false;setTimeout(()=>{mgClose(v);res()},400)}};
+    const hit=a=>{if(!alive)return;if(a===ring[k]){k=(k+1)%4;g=Math.min(100,g+5);sfx("bubble")}else{sfx("wrong");g=Math.max(0,g-6);shk(v.querySelector(".pot"))}paint();if(g>=100){alive=false;sfx("correct");setTimeout(()=>{mgClose(v);res()},400)}};
     let lt=performance.now();const tick=now=>{if(!alive)return;const dt=(now-lt)/1000;lt=now;g=Math.max(0,g-dt*4);paint();requestAnimationFrame(tick)};requestAnimationFrame(tick);
     v.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b)hit(b.dataset.a)});
     UI.onKey=e=>{const a=ARR[e.code];if(a){hit(a);return true}return true};
@@ -1176,10 +1217,10 @@ function meterGame(words,cuts,title,why){
       <div class="words"></div><div class="mgmsg note"></div><div class="row"><button class="btn pri" data-ok>확인</button></div>`);
     const paint=()=>{v.querySelector(".words").innerHTML=words.map((w,k)=>`<span class="wd">${esc(w)}</span>${k<words.length-1?`<button class="gap${sel.has(k)?" on":""}" data-g="${k}" aria-label="여기서 끊기">${sel.has(k)?"/":"｜"}</button>`:""}`).join("")};
     paint();
-    v.addEventListener("click",e=>{const g=e.target.closest("[data-g]");if(g){const k=+g.dataset.g;sel.has(k)?sel.delete(k):sel.add(k);paint();return}
+    v.addEventListener("click",e=>{const g=e.target.closest("[data-g]");if(g){const k=+g.dataset.g;sel.has(k)?sel.delete(k):sel.add(k);sfx("click");paint();return}
       if(e.target.closest("[data-ok]")){const ok=sel.size===cuts.length&&cuts.every(c=>sel.has(c));
-        if(ok){v.querySelector(".mgmsg").innerHTML=`<b style="color:var(--indigo)">맞았어요!</b> ${esc(why)}`;const b=v.querySelector("[data-ok]");b.textContent="계속 ▶";b.removeAttribute("data-ok");b.dataset.done="1"}
-        else{tries++;v.querySelector(".mgmsg").textContent=sel.size!==cuts.length?`네 도막이 되려면 ${cuts.length}군데를 끊어야 해요. 지금은 ${sel.size}군데예요.`:(tries>1?"소리 내어 읽으며 ‘둥-둥-둥-둥’ 네 박자로 나눠 보세요. 비슷한 길이의 도막이 돼요.":"조금 달라요. 소리 내어 읽으며 숨이 쉬어지는 곳을 찾아보세요.");shk(v.querySelector(".words"))}return}
+        if(ok){sfx("correct");v.querySelector(".mgmsg").innerHTML=`<b style="color:var(--indigo)">맞았어요!</b> ${esc(why)}`;const b=v.querySelector("[data-ok]");b.textContent="계속 ▶";b.removeAttribute("data-ok");b.dataset.done="1"}
+        else{sfx("wrong");tries++;v.querySelector(".mgmsg").textContent=sel.size!==cuts.length?`네 도막이 되려면 ${cuts.length}군데를 끊어야 해요. 지금은 ${sel.size}군데예요.`:(tries>1?"소리 내어 읽으며 ‘둥-둥-둥-둥’ 네 박자로 나눠 보세요. 비슷한 길이의 도막이 돼요.":"조금 달라요. 소리 내어 읽으며 숨이 쉬어지는 곳을 찾아보세요.");shk(v.querySelector(".words"))}return}
       if(e.target.closest("[data-done]")){mgClose(v);res()}});
     UI.onKey=e=>{if(["Enter"].includes(e.code)){const b=v.querySelector("[data-done]");if(b)b.click();return true}return true};
   });
@@ -1198,14 +1239,46 @@ function tableGame(){
     paint();
     v.addEventListener("click",e=>{
       const d=e.target.closest("[data-d]");if(d){pick=d.dataset.d;paint();return}
-      const s=e.target.closest("[data-s]");if(s){const sid=s.dataset.s;if(pick){place[sid]=pick;pick=null}else if(place[sid]){delete place[sid]}paint();return}
+      const s=e.target.closest("[data-s]");if(s){const sid=s.dataset.s;if(pick){place[sid]=pick;pick=null;sfx("click")}else if(place[sid]){delete place[sid]}paint();return}
       if(e.target.closest("[data-ok]")){
         const where=id=>Object.keys(place).find(k=>place[k]===id);const kind=sid=>slots.find(x=>x[0]===sid)[2];
         const errs=[];if(Object.keys(place).length<6)errs.push("아직 놓지 않은 그릇이 있어요.");
         else{if(kind(where("bap"))!=="fl")errs.push("밥은 앞 왼쪽이에요.");if(kind(where("guk"))!=="fr")errs.push("국은 밥 오른쪽이에요.");if(kind(where("sujeo"))!=="side")errs.push("수저는 상 오른쪽 끝에 놓아요.");
           for(const r of ["fish","namul","kimchi"])if(kind(where(r))!=="back"){errs.push("반찬은 뒤쪽에 놓아요.");break}}
-        if(errs.length){v.querySelector(".mgmsg").textContent=errs[0];shk(v.querySelector(".table"))}
-        else{mgClose(v);res()}}});
+        if(errs.length){sfx("wrong");v.querySelector(".mgmsg").textContent=errs[0];shk(v.querySelector(".table"))}
+        else{sfx("correct");mgClose(v);res()}}});
+    UI.onKey=()=>true;
+  });
+}
+
+/* 다짐 문서 채우기: 증거로 한 줄씩 입증 */
+function dajimGame(){
+  return new Promise(res=>{
+    const L=[
+      {pre:"하나. 서울 이춘풍이 평양에 가져온 돈은",blank:"호조에서 빌린 나랏돈",post:"이옵니다.",ok:["e1"],hint:"그 돈이 원래 어디에서 나온 돈인지 알려 주는 증거예요."},
+      {pre:"둘. 그 돈은 소녀가 조른",blank:"비단·노리개·놋그릇 값",post:"으로 다 쓰였사옵니다.",ok:["e2"],hint:"춘풍의 돈이 무엇을 사는 데 쓰였는지 적힌 기록이에요."},
+      {pre:"셋. 돈이 떨어지자 소녀는",blank:"‘노류장화’라 하며 춘풍을 내쫓았사옵니다",post:".",ok:["e7"],hint:"춘풍이 쫓겨나던 날 추월이 한 말을 들은 사람이 있어요."},
+      {pre:"넷. 그 뒤 소녀는 춘풍을",blank:"사환으로 부리며 구박하였사옵니다",post:".",ok:["e4","e5"],hint:"춘풍이 추월의 집에서 어떤 대접을 받는지 본 사람들이 있어요."}
+    ];
+    let i=0,hearts=3,msg="";const done=[];
+    const v=mgOpen("");const box=v.querySelector(".sheet");
+    const paint=()=>{
+      box.innerHTML=`<span class="eb">다짐 받기 · 증거로 한 줄씩 입증하기</span><h2>추월의 다짐</h2>
+      <p class="note">‘다짐’은 지은 죄를 인정하는 글이에요. 비장이 추월의 다짐을 적어 내려가요. 비어 있는 곳을 입증할 증거를 골라 한 줄씩 채우세요. <span class="heart" style="color:var(--seal)">위엄 ${"◆".repeat(hearts)}${"◇".repeat(3-hearts)}</span></p>
+      <div class="dajim">${L.map((l,k)=>`<p class="${k===i?"cur":""}">${esc(l.pre)} <b class="${done[k]?"ok":""}">${done[k]?esc(l.blank):"＿＿＿＿＿＿"}</b>${esc(l.post)}${done[k]?' <span class="seal-s">證</span>':""}</p>`).join("")}
+      ${i>=L.length?`<p class="sign">위 사실이 틀림없으므로 호조 돈과 이자를 합한 오천 냥을 영문 분부대로 바치겠사옵니다.<br><span>평양 기생 추월</span> <button class="btn pri" data-sign>수결 받기</button></p>`:""}</div>
+      ${i<L.length?`<div class="ev">${G.evid.map(id=>`<button data-ev="${id}"><b>${esc(EVID[id].t)}</b><span>${esc(EVID[id].d)}</span></button>`).join("")}</div>`:""}
+      ${msg?`<div class="resp">${msg}</div>`:""}`;
+    };
+    paint();
+    box.addEventListener("click",e=>{
+      const b=e.target.closest("[data-ev]");
+      if(b&&i<L.length){const id=b.dataset.ev,l=L[i];
+        if(l.ok.includes(id)){sfx("stamp");done[i]=true;i++;msg="";if(i>=L.length)sfx("correct")}
+        else{sfx("wrong");hearts--;msg=`그 증거로는 이 줄을 입증하기 어려워요. <b>실마리</b>: ${esc(l.hint)}`;if(hearts<=0){hearts=3;msg="사또가 헛기침을 한다. 비장은 정신을 가다듬었다. <b>실마리</b>: "+esc(l.hint)}shk(box)}
+        paint();return}
+      if(e.target.closest("[data-sign]")){sfx("stamp");const s=box.querySelector(".sign span");if(s)s.innerHTML="평양 기생 추월 <i class='sgn'>秋月</i>";setTimeout(()=>{mgClose(v);res()},700)}
+    });
     UI.onKey=()=>true;
   });
 }
@@ -1305,6 +1378,60 @@ addEventListener("pointerdown",audioGesture,{capture:true});addEventListener("ke
 
 (()=>{const b=document.querySelector("#bSnd");if(b){b.textContent=AU.on?"♪ 소리 켜짐":"♪ 소리 꺼짐";b.onclick=()=>setMusic(!AU.on)}})();
 
+/* ═════════ 효과음 (직접 합성) ═════════ */
+function sfx(name){
+  if(!AU.on)return;if(!AU.ctx&&!auInit())return;const ac=AU.ctx;if(ac.state==="suspended")ac.resume();
+  const t=ac.currentTime+0.01,out=ac.createGain();out.gain.value=0.5;out.connect(ac.destination);
+  const tone=(f,st,dur,type,vol,f2)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=type||"sine";o.frequency.setValueAtTime(f,t+st);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+st+dur);
+    g.gain.setValueAtTime(0.0001,t+st);g.gain.exponentialRampToValueAtTime(vol,t+st+0.005);g.gain.exponentialRampToValueAtTime(0.0005,t+st+dur);o.connect(g);g.connect(out);o.start(t+st);o.stop(t+st+dur+0.05)};
+  const noise=(st,dur,type,freq,vol,q,freq2)=>{const n=noiseSrc(t+st,dur),f=ac.createBiquadFilter(),g=ac.createGain();f.type=type;f.frequency.setValueAtTime(freq,t+st);if(freq2)f.frequency.exponentialRampToValueAtTime(freq2,t+st+dur);f.Q.value=q||1;
+    g.gain.setValueAtTime(0.0001,t+st);g.gain.exponentialRampToValueAtTime(vol,t+st+0.004);g.gain.exponentialRampToValueAtTime(0.0005,t+st+dur);n.connect(f);f.connect(g);g.connect(out)};
+  switch(name){
+    case"blip":tone(740,0,0.05,"triangle",0.05);break;
+    case"click":tone(1200,0,0.04,"square",0.035);tone(1800,0.01,0.03,"sine",0.03);break;
+    case"step":noise(0,0.06,"lowpass",420,0.05);break;
+    case"page":noise(0,0.16,"bandpass",2400,0.06,0.7,900);break;
+    case"coin":tone(1318,0,0.18,"sine",0.12);tone(1760,0.07,0.28,"sine",0.1);tone(2637,0.07,0.12,"triangle",0.03);break;
+    case"gain":[0,0.09,0.18].forEach((s,i)=>tone([784,988,1175][i],s,0.35,"triangle",0.1));break;
+    case"tip":tone(988,0,0.25,"sine",0.06);tone(1318,0.08,0.3,"sine",0.05);break;
+    case"correct":tone(659,0,0.18,"triangle",0.11);tone(988,0.1,0.35,"triangle",0.11);break;
+    case"wrong":tone(180,0,0.22,"square",0.06,120);noise(0,0.12,"lowpass",600,0.05);break;
+    case"whack":noise(0,0.09,"bandpass",1500,0.5,0.9);tone(140,0,0.22,"sine",0.45,55);noise(0.01,0.05,"highpass",3500,0.18);break;
+    case"gong":[110,166,221,277].forEach((f,i)=>tone(f,0,2.6-i*0.3,"sine",[0.22,0.12,0.08,0.05][i],f*0.985));noise(0,0.08,"bandpass",900,0.08);break;
+    case"poof":noise(0,0.45,"bandpass",300,0.16,0.8,4200);tone(523,0.25,0.3,"triangle",0.06);tone(784,0.33,0.3,"triangle",0.05);break;
+    case"splash":noise(0,0.5,"lowpass",3000,0.2,0.7,400);noise(0.08,0.3,"bandpass",1200,0.08);break;
+    case"bubble":tone(300+Math.random()*200,0,0.07,"sine",0.07,700+Math.random()*300);break;
+    case"stitch":tone(2400,0,0.03,"square",0.03);noise(0,0.04,"highpass",5000,0.05);break;
+    case"pull":noise(0,0.1,"bandpass",700,0.07,1.5);tone(200,0,0.08,"triangle",0.04,260);break;
+    case"stamp":tone(90,0,0.2,"sine",0.3,50);noise(0,0.06,"lowpass",800,0.2);break;
+  }
+}
+/* 곤장 연출 */
+const FX=[];
+async function flog(target,n,opt){
+  opt=opt||{};
+  const hit=G.map.npcs.find(x=>(x.look==="sar"||x.look==="guard")&&x!==target&&visible(x));let back=null;
+  if(hit){back=[hit.tx,hit.ty,hit.dir];G.flash=0;setNear(hit,[[target.tx-1,target.ty],[target.tx+1,target.ty],[target.tx-1,target.ty+1],[target.tx+1,target.ty+1]]);hit.dir=hit.tx<target.tx?"r":"l";hit.fixed=1;await sleep(250)}
+  for(let i=0;i<n;i++){
+    const t0=performance.now()/1000;FX.push({k:"paddle",e:target,t0,dur:0.42,count:(opt.from||0)+i+1});
+    await sleep(210);sfx("whack");G.shake=Math.max(G.shake||0,opt.hard?5:3.5);target.hurt=0.35;
+    FX.push({k:"hit",e:target,t0:performance.now()/1000,dur:0.5,count:(opt.from||0)+i+1});
+    await sleep(opt.fast?260:380);
+  }
+  if(hit&&back){await sleep(200);hit.tx=back[0];hit.ty=back[1];hit.dir=back[2]}
+}
+function drawFX(t){
+  const cx=G.cam.x,cy=G.cam.y;
+  for(let i=FX.length-1;i>=0;i--){const f=FX[i],p=(t-f.t0)/f.dur;if(p>1.2){FX.splice(i,1);continue}if(p<0)continue;
+    const [px,py]=entPos(f.e),sx=Math.round(px-cx),sy=Math.round(py-cy);
+    if(f.k==="paddle"){const a=-1.7+Math.min(1,p*1.9)*2.3;ctx.save();ctx.translate(sx+26,sy-30);ctx.rotate(a);
+      ctx.fillStyle="#1d1813";ctx.fillRect(-4,-1,8,40);ctx.fillStyle="#6d4b2c";ctx.fillRect(-2,0,4,14);ctx.fillStyle="#a07a4c";ctx.fillRect(-3,14,6,24);ctx.fillStyle="#c49a64";ctx.fillRect(-2,15,1,22);ctx.restore()}
+    if(f.k==="hit"&&p<1){const r=4+p*10,al=1-p;ctx.globalAlpha=al;ctx.fillStyle="#fff6c8";
+      for(let k=0;k<8;k++){const an=k*Math.PI/4+0.3;ctx.fillRect(Math.round(sx+8+Math.cos(an)*r)-1,Math.round(sy-2+Math.sin(an)*r)-1,2,2)}
+      ctx.fillStyle="#e0493a";ctx.fillRect(sx+6,sy-4,4,4);ctx.globalAlpha=1}
+  }
+}
+
 /* ═════════ 이야기 구성 ═════════ */
 const ROUTES={
   wife:{name:"춘풍의 아내",chapters:[["한양 다락골","아내의 계교, 그리고 남장"],["평양 성내","비장이 되어 증거를 모으다"],["평양 감영","논박전: 춘풍과 추월"],["다시 한양","다시 입은 비장 옷"]]},
@@ -1320,7 +1447,7 @@ async function startChapter(route,n){
   setMood({wife:[0,"hanyang","pyong","trial","home"],chun:[0,"hanyang","pyong","pyong","trial"]}[route][n]);
   await run(S.intro);
 }
-async function toNext(title,ev){await orderPuzzle(title,ev);G.busy=false;const n=G.ch+1;if(n>4)showEnding();else startChapter(G.route,n)}
+async function toNext(title,ev){await orderPuzzle(title,ev);const n=G.ch+1;setTimeout(()=>{if(n>4)showEnding();else startChapter(G.route,n)},0)}
 async function talkChicken(){await say("narr","꼬꼬댁! 모이를 쪼던 닭이 고개를 갸웃한다.")}
 async function talkPasser(n){const L=["장에 가는 길이오. 좀 비켜 주시오.","요새 쌀값이 또 올랐다지.","날씨 한번 좋구먼.","평양 기생 추월이 소문 들었소? 서울 부자 하나가 거덜 났다더군."];await say(n.look,L[(n.id.charCodeAt(n.id.length-1)||0)%L.length],{name:n.name})}
 function hanyangExtras(m,F){
@@ -1391,11 +1518,10 @@ async function w1Anak(n){
   await say("narr","서울 사는 이춘풍이 평양 장사 내려가서 추월을 작첩하여 호강으로 노닐다가, 수만금 재물 다 없애고 추월에게 구박 맞아 사환한단 말을 듣고,",{o:1});
   tip("‘작첩’은 첩을 얻는 것, ‘사환’은 잔심부름꾼이에요. 장사하러 간 남편이 기생 추월에게 돈을 다 날리고 그 집 심부름꾼이 되었다는 소문이에요.");
   await say("wife","애고애고 이 말이 웬 말인고. 슬프다 이내 가장 나와 같이 만났건만, 어이 그리 허랑한고. 청루미색에 한 번 치패도 어렵거든 만리타향에 막중국전을 대돈변으로 내어 가지고, 또 낭패하단 말인가.",{o:1});
-  const c=await choose("wife","분이 치밀어 오른다. 어떻게 할까?",["당장 평양으로 쫓아가 추월의 머리채를 잡겠다!","마음을 가라앉히고 방법을 궁리한다."],{think:1});
-  if(c===0){
-    await say("wife","평양을 찾아가서 추월의 집 찾아 불문곡직 달려들어 추월의 머리채를 감아쥐고, 춘풍에게 달려들어 허리띠에 목을 매어 죽으리라.",{o:1});
-    await say("narr","악을 내어 울다가 도로 풀쳐 생각하되,",{o:1});
-  }
+  await say("wife","전생에 무슨 죄로 여자가 되어 나서 가장 한번 잘못 만나 평생 고생하는구나. …… 여자가 되어 나서 이런 팔자 또 있는가.",{o:1});
+  await say("narr","이를 갈며 하는 말이,",{o:1});
+  await say("wife","평양을 찾아가서 추월의 집 찾아 불문곡직 달려들어 추월의 머리채를 감아쥐고, 춘풍에게 달려들어 허리띠에 목을 매어 죽으리라.",{o:1});
+  await say("narr","악을 내어 울다가 도로 풀쳐 생각하되,",{o:1});
   await say("wife","이리도 못 하리라. 어이하여 살잔 말인가. 내 가장을 경성으로 데려다가 살릴지라도 어찌하리요.",{o:1});
   await say("wife","머리채를 잡아 봐야 속만 시원하지. 서방님을 끌고 와도 정신을 못 차리면 또 똑같을 테고… 게다가 호조 돈은? 그 빚을 못 갚으면 서방님 목숨이 위태롭다.",{think:1});
   await say("wife","내게 필요한 건 눈물이 아니라 힘이다. 평양에서 서방님을 불러 세우고, 추월에게서 돈을 받아 낼 수 있는 힘.",{think:1});
@@ -1424,7 +1550,7 @@ async function w1Sew(n,id){
   await say(id,{halmeom:"춘풍 댁, 우리 영감 저고리 한 벌 지어 주겠소? 삯은 넉넉히 쳐 주리다.",jumo:"손님 옷이 찢어졌는데 좀 기워 주시오. 급하오.",saedaek:"친정 가는 날 입을 치마저고리를 부탁해도 될까요?"}[id]);
   const lv=["halmeom","jumo","saedaek"].filter(k=>F["sew_"+k]).length;
   await stitchGame(5+lv*2,["영감의 저고리","찢어진 도포 깁기","새댁의 치마저고리"][lv]);
-  G.money+=10;F["sew_"+id]=1;updateHUD();
+  G.money+=10;F["sew_"+id]=1;updateHUD();sfx("coin");
   await say(id,"솜씨가 참 곱구려. 여기 열 냥이오.");
   const k=["halmeom","jumo","saedaek"].filter(k=>F["sew_"+k]).length;
   if(k<3)setObj(`삯바느질로 찬값을 모으자 (${k}/3)`);
@@ -1436,7 +1562,7 @@ async function w1Buy(n,id,item){
   if(F["buy_"+id]){await say(id,"좋은 것으로 골라 드렸소.");return}
   const c=await choose(id,`${item}에 열 냥이오. 오늘 들어온 것 중에 제일 좋은 것이오.`,["사겠소.","다음에 오겠소."]);
   if(c===1)return;
-  G.money-=10;F["buy_"+id]=1;updateHUD();
+  G.money-=10;F["buy_"+id]=1;updateHUD();sfx("coin");
   if(bought()){await say("narr","아내는 품삯을 모두 털어 산 찬거리로 조기를 굽고, 햅쌀로 밥을 짓고, 산나물을 무쳤다. 이제 대부인께 올릴 상을 차릴 차례다.");await tableGame();await say("wife","이만하면 마님께 부끄럽지 않은 상이다.",{think:1});setObj("참판 댁 대부인께 밥상을 올리자 (북쪽 기와집 안마당)")}
 }
 async function w1Mom(n){
@@ -1463,6 +1589,8 @@ async function w1Mom(n){
   await say("narr","참판은 춘풍의 처를 불러 치하하고, 그 뒤로 더욱 기특히 여겼다. 그리고 얼마 지나지 않아,");
   await say("narr","천만의외에 참판 영감이 평양 감사를 하였구나.",{o:1});
   await say("wife","왔다. 기다리던 때가.",{think:1});
+  await say("narr","희희낙락 즐길 적에, 춘풍의 처 대부인께 온공히 여쭈오되,",{o:1});
+  await say("wife","이번에 천은으로 평양 감사 하셨으니 이런 경사 없사이다.",{o:1});
   await say("mom","나 평양 가려 하니, 너도 함께 내려가서 춘풍이도 찾아보고 구경이나 하는 것이 어떠하뇨?",{o:1});
   await say("wife","마님을 따라가면 평양에는 갈 수 있다. 하지만 아낙의 몸으로는 구경꾼일 뿐… 서방님을 불러 세울 수도, 추월에게 돈을 받아 낼 수도 없다.",{think:1});
   const reply={0:"집에 있으면 아무것도 바뀌지 않는다. 이 기회를 놓칠 수는 없다.",1:"울며 빈다고 저 사람이 정신을 차릴까? 구경꾼으로 따라가서는 아무 힘이 없다.",3:"옥에 가두면 호조 돈은 누가 갚고, 살림은 누가 살리나. 벌을 주되 살려야 한다."};
@@ -1474,7 +1602,7 @@ async function w1Mom(n){
   await say("wife","소녀는 고사하고 오라비 있사오니, 비장 한몫 주시기 바라나이다.",{o:1});
   tip("비장은 감사를 보좌하는 관리라 죄인을 잡아들이고 벌할 수 있어요. 아내는 없는 ‘오라비’를 내세워 그 권한을 얻어 냅니다.");
   await say("mom","네 청이야 아니 들을쏘냐?",{o:1});
-  await say("narr","대부인이 감사께 통기하니, 감사가 허락하였다.",{o:1});
+  await say("narr","하고 감사께 통기하니, 감사 허락하고,",{o:1});
   await say("champ","제가 비장할 양이면 바삐 거행하라.",{o:1});
   await say("wife","오라비라니, 내게 오라비가 어디 있어. 내가 가야지. 머리를 올리고, 남자 옷을 입고.",{think:1});
   F.served=1;setObj("집(남서쪽 초가)으로 돌아가 옷을 갈아입자");
@@ -1484,7 +1612,7 @@ async function w1Home(){
   if(!F.served){await say("narr",F.left?"우리 집이다. 남편 없는 방이 휑하다.":"우리 집이다.");return}
   if(F.dressed)return;
   await say("narr","춘풍의 처, 없는 오라비 있다 하고, 제가 손수 가려고 여자 의상 벗어 놓고 남자 의복 치장한다.",{o:1});
-  G.flash=1;G.player.look="bijang";G.player.dir="d";F.dressed=1;await sleep(500);
+  sfx("poof");G.flash=1;G.player.look="bijang";G.player.dir="d";F.dressed=1;await sleep(500);
   await card("남장(男裝)","아내, 회계 비장이 되다","거울 속에는 전립을 쓰고 동달이를 입은 낯선 사내가 서 있었다. 평양 감사를 따라가는 회계 비장이다.\n춘풍은 끝까지 이 비밀을 알아채지 못한다. 이 이야기를 하는 당신만 안다.\n\n여성이 관직을 가질 수 없던 시대, 남장은 아내가 스스로 문제를 풀기 위해 택한 방법이었다. 「홍계월전」의 남장이 나라를 구하는 수단이라면, 여기서는 가정을 구하는 수단이다.");
   await toNext("제1장 한양 다락골",["춘풍이 호조 돈 이천 냥을 빌려 평양으로 장사를 떠난다.","빨래터에서 춘풍이 추월의 사환이 되었다는 소문을 듣는다.","참판이 평양 감사 후보라는 말을 듣고 계교를 세운다.","삯바느질로 번 돈으로 대부인의 밥상을 올린다.","‘오라비’를 내세워 비장 자리를 얻고 남장을 한다."]);
 }
@@ -1545,7 +1673,7 @@ async function w2Silk(){
   await say("bijang","서울에서 온 이 서방이라는 자를 아시오?");
   await say("silk","추월 아씨 따라다니던 서울 부자 말이오? 우리 가게 큰손님이었지요. 아씨가 고르면 이 서방이 값을 다 치렀소.");
   await say("silk","아씨가 이렇게 조르는 걸 제 귀로 들었다니까요.");
-  await say("chu","통한단 쌍문초, 도리불수 능라단, 초록 저고리감만 날 사 주오. 은죽절 금봉채 가진 노리개 날 해 주오.",{o:1,name:"추월 (비단 장수의 기억)"});
+  await say("chu","통한단 쌍문초, 도리불수 능라단, 초록 저고리감만 날 사 주오. 은죽적 금봉채 가진 노리개 날 해 주오.",{o:1,name:"추월 (비단 장수의 기억)"});
   await say("silk","여기 외상 장부 보시오. 비단, 노리개… 이게 다 이 서방 돈이오. 그러다 돈이 떨어지니 발길을 딱 끊습디다.");
   gain("e2");
 }
@@ -1588,7 +1716,7 @@ async function w2Nopa(){
   if(!G.f.metSat){await say("nopa","저 기와집이 추월이 집이오. 요새 잔치가 끊이질 않지.");return}
   if(G.evid.includes("e7")){await say("nopa","쯧쯧, 인정도 없지.");return}
   await say("nopa","내 다 들었지. 돈 떨어지자마자 추월이 그 서울 양반을 내쫓는데, 서울 양반이 헤어지지 말자던 맹세를 들먹이니까…");
-  await say("chu","이 사람아, 내 말 좀 들어 보소. 청루 물정 몰랐던가. 노류장화는 인개가절이라. 평양 기생 추월 성식 몰랐던가. 자네가 가져온 돈냥 혼자 먹던가.",{o:1});
+  await say("chu","이 사람아, 내 말 좀 들어 보소. 청루 물정 몰랐던가. …… 노류장화는 인개가절이라. 평양 기생 추월 성식 몰랐던가. 자네가 가져온 돈냥 혼자 먹던가.",{o:1});
   tip("‘노류장화는 인개가절’: 기생은 누구나 꺾을 수 있는 길가의 꽃이라는 말. 추월은 자기 행동을 기생 세계의 관습으로 정당화해요.");
   gain("e7");
 }
@@ -1596,7 +1724,7 @@ async function w2House(){
   const F=G.f;if(F.sawChun)return;
   const cb=N("chunB"),ch=N("chu");
   await say("narr","비장은 떨리는 마음을 누르고 추월의 집 안마당에 들어섰다. 장독대 옆에서 물동이를 내려놓던 사내 하나가 황급히 고개를 숙였다.");
-  await say("narr","춘풍의 거동이 기구하고 볼만하다. 봉두난발 덥수룩한데 얼굴조차 안 씻어 더러운 때가 덕지덕지. 십 년이나 안 빤 옷을 도롱도롱 누비어서 그렁저렁 얽어 입었으니, 그 추한 형상에 뉘가 아니 침을 뱉으리오.",{o:1});
+  await say("narr","춘풍의 거동이 기구하고 볼만하다. 봉두난발 덥수룩한데 얼굴조차 안 씻어 더러운 때가 덕지덕지. 십 년이나 안 빤 옷을 도룡도룡 누비어서 그렁저렁 얽어 입었으니, 그 추한 형상에 뉘가 아니 침을 뱉으리오.",{o:1});
   await say("bijang","저 몰골이… 정말 서방님이란 말인가. 새 갓 쓰고 싱글벙글 떠나던 그 사람이.",{think:1});
   await say("narr","춘풍이 제 아내인 줄을 꿈에나 알랴마는 비장이야 모를쏜가.",{o:1});
   tip("진실을 아는 사람은 비장(아내)과 이 이야기를 하는 당신뿐. 이 ‘앎의 차이’가 풍자의 힘이에요.");
@@ -1634,48 +1762,80 @@ const W3={
     setObj("형틀 옆 사령에게 말을 걸어 심문을 시작하자");
   }
 };
-async function w3Trial(){
-  const F=G.f;if(F.done3){await say("sar","형틀을 치웠습니다.");return}
-  F.chunIn=1;
-  await say("narr","수일 후에 분부하여, 춘풍이를 잡아들여 형틀 위에 올려 매고,",{o:1});
+async function trialChun(target,isPlayer){
   await say("bijang","이놈, 너 들어라. 네가 춘풍이냐? 너는 웬 놈으로 막중한 나랏돈 호조 돈을 빌려 쓰고 평양 장사 내려와서 사오 년이 지나가되 일 푼 상납 아니하기로 호조에서 공문을 내려 ‘너를 잡아 죽이라’ 하였으니 너는 죽기를 사양치 말라.",{o:1});
+  if(isPlayer)await say("chunB","호조 돈…! 올 것이 왔구나.",{think:1});
   await say("bijang","각별히 매우 쳐라.",{o:1});
+  await flog(target,5,{});
   await say("narr","사령이 매를 들고 십여 대를 중장하니, 춘풍의 약한 다리에서 유혈이 낭자한지라. 비장이 내려다보고 또 치려 하다가 혼잣말로 ‘차마 못 치겠다’ 하고 사령을 불러,",{o:1});
-  tip("벌은 주되 해치려는 것은 아니에요. ‘차마 못 치겠다’는 혼잣말에 아내의 속마음이 드러나요.");
+  if(!isPlayer)tip("벌은 주되 해치려는 것은 아니에요. ‘차마 못 치겠다’는 혼잣말에 아내의 속마음이 드러나요.");
   await say("bijang","너 매 잡아라. 춘풍아 너 들어라. 그 돈을 다 어찌하였느냐? 투전을 하였느냐? 주색에 썼느냐? 돈 쓴 곳을 아뢰어라.",{o:1});
-  await say("bijang","이제 저 입에서 ‘추월’이라는 이름이 나와야 한다.",{think:1});
-  await debate({name:"이춘풍",look:"chunB",claims:[
-    {t:"소인은 평양에서 장사를 하다가 밑져서 이리되었나이다.",ok:["e2","e4","e5","e7"],retort:"호조에서 돈을 빌린 건 맞사오나, 그 돈은 장사하다 날렸사옵니다!",hint:"그 돈이 정말 장사에 쓰였을까요? 돈이 어디로 갔는지, 또는 춘풍이 지금 무엇을 하며 지내는지 보여 주는 증거를 찾아보세요.",win:"장사를 했다는 놈이 추월의 집 뜰에서 물을 긷고 있느냐? 한량들도, 아이들도 다 보았다!",winBy:{e2:"장사 밑천이라더니 비단 가게 장부에는 추월이 조른 비단, 노리개, 놋그릇 값만 적혀 있구나. 네 돈은 장사가 아니라 추월의 치장에 들어갔다!",e4:"장사를 했다는 놈이 추월의 집 뜰에서 물을 긷고 있느냐? 한량들이 다 보았다!",e5:"장사꾼이 기생에게 ‘아가씨’ 하고 존대하며 누룽지를 얻어먹느냐? 아이들까지 다 보았다!",e7:"장사로 망했다면 어찌 돈이 떨어지자마자 추월이 너를 내쫓았겠느냐? 네 돈이 어디로 갔는지 이웃이 다 안다!"}}
-  ]});
+  if(!isPlayer){for(;;){const q=await choose("bijang","‘투전을 하였느냐? 주색에 썼느냐?’ 모은 증거로 보면, 서방님의 돈은 어디로 갔을까?",["투전(노름)으로 날렸다","추월에게 빠져 주색에 다 썼다","장사를 하다 밑졌다"],{think:1});
+    if(q===1){await say("bijang","비단 가게 장부, 한량과 아이들, 이웃 노파의 말이 모두 한곳을 가리킨다. 추월이다.",{think:1});break}
+    await say("bijang",q===0?"성내 어디에서도 노름판 이야기는 듣지 못했다. 증거첩을 다시 떠올려 보자.":"장사를 했다면 저 사람이 왜 추월의 집 뜰에서 물을 긷고 있겠는가. 증거첩을 다시 떠올려 보자.",{think:1})}}
+  if(isPlayer){for(;;){const c=await choose("chunB","뭐라고 아뢸까?",["“장사를 하다가 밑져서 이리되었나이다.”","“호조 돈으로 추월이와 일 년을 함께 놀고 나니 한 푼도 없어졌나이다.”"]);if(c===1)break;
+    await notOriginal("chunB","원작의 춘풍은 이 물음에 둘러대지 않았어요. 매를 맞고 나서 곧바로 추월과 놀다 돈을 다 썼다고 털어놓지요.")}}
+  await say("narr","춘풍이 형틀 위에서 울면서 여쭈되,",{o:1});
   await say("chunB","소인이 호조 돈을 내어 쓰고 평양에 내려와서 내 집 주인 추월이와 일 년을 함께 놀고 나니 한 푼도 없어지고 이 지경이 되었으니, 나리님 분부대로 죽이거나 살리거나 하옵소서.",{o:1});
-  gain("e6");
-  await say("bijang","됐다. 서방님 입으로 추월의 이름이 나왔다. 이제 추월을 부를 명분이 섰다.",{think:1});
+}
+async function trialChu(withDebate){
+  const F=G.f;
   await say("narr","비장이 본래 추월이라 하면 원수같이 아는 중에, 이 말 듣고 이를 갈고 호령하여 사령에게 분부하되,",{o:1});
   await say("bijang","네 가서 그년 잡아 오라. 바삐 바삐 잡아 오되, 만일 지체하였다가는 네가 중죄를 당하리라.",{o:1});
-  F.chuIn=1;G.flash=.6;await sleep(400);
-  await say("narr","사령이 추월의 덜미를 집어 끌고 왔다. 곱게 단장한 얼굴이 하얗게 질려 있었다.");
-  await say("bijang","이년, 바삐 다짐하여라. 네 죄를 네가 아느냐?",{o:1});
-  await debate({name:"추월",look:"chu",claims:[
-    {t:"춘풍이 가져온 돈 소녀가 어찌 아오리까?",o:1,ok:["e2","e6","e7"],retort:"소녀는 정말 모르는 일이옵니다.",hint:"춘풍의 돈이 추월에게 흘러갔다는 기록이나 증언, 또는 추월 스스로 한 말을 떠올려 보세요.",win:"비단 가게 장부에 네가 조른 것이 다 적혀 있다. 비단, 노리개, 놋그릇까지 춘풍이 값을 치렀지!",winBy:{e6:"춘풍이 ‘내 집 주인 추월이와 일 년을 함께 놀고 나니 한 푼도 없어졌다’ 하였다. 그 돈을 모른다니 말이 되느냐!",e7:"춘풍을 내쫓으며 ‘자네가 가져온 돈냥 혼자 먹던가’ 했다지? 함께 썼다고 제 입으로 말해 놓고 이제 와서 모른다 하느냐!"}},
-    {t:"춘풍은 제 발로 와서 제 돈을 제 마음대로 썼을 뿐이옵니다. 소녀와는 상관없는 일이오.",ok:["e6","e2"],winBy:{e2:"상관없다? 비단이며 노리개며 구첩반상이며 ‘날 사 주오’ 하고 조른 것이 누구냐! 장부에 다 적혀 있다."},retort:"누가 그럽디까? 증거가 있소?",hint:"춘풍이 돈을 누구와 어떻게 썼다고 털어놓았나요? 추월이 무엇을 사 달라고 졸랐는지도 떠올려 보세요.",win:"춘풍이 ‘추월이와 일 년을 함께 놀고 나니 한 푼도 없어졌다’ 하였다. 네 집에서, 너와 함께 쓴 돈이다!"},
-    {t:"돈이 떨어진 뒤에도 소녀가 불쌍히 여겨 식구처럼 거두어 먹이고 있사옵니다.",ok:["e5","e7","e4"],winBy:{e4:"식구라? 뜰에서 물을 긷게 하고, 손님들 앞에서 ‘내 집 사환하는 놈’이라 부른다지. 한량들이 다 들었다!"},retort:"소녀처럼 인정 많은 기생이 또 어디 있사오리까.",hint:"춘풍이 이 집에서 어떤 대접을 받는지, 어떻게 쫓겨났는지 본 사람이 있었지요.",win:"식구라? ‘아가씨’ 소리를 시키고 누룽지를 숟가락도 없이 먹인다지. 돈이 떨어지자 ‘노류장화’ 운운하며 내쫓은 것도 들은 사람이 있다!"},
-    {t:"설령 소녀가 그 돈을 받았다 한들, 호조에서 돈을 빌린 건 춘풍이옵니다. 빌린 사람이 갚아야지, 어찌 소녀가 물어내야 하옵니까?",ok:["e1"],retort:"빌린 사람이 갚는 게 세상 이치 아니옵니까?",hint:"그 돈은 누구의 돈이고, 갚지 않으면 어떻게 된다고 했지요? 지금 춘풍에게 갚을 돈이 남아 있을까요?",pre:"이 돈은 호조의 나랏돈이다. 사오 년째 한 푼도 갚지 않아 ‘춘풍을 잡아 죽이라’는 공문까지 내려왔다. 그런데 춘풍은 지금 한 푼도 없는 거지다. 그 돈을 춘풍이 어찌 갚느냐? 돈이 사라진 곳은 네 집이다.",wo:1,win:"여담절각이라 하는 말을 네 아느냐? 불같은 호조 돈을 영문이 물어 주랴, 본관에서 물어 주랴? 백성에게 수렴하랴? 네 이 지경에 무슨 잔말을 하랴?"}
-  ]});
+  await say("narr","하니 사령이 덜미 집어 잡아 왔거늘,",{o:1});
+  F.chuIn=1;G.flash=.5;sfx("stamp");await sleep(300);
+  const chu=N("chu");
+  await say("bijang","형틀 위에 올려 매고 별태장 골라잡고 각별히 매우 쳐라. 사령, 너는 사정을 두었다가는 네 목숨이 죽으리라.",{o:1});
+  await flog(chu,4,{});
+  await say("narr","하나 치고 고찰하고, 둘을 치고 고찰한다. 매마다 표를 하며 십여 대를 중장하며,",{o:1});
+  await say("bijang","이년, 바삐 다짐하여라.",{o:1});
+  await say("narr","호령을 서리같이 하는 말이,",{o:1});
+  await say("bijang","네 죄를 네가 아느냐?",{o:1});
+  await say("narr","추월이 여쭈되,",{o:1});
+  if(withDebate){
+    await debate({name:"추월",look:"chu",claims:[
+      {t:"춘풍이 가져온 돈 소녀가 어찌 아오리까?",o:1,ok:["e2","e6","e7"],retort:"소녀는 정말 모르는 일이옵니다.",hint:"춘풍의 돈이 추월에게 흘러갔다는 기록이나 증언, 또는 추월 스스로 한 말을 떠올려 보세요. 호조 공문은 돈을 빌렸다는 사실만 알려 줘요.",
+       preBy:{e2:"비단 가게 장부에 네가 조른 비단, 노리개, 놋그릇 값이 다 적혀 있다. 춘풍의 돈이 네 집으로 흘러간 것을 모른다 하느냐?",e6:"춘풍이 ‘추월이와 일 년을 함께 놀고 나니 한 푼도 없어졌다’ 하였다. 그 돈을 네가 모른다 하느냐?",e7:"춘풍을 내쫓으며 ‘자네가 가져온 돈냥 혼자 먹던가’ 하였다지? 제 입으로 함께 썼다고 해 놓고 모른다 하느냐?"},
+       wo:1,win:"여담절각이라 하는 말을 네 아느냐? 불같은 호조 돈을 영문이 물어 주랴, 본관에서 물어 주랴? 백성에게 수렴하랴? 네 이 지경에 무슨 잔말을 하랴?"}
+    ]});
+  }else{
+    await say("chu","춘풍이 가져온 돈 소녀가 어찌 아오리까?",{o:1});
+    await say("narr","비장이 이 말 듣고 성을 내어 분부하되,",{o:1});
+    await say("bijang","여담절각이라 하는 말을 네 아느냐? 불같은 호조 돈을 영문이 물어 주랴, 본관에서 물어 주랴? 백성에게 수렴하랴? 네 이 지경에 무슨 잔말을 하랴?",{o:1});
+  }
   tip("‘여담절각’은 ‘네 집 담 때문에 내 소뿔이 부러졌다’는 말. 비장은 춘풍이 망한 책임을 추월의 집에 지웁니다.");
-  await say("narr","군뢰 등이 두 눈을 부릅뜨고 형장을 높이 들어, 백일청천에 벼락 치듯, 만첩청산 울리듯 금장 소리 호통치며",{o:1});
+  await say("narr","군뢰 등이 두 눈을 부릅뜨고 형장을 높이 들어, 백일청천에 벼락 치듯, 만첩청산 울리듯 금장 소리 호통치며 하는 말이,",{o:1});
+  await say("guard","네가 일정 발명치 못할까? 너를 우선 죽이리라.",{o:1});
+  await say("narr","하고 주장대로 찌르면서 오십 대 중장하고,",{o:1});
+  await flog(chu,6,{fast:1,hard:1});
+  await say("bijang","바삐 다짐 못 할쏘냐?",{o:1});
+  await say("narr","서리같이 호령하니, 추월이 기가 막혀 혼백이 달아난 듯 혼미 중에 겁내어 죽기를 면하려고 애걸하여 여쭈되,",{o:1});
   await say("chu","국법도 엄숙하고 관령도 지엄하고 나리님 분부도 엄하오니, 춘풍이 가져온 돈을 영문 분부대로 소녀가 바치리다.",{o:1});
-  await say("bijang","빌린 돈은 이천 냥. 여기에 이자를 쳐서 받아 내면 호조 빚을 갚고도 남는다. 감정이 아니라 나라의 셈법으로 따지면 추월도 거스를 수 없다.",{think:1});
+  if(withDebate)await say("bijang","빌린 돈은 이천 냥. 여기에 이자를 쳐서 받아 내면 호조 빚을 갚고도 남는다. 감정이 아니라 나라의 셈법으로 따지면 추월도 거스를 수 없다.",{think:1});
+  await say("narr","비장이 하는 말이,",{o:1});
   await say("bijang","호조에서 공문을 보내 ‘너를 바삐 죽이라’ 하였으되, 네 죄를 네가 알고 ‘돈을 모두 바치마’ 하니 너를 살려 주거니와, 호조 돈 이자를 이 할로 하여 오천 냥을 모두 보내 바치라.",{o:1});
   await say("chu","십 일 말미를 주옵시면 오천 냥을 바치리다.",{o:1});
-  tip("빌린 돈 이천 냥이 이자까지 쳐서 오천 냥으로! ‘회계’ 비장다운 해결이에요.");
+  if(withDebate)tip("빌린 돈 이천 냥이 이자까지 쳐서 오천 냥으로! ‘회계’ 비장다운 해결이에요.");
+  else await say("chunB","오, 오천 냥…! 이 비장이 대체 누구기에 나를 이렇게 살려 준단 말인가.",{think:1});
+  if(withDebate){await say("bijang","말로만 바치겠다 하면 믿을 수 없다. 네 죄를 낱낱이 적어 다짐을 받으리라.",{think:1});await dajimGame();}
+  await say("narr","하고 다짐을 써서 올리거늘, 그제야 비장이 춘풍이와 추월이를 형틀에서 내려놓고, 춘풍을 다시 불러 가만히 약속하되,",{o:1});
   F.chuIn=0;
-  await say("narr","비장은 춘풍을 형틀에서 내려놓게 하고, 조용히 불러 일렀다.");
   await say("bijang","열흘 안으로 모두 받아 가지고 서울로 올라오라. 내가 또한 특별한 일이 있어서 먼저 떠나 올라가니, 네가 서울에 올라오거든 문안하여라.",{o:1});
+  await say("narr","춘풍이 감사하여 내려서서 여쭈되,",{o:1});
   await say("chunB","나리님 덕택으로 호조 돈을 갚았습니다.",{o:1});
+}
+async function w3Trial(){
+  const F=G.f;if(F.done3){await say("sar","형틀을 치웠습니다.");return}
+  F.chunIn=1;sfx("gong");
+  await say("narr","수일 후에 분부하여, 춘풍이를 잡아들여 형틀 위에 올려 매고,",{o:1});
+  await trialChun(N("chunB"),false);
+  gain("e6");
+  await say("bijang","됐다. 서방님 입으로 추월의 이름이 나왔다. 이제 추월을 부를 명분이 섰다.",{think:1});
+  await trialChu(true);
   await say("bijang","돈을 되찾았다고 끝이 아니다. 서울에 돌아와서도 저 사람이 정신을 차리는지, 내 눈으로 봐야겠다.",{think:1});
   tip("‘서울에 오거든 문안하라’는 말은 복선이에요. 서울에 있는 ‘비장’은 누구일까요?");
   F.done3=1;
-  await toNext("제3장 평양 감영",["춘풍을 형틀에 올려 매를 치다가 차마 더 치지 못한다.","춘풍이 추월과 놀다 돈을 다 썼다고 자백한다.","추월을 잡아 와 증거로 변명을 꺾는다.","추월이 오천 냥을 바치기로 다짐한다.","비장이 먼저 서울로 올라가며 춘풍에게 문안 오라 이른다."]);
+  await toNext("제3장 평양 감영",["춘풍을 형틀에 올려 매를 치다가 차마 더 치지 못한다.","춘풍이 추월과 놀다 돈을 다 썼다고 털어놓는다.","추월을 잡아 와 매를 치고, 변명을 여담절각으로 꺾는다.","증거로 추월의 죄를 입증해 오천 냥을 바치겠다는 다짐을 받는다.","비장이 먼저 서울로 올라가며 춘풍에게 문안 오라 이른다."]);
 }
 
 const W4={
@@ -1727,7 +1887,7 @@ async function w4Chun(n){
   const c=await choose("bijang","이제 어떻게 할까?",["헛기침을 하며 조금 더 속여 본다.","비장 옷을 벗고 정체를 밝힌다."]);
   if(c===0)await say("narr","비장이 헛기침을 한 번 더 하자, 춘풍이 사색이 되어 엎드린다. 이만하면 되었다.");
   await say("narr","이런 거동 저런 거동 다 본 연후에, 회계 비장 의복 벗어 놓고 여자 의복 다시 입고 웃으면서,",{o:1});
-  G.flash=1;G.player.look="wife";await sleep(500);
+  sfx("poof");G.flash=1;G.player.look="wife";await sleep(500);
   await say("wife","이 멍청아!",{o:1});
   await say("narr","춘풍의 등을 밀치면서 하는 말이,",{o:1});
   await say("wife","안목이 그다지 무도한가?",{o:1});
@@ -1758,7 +1918,7 @@ async function w4Home(){
   if(!F.meal){await say("narr","우리 집이다. 춘풍이 들여놓은 돈 궤짝이 방 안 가득하다.");return}
   if(F.dress2)return;
   await say("narr","온갖 교만 다할 적에 춘풍 아내 춘풍을 속이려고 황혼을 기다려서 여자 의복 벗어 놓고 비장 의복 다시 입고 흐늘거리며 들어오니,",{o:1});
-  G.flash=1;G.player.look="bijang";F.dress2=1;await sleep(400);
+  sfx("poof");G.flash=1;G.player.look="bijang";F.dress2=1;await sleep(400);
   setObj("비장의 모습으로 춘풍에게 다가가자");
 }
 
@@ -1830,7 +1990,7 @@ async function c1Hojo(){
   const c=await choose("chun","어떻게 할까?",["“걱정 마시오. 평양에서 몇 곱절로 불려 오리다.”","“생각해 보니 무섭구려. 그만두겠소.”"]);
   if(c===1){await notOriginal("chun","원작의 춘풍은 비싼 이자의 나랏돈(대돈변)도 겁내지 않고 빌려 가요. 그 무모함이 뒤에서 목숨을 위태롭게 하지요.")}
   await say("hojo","그럼 여기 수결을 두시오. 이천 냥이오.");
-  G.purse=2500;G.purseOn=true;updateHUD();toast("호조 돈","이천 냥 + 집안 재산 오백 냥");
+  G.purse=2500;G.purseOn=true;updateHUD();sfx("coin");toast("호조 돈","이천 냥 + 집안 재산 오백 냥");
   tip("원문에서 아내는 이 돈을 ‘막중국전(아주 중요한 나랏돈)을 대돈변(비싼 이자)으로’ 빌렸다며 한탄해요.");
   F.loan=1;setObj("집에 돌아가 아내에게 떠난다고 말하자");
 }
@@ -1853,7 +2013,7 @@ const C2={
   },
   async intro(){
     await card("제2장","평양, 추월의 집","평양에 닿은 춘풍은 장사할 곳을 찾아 성안을 돌았다. 짐바리에는 이천오백 냥이 실려 있었다.\n그런데 북동쪽 기와집 담 너머로 거문고 소리가 흘러나왔다.","k2");
-    await say("narr","이때 서울 부상대고 이춘풍이 수천 냥 싣고 와서 뒷집에 주인 했다는 말을 듣고, 추월이 넌지시 춘풍을 홀리려고 …… 녹의홍상 다시 입고 천연히 앉은 모양,",{o:1});
+    await say("narr","이때 서울 부상대고 이춘풍이 수천 냥 싣고 와서 뒷집에 주인 했다는 말을 듣고, 추월이 넌짓 춘풍을 홀리려고 …… 녹의홍상 다시 입고 천연히 앉은 모양,",{o:1});
     tip("추월은 춘풍이 ‘수천 냥’을 싣고 왔다는 소문을 먼저 들었어요. 추월의 관심이 어디에 있는지 기억해 두세요.");
     await say("chun","장사는 내일 해도 늦지 않지. 저 거문고 소리의 주인부터 보자.",{think:1});
     setObj("거문고 소리를 따라 추월의 집(북동쪽 기와집)으로 가자");
@@ -1863,7 +2023,7 @@ async function c2Chu(n){
   const F=G.f;
   if(!F.met){
     await say("narr","얼굴 태도 청천명월 같고, 모란화 아침 이슬에 반쯤 핀 형상이요, 그 절묘한 맵시는 해당화가 그늘 속의 그림이요, 월궁의 항아로다.",{o:1});
-    await say("narr","제가 본디 계집이라 하면 화약 한 섬을 지고 모닥불에 보금자리 치고 …… 일신의 정신 있는 대로 모두 그리 간다.",{o:1});
+    await say("narr","제가 본디 계집이라 하면 화약 한 섬을 지고 모닥불에 보금자리 치고 …… 일신의 정신 있는 대로 모다 그리간다.",{o:1});
     await say("chu","서울에서 오신 나리시지요? 먼 길 오셨는데 쉬었다 가시어요.");
     for(;;){
       const c=await choose("chun","어떻게 할까?",["“장사하러 온 몸이니, 장사부터 하고 오겠소.”","“오늘은 여기서 쉬어 가겠네.”"]);
@@ -1874,20 +2034,20 @@ async function c2Chu(n){
     await say("narr","밤마다 잔치, 낮마다 선물. 추월은 교태를 부리며 하나씩 조르기 시작했다.");
     const items=[
       ["비단 옷감","통한단 쌍문초, 도리불수 능라단, 초록 저고리감만 날 사 주오.",400],
-      ["노리개","은죽절 금봉채 가진 노리개 날 해 주오.",300],
+      ["노리개","은죽적 금봉채 가진 노리개 날 해 주오.",300],
       ["살림 그릇","두리소반 주전자 화로 양푼 대야 날 사 주오.",250],
       ["놋그릇 반상","동래반상, 안성유기 구첩반상 실굽다리 날 사 주오.",350],
       ["세간살이","요강 타구 새옹 냄비 청동화로 날 사 주게.",200],
       ["담뱃대","백통대 은대 금대 수복 담뱃대 날 사 주오.",250],
       ["술안주","문어 전복 편포 안주하게 날 사 주오.",250],
       ["좋은 쌀","연안배천 상상미로 밥쌀하게 팔아 주오.",300],
-      ["미역과 김","동래 울산 장곽 해의 날 사 주오.",200]];
+      ["미역과 김","동래을산 장곽해의 날 사 주오.",200]];
     let refused=0;
     for(const [nm,line,cost] of items){
       await say("chu",line,{o:1});
       const c=await choose("chun",`${nm}… 어떻게 할까? (주머니 ${G.purse.toLocaleString("ko-KR")}냥)`,["사 준다.","거절한다."]);
       if(c===1){refused++;await say("chu",refused===1?"어머, 서울 부자 나리께서 이것도 못 사 주오? 소녀가 서운하옵니다.":"흥, 서울 부자라더니 소문만 요란했나 봐요.");await say("chun","체면이 있지… 기생 앞에서 인색하다는 소리를 들을 수는 없다.",{think:1})}
-      G.purse-=cost;updateHUD();
+      G.purse-=cost;updateHUD();sfx("coin");
     }
     for(;;){const q=await choose("chun","그런데… 추월이 사 달라고 조른 것이 아닌 것은 무엇이었지?",["비단 옷감과 노리개","백통대, 은대, 금대 담뱃대","거문고와 가야금","동래 울산 미역과 김"],{think:1});if(q===2){await say("narr","맞아요. 거문고는 추월이 이미 가지고 있던 것이지요. 추월은 옷감과 노리개부터 그릇, 담뱃대, 쌀과 미역까지 살림 전체를 춘풍의 돈으로 채웠어요.");break}await say("narr","그건 추월이 조른 목록에 있었어요. 다시 떠올려 보세요.")}
     await say("narr","온가지로 헤어 내니 허랑한 이춘풍이 일호나 사양할까. 수천여 냥 돈을 비일비재 내어 주니 청산유수 아니어든 오랠손가. 일 년이 못 다 가서 낭탁이 비었구나.",{o:1});
@@ -1895,7 +2055,7 @@ async function c2Chu(n){
     F.met=1;F.spent=1;
     await card("일 년 뒤","텅 빈 주머니","잔치는 끝났다. 이천오백 냥은 비단과 노리개, 놋그릇과 담뱃대가 되어 추월의 집에 남았다.\n그리고 어느 날 아침, 추월의 얼굴이 달라져 있었다.");
     await say("narr","추월의 거동 보소. 춘풍의 재물을 빼앗고 괄시하여 내쫓으니 춘풍의 슬픈 거동 가련하다.",{o:1});
-    await say("chu","어디로 가려시오. 노자가 부족하면 한 때나 보태지요.",{o:1});
+    await say("chu","어디로 갈랴시오. 노자가 부족하면 한 때나 보태지요.",{o:1});
     await say("narr","돈 한 돈 내어 주며 바삐 나가라 재촉하니, 춘풍의 거동 보소. 분한 마음 폭발하여 추월더러 하는 말이,",{o:1});
     await say("chun","우리 둘이 갓 만나서 원앙금침 마주 누워, 불원상리 굳은 언약 태산같이 언약하여, 대동강이 마르도록 떠나가지 말자더니, 이렇듯 깊은 맹세 농담인가 진정인가. 이제 이 말 웬 말인가.",{o:1});
     await say("chu","이 사람아, 내 말 좀 들어 보소. 청루 물정 몰랐던가. …… 노류장화는 인개가절이라. 평양 기생 추월 성식 몰랐던가. 자네가 가져온 돈냥 혼자 먹던가.",{o:1});
@@ -2022,34 +2182,10 @@ const C4={
   async intro(){
     const F=G.f;
     await card("제4장","감영과 귀가","수일 후. 사령들이 들이닥쳐 춘풍을 감영으로 끌고 갔다. 영문도 모른 채 형틀에 묶인 춘풍 앞에, 그날의 회계 비장이 서 있었다.","c3");
+    sfx("gong");
     await say("narr","수일 후에 분부하여, 춘풍이를 잡아들여 형틀 위에 올려 매고,",{o:1});
-    await say("bijang","이놈, 너 들어라. 네가 춘풍이냐? 너는 웬 놈으로 막중한 나랏돈 호조 돈을 빌려 쓰고 평양 장사 내려와서 사오 년이 지나가되 일 푼 상납 아니하기로 호조에서 공문을 내려 ‘너를 잡아 죽이라’ 하였으니 너는 죽기를 사양치 말라.",{o:1});
-    await say("chunB","호조 돈…! 올 것이 왔구나.",{think:1});
-    await say("bijang","각별히 매우 쳐라.",{o:1});
-    await say("narr","사령이 매를 들고 십여 대를 중장하니, 춘풍의 약한 다리에서 유혈이 낭자한지라. 비장이 내려다보고 또 치려 하다가 혼잣말로 ‘차마 못 치겠다’ 하고 사령을 불러,",{o:1});
-    await say("bijang","너 매 잡아라. 춘풍아 너 들어라. 그 돈을 다 어찌하였느냐? 투전을 하였느냐? 주색에 썼느냐? 돈 쓴 곳을 아뢰어라.",{o:1});
-    for(;;){
-      const c=await choose("chunB","뭐라고 아뢸까?",["“장사를 하다가 밑져서 이리되었나이다.”","“추월이와 일 년을 함께 놀고 나니 한 푼도 없어졌나이다.”"]);
-      if(c===1)break;
-      await say("bijang","장사를 했다는 놈이 추월의 집 뜰에서 물을 긷느냐? 평양 사람이 다 보았다! 다시 매를 들어라!");
-      await say("narr","매가 한 대 더 떨어졌다. 거짓말은 통하지 않는다.");
-    }
-    await say("chunB","소인이 호조 돈을 내어 쓰고 평양에 내려와서 내 집 주인 추월이와 일 년을 함께 놀고 나니 한 푼도 없어지고 이 지경이 되었으니, 나리님 분부대로 죽이거나 살리거나 하옵소서.",{o:1});
-    await say("narr","비장이 본래 추월이라 하면 원수같이 아는 중에, 이 말 듣고 이를 갈고 호령하여 사령에게 분부하되,",{o:1});
-    await say("bijang","네 가서 그년 잡아 오라. 바삐 바삐 잡아 오되, 만일 지체하였다가는 네가 중죄를 당하리라.",{o:1});
-    F.chuIn=1;G.flash=.5;await sleep(300);
-    await say("narr","추월이 끌려와 형틀 옆에 꿇어앉았다. 춘풍은 제 눈을 의심했다. 저 도도하던 추월이.");
-    await say("chu","춘풍이 가져온 돈 소녀가 어찌 아오리까?",{o:1});
-    await say("bijang","여담절각이라 하는 말을 네 아느냐? 불같은 호조 돈을 영문이 물어 주랴, 본관에서 물어 주랴? 백성에게 수렴하랴? 네 이 지경에 무슨 잔말을 하랴?",{o:1});
-    tip("‘여담절각’: ‘네 집 담 때문에 내 소뿔이 부러졌다’는 말. 비장은 춘풍이 망한 책임을 추월의 집에 지워요.");
-    await say("narr","군뢰 등이 두 눈을 부릅뜨고 형장을 높이 들어, 백일청천에 벼락 치듯, 만첩청산 울리듯 금장 소리 호통치며",{o:1});
-    await say("chu","국법도 엄숙하고 관령도 지엄하고 나리님 분부도 엄하오니, 춘풍이 가져온 돈을 영문 분부대로 소녀가 바치리다.",{o:1});
-    await say("bijang","호조에서 공문을 보내 ‘너를 바삐 죽이라’ 하였으되, 네 죄를 네가 알고 ‘돈을 모두 바치마’ 하니 너를 살려 주거니와, 호조 돈 이자를 이 할로 하여 오천 냥을 모두 보내 바치라.",{o:1});
-    await say("chu","십 일 말미를 주옵시면 오천 냥을 바치리다.",{o:1});
-    await say("chunB","오, 오천 냥…! 이 비장이 대체 누구기에 나를 이렇게 살려 준단 말인가.",{think:1});
-    F.chuIn=0;
-    await say("bijang","열흘 안으로 모두 받아 가지고 서울로 올라오라. 내가 또한 특별한 일이 있어서 먼저 떠나 올라가니, 네가 서울에 올라오거든 문안하여라.",{o:1});
-    await say("chunB","나리님 덕택으로 호조 돈을 갚았습니다.",{o:1});
+    await trialChun(G.player,true);
+    await trialChu(false);
     G.purse=5000;updateHUD();toast("오천 냥","추월이 열흘 만에 모두 바쳤다");
     await card("열흘 뒤","서울로","춘풍은 오천 냥을 말 열두 필에 싣고 서울로 향했다. 호조 빚 이천 냥을 갚아도 삼천 냥이 남는다.\n새 옷을 사 입고, 새 갓을 썼다. 발걸음이 가벼웠다.\n…아내에게는 뭐라고 말할까?","c4");
     const m=buildHanyang();G.map=m;G.night=true;G.lights=[[7,19]];G.lock=false;place(9,15,"d","chun");G.f={};setMood("home");
@@ -2102,7 +2238,7 @@ async function c4Kitchen(){
     await say("chun","내일 호조 돈을 다 바치고 다시 평양으로 내려갈 제, 너도 함께 따라가서 평양 감영 내 작은집에 가서 음식 좀 먹어 보소.",{o:1});
     tip("거지로 부려지던 추월의 집을 ‘내 작은집(첩의 집)’이라 부풀리는 허세. 잘못을 전혀 뉘우치지 않았어요.");
     await say("narr","아내는 아무 말 없이 상을 물렸다. 그리고 해가 지자, 어디론가 사라졌다.");
-    F.meal=1;G.flash=.4;const w=N("wife");w.look="bijang";w.name="회계 비장";setNear(w,[[9,18],[9,17],[8,21],[9,20]]);faceTo(w);F.bij=1;
+    F.meal=1;sfx("poof");G.flash=.4;const w=N("wife");w.look="bijang";w.name="회계 비장";setNear(w,[[9,18],[9,17],[8,21],[9,20]]);faceTo(w);F.bij=1;
     await say("narr","황혼 무렵, 대문간에 누군가 흐늘거리며 들어선다. 전립에 동달이… 평양의 그 회계 비장이다!");
     await say("chun","저, 저 비장이 어찌 여기에…!",{think:1});
     setObj("대문 안에 선 회계 비장에게 가자");return;
@@ -2117,7 +2253,7 @@ async function c4Kitchen(){
     await say("narr","하니, 그제야 춘풍이 아내가 어디서 죽 먹는 양을 볼까 하여 여기저기 살펴보며 얼른얼른 먹는지라.",{o:1});
     const w=N("wife");
     await say("narr","이런 거동 저런 거동 다 본 연후에, 회계 비장 의복 벗어 놓고 여자 의복 다시 입고 웃으면서,",{o:1});
-    G.flash=1;w.look="wife";w.name="춘풍의 아내";await sleep(500);
+    sfx("poof");G.flash=1;w.look="wife";w.name="춘풍의 아내";await sleep(500);
     await say("wife","이 멍청아!",{o:1});
     await say("narr","춘풍의 등을 밀치면서 하는 말이,",{o:1});
     await say("wife","안목이 그다지 무도한가?",{o:1});
