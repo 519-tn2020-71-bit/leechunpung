@@ -147,6 +147,21 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 #mini{position:fixed;right:12px;top:calc(58px + env(safe-area-inset-top,0px));z-index:4;border:2px solid var(--ink2);box-shadow:0 3px 0 rgba(0,0,0,.35);background:#1b1a17;image-rendering:pixelated;display:none;pointer-events:none}
 @media (max-width:560px){#mini{top:auto;bottom:calc(120px + env(safe-area-inset-bottom,0px));right:10px;transform:scale(.8);transform-origin:right bottom}}
 body.talking #mini{opacity:.35}
+.mg .psg{position:relative;background:#f7f0dc;border:2px solid var(--ink2);padding:10px 40px 10px 12px;margin:8px 0;font-family:var(--display);font-size:16.5px;line-height:1.9;max-height:12em;overflow:auto}
+.mg .psg .orig,.mg .sugi .orig{position:absolute;right:8px;top:6px;display:inline-grid;place-items:center;width:26px;height:26px;border:2px solid var(--seal);color:var(--seal);font-family:var(--display);font-size:13px;transform:rotate(-6deg)}
+.mg .psg .hit{background:#dfe6ef;color:var(--indigo);font-weight:700;border-radius:3px;padding:0 2px}
+.histlnk{margin-left:auto;font-family:var(--ui);font-size:12px;background:transparent;border:1.5px solid var(--line);padding:2px 8px;color:var(--muted)}
+.histlnk:hover{border-color:var(--indigo);color:var(--indigo)}
+.dlg .orig+.histlnk{margin-left:8px}
+#hist{z-index:90}
+#hist .rec.plain{border-left-color:var(--line);color:#4a3d2c}
+#hist .seal-s{width:18px;height:18px;font-size:10px;vertical-align:middle}
+.mg .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px}
+.mg .cards button{display:grid;gap:2px;text-align:left;background:#6d4b2c;color:#f1ead8;border:2px solid var(--ink2);padding:10px;min-height:70px;font-family:var(--ui);font-size:13px}
+.mg .cards button b{font-family:var(--display);font-weight:400;font-size:17px}
+.mg .cards button.on{background:#f7f0dc;color:var(--text);border-color:var(--gold);animation:stIn .25s}
+.mg .cards button.on span{color:var(--muted)}
+.mg .picks button:disabled{opacity:.6;cursor:default}
 /* 알림 */
 .tip{position:fixed;left:50%;transform:translateX(-50%);top:calc(74px + env(safe-area-inset-top,0px));width:min(560px,calc(100% - 24px));background:#2b4a6f;color:#f1ead8;border:2px solid #16283d;box-shadow:0 4px 0 rgba(0,0,0,.35);padding:10px 14px;font-family:var(--ui);font-size:14px;line-height:1.6;z-index:30;display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .tip i{font-style:normal;font-family:var(--display);font-size:14px;border:1.5px solid #f1ead8;padding:0 5px;flex:none;margin-top:2px}
@@ -768,9 +783,12 @@ function ambient(dt){
   if(!G.night){ambT.bird-=dt;if(ambT.bird<=0){ambT.bird=9+Math.random()*10;const y0=cam.y+14+Math.random()*50,n=3+Math.floor(Math.random()*3);for(let i=0;i<n;i++)addPart({k:"bird",x:cam.x-20-i*9,y:y0+(i%2)*6+i*2,vx:34+Math.random()*4,vy:-1,life:(VW+60)/34,ph:Math.random()*6})}}
   if(G.petals&&!G.night){ambT.petal-=dt;if(ambT.petal<=0){ambT.petal=0.45;addPart({k:"petal",x:cam.x+Math.random()*VW,y:cam.y-4,vx:7+Math.random()*5,vy:9+Math.random()*5,life:VH/9,ph:Math.random()*6,c:Math.random()<0.6?"#f4c6d2":"#fbeef0"})}}
   if(G.snow){ambT.snow-=dt;if(ambT.snow<=0){ambT.snow=0.12;addPart({k:"snow",x:cam.x+Math.random()*VW,y:cam.y-4,vx:-3+Math.random()*4,vy:10+Math.random()*6,life:VH/9,ph:Math.random()*6})}}
+  if(G.partyAt){ambT.note=(ambT.note||0)-dt;if(ambT.note<=0){ambT.note=0.3;addPart({k:"note",x:G.partyAt[0]+Math.random()*28-14,y:G.partyAt[1],vx:0,vy:-12-Math.random()*5,life:2.4,ph:Math.random()*6,c:["#f2c94c","#e9a4b8","#9cc7dc","#ffffff"][Math.floor(Math.random()*4)]})}}
   if(G.night&&!G.snow){ambT.fly-=dt;if(ambT.fly<=0){ambT.fly=0.5;addPart({k:"fly",x:cam.x+Math.random()*VW,y:cam.y+VH*0.3+Math.random()*VH*0.6,life:5,ph:Math.random()*6})}}
   for(let i=PARTS.length-1;i>=0;i--){const p=PARTS[i];p.age+=dt;if(p.age>=p.life){PARTS.splice(i,1);continue}
     if(p.k==="fly"){p.x+=Math.sin(p.age*1.7+p.ph)*8*dt;p.y+=Math.cos(p.age*1.3+p.ph)*6*dt}
+    else if(p.k==="coin"){if(p.age>=0){const q=Math.min(1,p.age/p.life);p.x=p.x0+(p.x1-p.x0)*q;p.y=p.y0+(p.y1-p.y0)*q-Math.sin(Math.PI*q)*22}}
+    else if(p.k==="note"){p.x+=Math.sin(p.age*3+p.ph)*10*dt;p.y+=p.vy*dt}
     else if(p.k==="petal"||p.k==="snow"){p.x+=(p.vx+Math.sin(p.age*2+p.ph)*6)*dt;p.y+=p.vy*dt}
     else{p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.k==="dust"){p.vy+=10*dt;p.vx*=0.92}}}
 }
@@ -781,6 +799,8 @@ function drawParts(t){const cx=G.cam.x,cy=G.cam.y;
     else if(p.k==="bird"){ctx.globalAlpha=1;const up=Math.sin(t*12+p.ph)>0;R(x,y,1,1,"#2a2622");R(x-2,y+(up?-1:1),2,1,"#2a2622");R(x+1,y+(up?-1:1),2,1,"#2a2622")}
     else if(p.k==="petal"){ctx.globalAlpha=0.9;R(x,y,Math.sin(p.age*5+p.ph)>0?2:1,1,p.c)}
     else if(p.k==="snow"){ctx.globalAlpha=0.85;R(x,y,Math.sin(p.age*3+p.ph)>0?2:1,Math.sin(p.age*3+p.ph)>0?1:2,"#f6f8fb")}
+    else if(p.k==="coin"){if(p.age<0)continue;ctx.globalAlpha=1;R(x-1,y-1,3,3,"#1d1813");R(x-1,y-1,2,2,"#f2c94c");R(x,y,1,1,"#b8952f")}
+    else if(p.k==="note"){ctx.globalAlpha=k<0.15?k/0.15:1-Math.max(0,(k-0.6)/0.4);R(x,y,2,2,p.c);R(x+1,y-5,1,5,p.c);R(x+2,y-5,2,1,p.c)}
     else if(p.k==="fly"){const a=0.5+0.5*Math.sin(t*4+p.ph);ctx.globalAlpha=a*(k<0.1?k*10:k>0.8?(1-k)*5:1);R(x,y,1,1,"#fff3a0");ctx.globalAlpha*=0.35;R(x-1,y-1,3,3,"#f2e070")}
   }ctx.globalAlpha=1}
 function wanderNPCs(dt){
@@ -830,7 +850,7 @@ function draw(t){
   LABELS.length=0;objLabels(cx,cy);
   const ents=m.npcs.filter(visible).concat(G.demo?[]:[G.player]);
   for(const e of ents){const [px,py]=entPos(e);dr.push({y:py+T+0.5,f:()=>{
-    let sx=Math.round(px-cx);const sy=Math.round(py-cy),ph=e.ph||0;if(e.hurt>0){e.hurt-=1/60;sx+=Math.round(Math.sin(t*70)*2)}
+    let sx=Math.round(px-cx);let sy=Math.round(py-cy);const ph=e.ph||0;if(e.dance){sy-=Math.round(Math.abs(Math.sin(t*5+ph))*3);e.dir=["d","l","d","r"][Math.floor(t*2.2+ph)%4]}if(e.lunge){const q=(performance.now()/1000-e.lunge.t0)/0.26;if(q>=1)e.lunge=null;else{const k=Math.sin(Math.PI*q)*5;sx+=Math.round(e.lunge.dx*k);sy+=Math.round(e.lunge.dy*k)}}if(e.hurt>0){e.hurt-=1/60;sx+=Math.round(Math.sin(t*70)*2)}
     const av=AV[AVA_OF[e.look]];let topY;
     if(av)topY=drawAvatar(e,av,sx,sy,t);
     else{
@@ -859,7 +879,7 @@ function drawLabels(t){
   octx.font="600 12px 'IBM Plex Sans KR','Malgun Gothic',sans-serif";octx.textAlign="center";octx.textBaseline="middle";
   const near=(l)=>{const p=G.player;const [px,py]=entPos(p);return Math.abs(l.x-(px-G.cam.x+8))<3*T&&Math.abs(l.y-(py-G.cam.y))<4*T};
   for(const f of FX){if(f.k!=="hit")continue;const p=(t-f.t0)/f.dur;if(p<0||p>=1)continue;const [px,py]=entPos(f.e);const x=(px-G.cam.x+8)*SC,y=(py-G.cam.y-46)*SC-p*26;
-    octx.globalAlpha=1-p;octx.font="800 26px 'Song Myung',serif";octx.lineWidth=5;octx.strokeStyle="#1d1813";octx.strokeText("딱!",x+18,y);octx.fillStyle="#f2c94c";octx.fillText("딱!",x+18,y);
+    octx.globalAlpha=1-p;octx.font="800 26px 'Song Myung',serif";octx.lineWidth=5;octx.strokeStyle="#1d1813";const wd=f.word||"딱!";octx.strokeText(wd,x+18,y);octx.fillStyle=f.col||"#f2c94c";octx.fillText(wd,x+18,y);
     if(f.count){octx.font="700 13px 'IBM Plex Sans KR',sans-serif";octx.lineWidth=4;octx.strokeText(f.count+"대",x+18,y+22);octx.fillStyle="#fff";octx.fillText(f.count+"대",x+18,y+22)}octx.globalAlpha=1}
   octx.font="600 12px 'IBM Plex Sans KR','Malgun Gothic',sans-serif";
   for(const l of LABELS){
@@ -883,7 +903,7 @@ const NAMES={narr:"",wife:"춘풍의 아내",bijang:"회계 비장",chun:"이춘
 function setBodyTalking(on){document.body.classList.toggle("talking",on)}
 function recAdd(who,t){if(!G.rec.some(r=>r.t===t)){G.rec.push({ch:G.ch,route:G.route,who:NAMES[who]||who,t,g:glossOf(t)||""});$("#nRec").textContent=G.rec.length;writeSave()}}
 function say(who,text,opt){
-  opt=opt||{};if(who!=="narr"||opt.o)G.lastLine={who:opt.name||NAMES[who]||"",t:text};
+  opt=opt||{};histAdd(who,text,opt);if(who!=="narr"||opt.o)G.lastLine={who:opt.name||NAMES[who]||"",t:text};
   return new Promise(res=>{
     UI.modal=true;setBodyTalking(true);
     const name=who==="narr"?"":(opt.name||NAMES[who]||who);
@@ -907,7 +927,7 @@ function choose(who,text,opts,opt){G.lastLine=null;
     UI.modal=true;setBodyTalking(true);
     const name=who==="narr"?"":(opt.name||NAMES[who]||who);
     const el=document.createElement("div");el.className="dlg"+(PORT[who]?" hasp":"");el.style.cursor="default";
-    el.innerHTML=portHTML(who)+`<div class="nm">${name?`<b>${esc(name)}</b>`:""}${opt.think?`<span class="think">속마음</span>`:""}</div><div class="tx">${esc(text)}</div><div class="chs">${opts.map((o,n)=>`<button data-i="${n}"><span class="k">${n+1}</span>${esc(o)}</button>`).join("")}</div>`;
+    el.innerHTML=portHTML(who)+`<div class="nm">${name?`<b>${esc(name)}</b>`:""}${opt.think?`<span class="think">속마음</span>`:""}<button class="histlnk" data-hist>앞 대화 보기</button></div><div class="tx">${esc(text)}</div><div class="chs">${opts.map((o,n)=>`<button data-i="${n}"><span class="k">${n+1}</span>${esc(o)}</button>`).join("")}</div>`;
     $("#ui").appendChild(el);
     let sel=0;const bs=[...el.querySelectorAll(".chs button")];
     const mark=()=>bs.forEach((b,n)=>b.classList.toggle("sel",n===sel));mark();
@@ -985,7 +1005,7 @@ function orderPuzzle(title,ev){
     const order=ev.map((e,i)=>i).sort((a,b)=>((a*37+seed)%11)-((b*37+seed)%11));
     if(order.every((x,i)=>x===i))order.push(order.shift());
     const paint=()=>{const done=got.length===ev.length;
-      v.innerHTML=`<div class="sheet ord"><span class="eb">줄거리 잇기</span><h2>${esc(title)}</h2><p class="note">이 장에서 일어난 일을 순서대로 눌러 이어 보세요.</p>
+      v.innerHTML=`<div class="sheet ord"><span class="eb">줄거리 잇기</span><h2>${esc(title)}</h2><p class="note">이 장에서 일어난 일을 순서대로 눌러 이어 보세요. 기억이 안 나면 앞 대화를 다시 볼 수 있어요.</p><div class="row" style="justify-content:flex-start;margin-top:0">${HISTBTN}</div>
       <ol>${got.map(i=>`<li>${esc(ev[i])}</li>`).join("")}${done?"":`<li class="empty">${got.length?"다음 사건은?":"가장 먼저 일어난 일은?"}</li>`}</ol>
       ${done?`<p class="note">줄거리를 복원했어요.</p><div class="row"><button class="btn pri" data-go="1">다음으로 ▶</button></div>`:`<div class="pool">${order.filter(i=>!got.includes(i)).map(i=>`<button data-e="${i}">${esc(ev[i])}</button>`).join("")}</div>`}</div>`};
     paint();
@@ -1103,6 +1123,35 @@ function drawNav(t){
   const [px,py]=entPos(G.player);dot(Math.round((px+8)/T*s),Math.round((py+8)/T*s),"#ffffff",2);
 }
 addEventListener("keydown",ev=>{if(ev.code==="KeyM"&&!UI.modal&&!G.demo){G.nav=!G.nav;writeSave()}});
+
+/* ═════════ 앞 대화 다시 보기 ═════════ */
+const HISTBTN='<button class="btn" data-hist>앞 대화 다시 보기</button>';
+function histAdd(who,text,opt){G.hist=G.hist||[];const nm=who==="narr"?"":(opt.name||NAMES[who]||who);G.hist.push({nm,t:text,o:!!opt.o,th:!!opt.think});if(G.hist.length>200)G.hist.shift()}
+function openHist(){
+  if($("#hist"))return;const prev=UI.onKey;
+  const v=document.createElement("div");v.className="veil";v.id="hist";
+  const L=(G.hist||[]);
+  v.innerHTML=`<div class="sheet"><button class="close" data-hclose>닫기</button><span class="eb">앞 대화 다시 보기</span><h2>이 장에서 나눈 말</h2><p class="note">위에서 아래로 시간 순서예요. 붉은 낙관(原)이 원문이에요.</p>
+    <div class="hlist">${L.length?L.map(x=>`<div class="rec${x.o?"":" plain"}"><small>${esc(x.nm||"서술")}${x.th?" · 속마음":""}${x.o?' <span class="seal-s">原</span>':""}</small>${esc(x.th?"‘"+x.t+"’":x.t)}</div>`).join(""):'<p class="note">아직 나눈 말이 없어요.</p>'}</div></div>`;
+  $("#ui").appendChild(v);const list=v.querySelector(".sheet");list.scrollTop=list.scrollHeight;
+  const close=()=>{v.remove();UI.onKey=prev};
+  v.addEventListener("click",ev=>{if(ev.target===v||ev.target.closest("[data-hclose]"))close()});
+  UI.onKey=ev=>{if(["Escape","Enter","KeyE","Space"].includes(ev.code))close();return true};
+}
+document.addEventListener("click",ev=>{if(ev.target.closest("[data-hist]")){ev.stopPropagation();ev.preventDefault();openHist()}},true);
+
+/* ═════════ 장면 연출 ═════════ */
+function lungeAt(a,b){const dx=Math.sign(b.tx-a.tx),dy=Math.sign(b.ty-a.ty);a.dir=dx>0?"r":dx<0?"l":dy<0?"u":"d";a.lunge={t0:performance.now()/1000,dx,dy}}
+/* 머리채를 잡고 치는 장면: 원문 그대로 '휘휘 칭칭', '이리 치고', '저리 치며' */
+async function scuffle(att,vic,words){
+  const p=G.player;if(att!==p&&Math.abs(att.tx-vic.tx)+Math.abs(att.ty-vic.ty)>1)setNear(att,[[vic.tx-1,vic.ty],[vic.tx+1,vic.ty],[vic.tx,vic.ty+1],[vic.tx,vic.ty-1]]);
+  vic.dir=att.tx<vic.tx?"l":att.tx>vic.tx?"r":att.ty<vic.ty?"u":"d";
+  for(const w of words){lungeAt(att,vic);await sleep(130);sfx("slap");vic.hurt=0.35;G.shake=Math.max(G.shake||0,3);
+    FX.push({k:"hit",e:vic,t0:performance.now()/1000,dur:0.7,word:w,col:"#f07a6a"});await sleep(560)}
+}
+/* 엽전이 날아가는 연출 */
+function coinsFly(from,to,n){const [ax,ay]=entPos(from),[bx,by]=entPos(to);
+  for(let i=0;i<(n||6);i++){const pr={k:"coin",x0:ax+8,y0:ay-4,x1:bx+8+Math.random()*6-3,y1:by-2,x:ax+8,y:ay-4,life:0.55};addPart(pr);pr.age=-i*0.08}}
 
 /* ═════════ 원문 현대어 풀이 ═════════ */
 const GLOSS=[
@@ -1465,45 +1514,59 @@ function sugiGame(ver,asWriter){
   });
 }
 
-/* 평양 가는 길: 원문에 나온 순서대로 지나간 곳 잇기 */
+/* 평양 가는 길: 말을 달려 지나는 곳을 하나씩 만나고, 춘풍의 마음을 헤아리기 */
 function routeGame(){
   return new Promise(res=>{
     const R=["연소문","무학재","청석골","동선령","황주 병영","중화","형제교","십리장림","대동강","대동문"];
-    const order=[5,0,8,2,6,3,9,1,7,4];let i=0;
+    const Q=[["의기양양하고 들떠 있다",1,"맞아요. ‘의기양양 내려갈 때’라고 했고, 봄 경치 속 버들마저 ‘우쭐우쭐 춤을 춘다’고 했지요. 울며 말리던 아내와 달리 춘풍은 신이 나 있어요."],
+      ["아내에게 미안해 마음이 무겁다",0,"길을 떠나는 대목에 미안해하는 모습은 없어요. 앞 대화를 다시 보며 춘풍이 어떤 모습으로 내려가는지 찾아보세요."],
+      ["호조 빚을 갚을 걱정에 두렵다",0,"빚 걱정은커녕 좌우 산천을 구경하며 내려가요. 앞 대화를 다시 보세요."]];
+    let i=0,stage="ride",msg="",ok=false;
     const v=mgOpen("");const box=v.querySelector(".sheet");
     const paint=()=>{
-      box.innerHTML=`<span class="eb">평양 가는 길</span><h2>한양에서 평양까지</h2><p class="note">원문은 춘풍이 지나간 곳을 차례로 늘어놓아요. 서울 성문을 나서서 평양 대동문에 들기까지, <b>지나간 순서대로</b> 눌러 길을 이어 보세요.</p>
-      <div class="route">${R.map((n,k)=>`<span class="stop${k<i?" on":""}${k===i?" cur":""}"><i></i><b>${k<i?esc(n):"?"}</b></span>`).join("")}</div>
-      ${i<R.length?`<div class="picks">${order.filter(k=>k>=i).map(k=>`<button data-r="${k}">${esc(R[k])}</button>`).join("")}</div>`:`<p class="note">평양에 닿았어요.</p><div class="row"><button class="btn pri" data-go>계속 ▶</button></div>`}`;
+      box.innerHTML=`<span class="eb">평양 가는 길</span><h2>한양에서 평양까지</h2>
+      <p class="note">${stage==="ride"?"‘말 달리기’를 눌러(또는 → 키) 평양까지 가 보세요. 원문에 나오는 곳을 차례로 지나가요.":"평양에 닿았어요. 지나온 길을 떠올리며 물음에 답해 보세요."}</p>
+      <div class="route">${R.map((n,k)=>`<span class="stop${k<=i?" on":""}${k===i?" cur":""}"><i></i><b>${k===i&&stage==="ride"?"🐎 ":""}${k<=i?esc(n):"·"}</b></span>`).join("")}</div>
+      ${stage==="ride"?`<div class="row" style="justify-content:center"><button class="btn pri" data-run>말 달리기 ▶</button></div>`:
+        `<p style="margin-top:12px"><b>평양 가는 길의 춘풍은 어떤 마음일까요?</b></p><div class="picks">${Q.map(([t],k)=>`<button data-q="${k}" ${ok?"disabled":""}>${esc(t)}</button>`).join("")}</div>
+        <div class="row" style="justify-content:${ok?"flex-end":"flex-start"}">${ok?'<button class="btn pri" data-go>계속 ▶</button>':HISTBTN}</div>`}
+      ${msg?`<div class="resp">${msg}</div>`:""}`;
     };
+    const run=()=>{if(stage!=="ride")return;i++;sfx(i>=R.length-1?"correct":"step");if(i>=R.length-1)stage="q";paint()};
     paint();
-    box.addEventListener("click",e=>{
-      const b=e.target.closest("[data-r]");if(b){if(+b.dataset.r===i){i++;sfx(i>=R.length?"correct":"step");paint()}else{sfx("wrong");shk(b)}return}
-      if(e.target.closest("[data-go]")){mgClose(v);res()}
+    box.addEventListener("click",ev=>{
+      if(ev.target.closest("[data-run]")){run();return}
+      const q=ev.target.closest("[data-q]");if(q&&!ok){const [,right,why]=Q[+q.dataset.q];msg=why;if(right){ok=true;sfx("correct")}else{sfx("wrong");shk(q)}paint();return}
+      if(ev.target.closest("[data-go]")){mgClose(v);res()}
     });
-    UI.onKey=()=>true;
+    UI.onKey=ev=>{if(stage==="ride"&&["ArrowRight","KeyD","Space","Enter"].includes(ev.code))run();else if(ok&&["Enter","Space"].includes(ev.code)){mgClose(v);res()}return true};
   });
 }
 
-/* 추월의 방: 원문에 나오는 살림만 고르기 */
+/* 추월의 방: 방을 둘러보며 살림을 하나씩 살피고, 그 뜻을 헤아리기 */
 function roomGame(){
   return new Promise(res=>{
-    const items=[["놋촛대",1],["가야금",0],["요강",1],["쟁기",0],["재떨이",1],["청동화로",1],["물레",0],["화류장",1],["가마솥",0],["원앙금침",1],["장기판",0],["화문석",1],["옷걸이",1],["활과 화살",0]];
-    const pick=new Set();let msg="";
+    const items=[["원앙금침 잣베개","원앙을 수놓은 비단 이불과 베개"],["국화 새긴 완자창","국화를 새겨 넣은 멋진 창살"],["산수병의 미인도","산수와 미인을 그린 병풍"],["출사표·적벽부","벽마다 붙여 둔 이름난 글"],["놋촛대 광명두리","놋쇠 촛대와 등잔"],["청동화로 수박화로","청동 화로와 수박 모양 화로"],["삼층 화류장","붉은 나무로 짠 삼층 장"],["용담 백담 화문석","꽃무늬를 넣은 고급 돗자리"]];
+    const Q=[["한량들이 쓴 돈으로 추월이 사치스럽게 산다. 춘풍의 돈도 곧 이 방으로 흘러들 것이다.",1,"맞아요. 앞에서 ‘팔도의 소년 한량 한번 보면 수 삼백 석 쓰기를 물같이 쓰는구나’라고 했지요. 이 호화로운 방은 한량들의 돈으로 꾸민 것이고, 이제 춘풍의 차례예요."],
+      ["추월이 알뜰하게 살림을 꾸려 왔다.",0,"원앙금침, 화류장, 화문석… 알뜰하다기엔 너무 호화로워요. 앞 대화에서 한량들이 추월에게 돈을 어떻게 쓴다고 했는지 다시 보세요."],
+      ["춘풍이 장사로 번 돈으로 사 준 물건들이다.",0,"춘풍은 이제 막 추월의 집에 처음 들어섰어요. 이 방은 그 전부터 이렇게 꾸며져 있었지요."]];
+    const seen=new Set();let msg="",ok=false;
     const v=mgOpen("");const box=v.querySelector(".sheet");
-    const paint=()=>{
-      box.innerHTML=`<span class="eb">추월의 방 살펴보기</span><h2>무엇으로 채운 방일까</h2><p class="note">원문은 추월의 방을 살림살이 이름으로 줄줄이 늘어놓아요. 방금 읽은 원문에 <b>나온 살림만</b> 모두 고르세요.</p>
-      <div class="picks grid">${items.map(([t],k)=>`<button data-p="${k}" class="${pick.has(k)?"on":""}">${pick.has(k)?"☑":"☐"} ${esc(t)}</button>`).join("")}</div>
-      <div class="row"><button class="btn pri" data-chk>확인</button></div>${msg?`<div class="resp">${msg}</div>`:""}`;
+    const paint=()=>{const all=seen.size>=items.length;
+      box.innerHTML=`<span class="eb">추월의 방 살펴보기</span><h2>추월의 방</h2>
+      <p class="note">방 안 곳곳을 눌러 무엇이 있는지 살펴보세요. (${seen.size}/${items.length})</p>
+      <div class="cards">${items.map(([n,g],k)=>`<button data-it="${k}" class="${seen.has(k)?"on":""}">${seen.has(k)?`<b>${esc(n)}</b><span>${esc(g)}</span>`:"<b>?</b><span>살펴보기</span>"}</button>`).join("")}</div>
+      ${all?`<p style="margin-top:12px"><b>이렇게 꾸민 추월의 방은 무엇을 보여 줄까요?</b></p><div class="picks">${Q.map(([t],k)=>`<button data-q="${k}" ${ok?"disabled":""}>${esc(t)}</button>`).join("")}</div>
+        <div class="row" style="justify-content:${ok?"flex-end":"flex-start"}">${ok?'<button class="btn pri" data-go>계속 ▶</button>':HISTBTN}</div>`:""}
+      ${msg?`<div class="resp">${msg}</div>`:""}`;
     };
     paint();
-    box.addEventListener("click",e=>{
-      const p=e.target.closest("[data-p]");if(p){const k=+p.dataset.p;pick.has(k)?pick.delete(k):pick.add(k);sfx("click");paint();return}
-      if(e.target.closest("[data-chk]")){const want=items.map((x,k)=>x[1]?k:-1).filter(k=>k>=0);const miss=want.filter(k=>!pick.has(k)).length,extra=[...pick].filter(k=>!items[k][1]).length;
-        if(!miss&&!extra){sfx("correct");mgClose(v);tip("판소리계 소설은 살림살이, 옷차림, 음식 이름을 줄줄이 늘어놓아(나열) 장면을 생생하게 보여 줘요. 춘풍의 돈이 결국 이 방을 채우는 데 들어가지요.");res();return}
-        sfx("wrong");msg=`${miss?`빠진 살림이 ${miss}가지`:""}${miss&&extra?", ":""}${extra?`원문에 없는 것이 ${extra}가지`:""} 있어요.`;shk(box);paint()}
+    box.addEventListener("click",ev=>{
+      const it=ev.target.closest("[data-it]");if(it){seen.add(+it.dataset.it);sfx("click");paint();return}
+      const q=ev.target.closest("[data-q]");if(q&&!ok){const [,right,why]=Q[+q.dataset.q];msg=why;if(right){ok=true;sfx("correct")}else{sfx("wrong");shk(q)}paint();return}
+      if(ev.target.closest("[data-go]")){mgClose(v);tip("판소리계 소설은 살림살이, 옷차림, 음식 이름을 줄줄이 늘어놓아(나열) 장면을 생생하게 보여 줘요. 추월의 방도 그렇게 그려졌지요.");res()}
     });
-    UI.onKey=()=>true;
+    UI.onKey=ev=>{if(ok&&["Enter","Space"].includes(ev.code)){box.querySelector("[data-go]").click()}return true};
   });
 }
 
@@ -1543,7 +1606,9 @@ async function w1Chun(n){
     if(c===0)break;await notOriginal("wife","원작의 아내는 춘풍이 제 손으로 써 준 ‘수기’를 떠올리게 해요. 앞에서 받아 둔 문서를 기억해 보세요.")}
   await say("narr","춘풍 아내 이른 말이,",{o:1});
   await say("wife","연전에 치패하여 일푼전 일두속을 참견 아니 할 뜻으로 비부지재라 수기 써서 내 함롱에 넣었거든 그 사이 잊었는가. 의식을 내게 믿고, 편안히 앉아 먹고 부디부디 가지 마소.",{o:1});
+  setMood("sad");
   await say("narr","춘풍이 이 말 듣고 대노하여 어질고 착한 아내 머리채를 선전시전 비단 감듯 휘휘 칭칭 감아쥐고, 이리 치고 저리 치며,",{o:1});
+  await scuffle(n,G.player,["휘휘 칭칭","이리 치고","저리 치며"]);
   await say("chun","천리원정 장삿길에 요망한 계집년이 잔말을 이리 하니, 이런 변 또 있는가?",{o:1});
   await say("narr","제 아내 욱지르고 집안 재물 다 털어서 말에 싣고 떠날 적에 불쌍하다, 춘풍 아내 아무리 여러 말로 말리어도 막무가내일러라.",{o:1});
   tip("제 손으로 쓴 수기를 들이민 아내의 머리채를 잡고 때리며 ‘요망한 계집년’이라 욕하는 춘풍. 남편의 권위를 내세워 아내에게 폭력을 휘두르는 모습으로, 비평문의 근거가 되는 장면이에요.");
@@ -1621,7 +1686,9 @@ async function c1Leave(){
   await say("wife","연전에 치패하여 일푼전 일두속을 참견 아니 할 뜻으로 비부지재라 수기 써서 내 함롱에 넣었거든 그 사이 잊었는가. 의식을 내게 믿고, 편안히 앉아 먹고 부디부디 가지 마소.",{o:1});
   for(;;){const c=await choose("chun","아내가 사오 년 전의 수기를 들이민다. 어떻게 할까?",["“내 손으로 쓴 수기다. 약속을 지키겠네.”","화를 내며 아내를 윽박지르고 떠난다."]);
     if(c===1)break;await notOriginal("chun","원작의 춘풍은 제 손으로 쓴 수기를 지키지 않아요. 오히려 크게 화를 내며 아내에게 손찌검을 하고 떠나지요.")}
+  setMood("sad");
   await say("narr","춘풍이 이 말 듣고 대노하여 어질고 착한 아내 머리채를 선전시전 비단 감듯 휘휘 칭칭 감아쥐고, 이리 치고 저리 치며,",{o:1});
+  await scuffle(G.player,N("wife"),["휘휘 칭칭","이리 치고","저리 치며"]);
   await say("chun","천리원정 장삿길에 요망한 계집년이 잔말을 이리 하니, 이런 변 또 있는가?",{o:1});
   await say("narr","제 아내 욱지르고 집안 재물 다 털어서 말에 싣고 떠날 적에 불쌍하다, 춘풍 아내 아무리 여러 말로 말리어도 막무가내일러라.",{o:1});
   tip("제 손으로 쓴 수기를 들이민 아내의 머리채를 잡고 때리며 ‘요망한 계집년’이라 욕하는 춘풍. 남편의 권위를 내세워 아내에게 폭력을 휘두르고, 제가 쓴 수기까지 어겼어요. 비평문의 근거가 되는 장면이에요.");
@@ -1668,6 +1735,14 @@ function gPluck(f,t,dur,vel){const ac=AU.ctx;
   g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vel,t+0.006);g.gain.exponentialRampToValueAtTime(0.0008,t+dur);
   auOut(g,true);o.start(t);o2.start(t);o.stop(t+dur+0.05);o2.stop(t+dur+0.05)}
 /* 대금: 숨이 섞인 긴 소리, 떨림 */
+/* 해금: 활로 켜는 소리, 살짝 밀어 올리는 음과 떨림 */
+function gHaegeum(f,t,dur,vel){const ac=AU.ctx;
+  const o=ac.createOscillator(),g=ac.createGain(),lp=ac.createBiquadFilter(),bp=ac.createBiquadFilter(),l=ac.createOscillator(),lg=ac.createGain();
+  o.type="sawtooth";o.frequency.setValueAtTime(f*0.97,t);o.frequency.exponentialRampToValueAtTime(f,t+0.09);
+  l.frequency.value=6;lg.gain.setValueAtTime(0,t);lg.gain.linearRampToValueAtTime(f*0.014,t+Math.min(0.5,dur*0.6));l.connect(lg);lg.connect(o.frequency);
+  lp.type="lowpass";lp.frequency.value=1500;lp.Q.value=1.5;bp.type="peaking";bp.frequency.value=900;bp.gain.value=5;o.connect(bp);bp.connect(lp);lp.connect(g);
+  g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vel,t+Math.min(0.08,dur*0.3));g.gain.setValueAtTime(vel*0.85,t+dur*0.7);g.gain.exponentialRampToValueAtTime(0.0008,t+dur);
+  auOut(g,false);o.start(t);l.start(t);o.stop(t+dur+0.05);l.stop(t+dur+0.05)}
 function gFlute(f,t,dur,vel){const ac=AU.ctx;
   const o=ac.createOscillator(),o2=ac.createOscillator(),g=ac.createGain(),lp=ac.createBiquadFilter(),l=ac.createOscillator(),lg=ac.createGain();
   o.type="sine";o2.type="triangle";o.frequency.value=f;o2.frequency.value=f*2;const g2=ac.createGain();g2.gain.value=0.12;
@@ -1694,12 +1769,12 @@ const JANG={
   hwi:{n:8,hits:{0:"덩",2:"덕",3:"덕",4:"쿵",6:"덕",7:"기덕"}}
 };
 const MOODS={
-  title:{base:293.66,scale:[0,2,5,7,9],jang:"gut",eighth:0.27,lead:"pluck",flute:true,vol:0.9,seed:3},
-  hanyang:{base:293.66,scale:[0,2,5,7,9],jang:"gut",eighth:0.26,lead:"pluck",flute:true,vol:0.85,seed:7},
-  pyong:{base:392,scale:[0,2,5,7,9],jang:"sema",eighth:0.2,lead:"pluck",flute:false,vol:0.85,seed:11},
-  sad:{base:220,scale:[0,3,5,7,10],jang:"jin",eighth:0.42,lead:"flute",flute:true,vol:0.8,seed:5},
-  trial:{base:146.83,scale:[0,3,5,7,10],jang:"hwi",eighth:0.17,lead:"pluck",flute:false,vol:0.9,seed:13},
-  home:{base:261.63,scale:[0,2,5,7,9],jang:"gut",eighth:0.3,lead:"flute",flute:true,vol:0.75,seed:17}
+  title:{base:293.66,scale:[0,2,5,7,9],jang:"jin",eighth:0.36,lead:"flute",vol:0.85,seed:3},
+  hanyang:{base:293.66,scale:[0,2,5,7,9],jang:"gut",eighth:0.24,lead:"pluck",vol:0.85,seed:7},
+  pyong:{base:392,scale:[0,2,5,7,9],jang:"sema",eighth:0.17,lead:"pluck",vol:0.8,seed:11},
+  sad:{base:220,scale:[0,3,5,7,10],jang:"jin",eighth:0.46,lead:"haegeum",vol:0.9,seed:5},
+  trial:{base:146.83,scale:[0,3,5,7,10],jang:"hwi",eighth:0.15,lead:"haegeum",vol:0.85,seed:13},
+  home:{base:261.63,scale:[0,2,5,7,9],jang:"gut",eighth:0.33,lead:"flute",vol:0.75,seed:17}
 };
 function makeSong(m){
   let s=m.seed*9301+49297;const rnd=()=>(s=(s*9301+49297)%233280)/233280;
@@ -1719,7 +1794,7 @@ function auTick(){
     const i=AU.step%AU.song.total,t=AU.next,pos=i%J.n,h=J.hits[pos];
     if(h){if(h==="기덕"){gDrum("기",t,0.28);gDrum("덕",t+m.eighth*0.5,0.3)}else gDrum(h,t,h==="덩"||h==="쿵"?0.55:0.32)}
     for(const n of AU.song.notes)if(n.at===i){const f=degFreq(m,n.deg),dur=n.len*m.eighth;
-      if(m.lead==="flute")gFlute(f*2,t,dur*1.05,0.16);else gPluck(f*2,t,Math.max(0.5,dur*1.4),n.accent?0.34:0.26);
+      if(m.lead==="flute")gFlute(f*2,t,dur*1.05,0.16);else if(m.lead==="haegeum")gHaegeum(f*2,t,Math.max(0.18,dur*0.98),0.11);else gPluck(f*2,t,Math.max(0.5,dur*1.4),n.accent?0.34:0.26);
       
       }
     AU.next+=m.eighth;AU.step++}
@@ -1744,7 +1819,7 @@ addEventListener("pointerdown",audioGesture,{capture:true});addEventListener("ke
 function setVol(kind,v){if(kind==="sfx")AU.sfxVol=v;else{AU.musicVol=v;if(AU.ctx&&AU.mood&&AU.on){const m=MOODS[AU.mood];AU.master.gain.setTargetAtTime(0.12*m.vol*v,AU.ctx.currentTime,0.1)}}
   try{const sv=JSON.parse(localStorage.getItem("bijang-rpg-v2")||"{}")||{};sv[kind==="sfx"?"sfxVol":"musicVol"]=v;localStorage.setItem("bijang-rpg-v2",JSON.stringify(sv))}catch(e){}}
 
-const SFXVOL={blip:20,click:18,step:40,page:10,tip:7.5,stitch:14,bubble:13,pull:24,coin:4.6,gain:5,correct:5.5,wrong:15,whack:3.2,gong:1.9,poof:9,splash:5.5,stamp:5.5};
+const SFXVOL={slap:5,blip:20,click:18,step:40,page:10,tip:7.5,stitch:14,bubble:13,pull:24,coin:4.6,gain:5,correct:5.5,wrong:15,whack:3.2,gong:1.9,poof:9,splash:5.5,stamp:5.5};
 /* ═════════ 효과음 (직접 합성) ═════════ */
 function sfx(name){
   if(!AU.sfxOn)return;if(!AU.ctx&&!auInit())return;const ac=AU.ctx;if(ac.state==="suspended")ac.resume();
@@ -1773,6 +1848,7 @@ function sfx(name){
     case"bubble":tone(300+Math.random()*200,0,0.07,"sine",0.07,700+Math.random()*300);break;
     case"stitch":tone(2400,0,0.03,"square",0.03);noise(0,0.04,"highpass",5000,0.05);break;
     case"pull":noise(0,0.1,"bandpass",700,0.07,1.5);tone(200,0,0.08,"triangle",0.04,260);break;
+    case"slap":noise(0,0.07,"bandpass",2200,0.5,1.1);tone(220,0,0.12,"sine",0.25,110);break;
     case"stamp":tone(90,0,0.2,"sine",0.3,50);noise(0,0.06,"lowpass",800,0.2);break;
   }
 }
@@ -1812,7 +1888,7 @@ const ROUTES={
 };
 function place(x,y,dir,look){Object.assign(G.player,{tx:x,ty:y,dir:dir||"d",moving:false,prog:0,look:look||G.player.look})}
 async function startChapter(route,n){
-  G.route=route;G.ch=n;G.f={};G.busy=false;G.demo=false;G.night=false;G.snow=false;G.petals=false;G.lights=[];G.lock=false;G.money=0;G.purseOn=false;G.obj="";
+  G.route=route;G.ch=n;G.f={};G.hist=[];G.partyAt=null;G.busy=false;G.demo=false;G.night=false;G.snow=false;G.petals=false;G.lights=[];G.lock=false;G.money=0;G.purseOn=false;G.obj="";
   if(route==="wife"){G.evid=n===3?["e1","e2","e4","e5","e7"]:[]}
   PARTS.length=0;$("#hud").hidden=false;writeSave();
   const S=(route==="wife"?[null,W1,W2,W3,W4]:[null,C1,C2,C3,C4])[n];
@@ -1900,7 +1976,7 @@ async function w1Madang(n){
   await say("narr","춘풍 아내 생각하되, 이 댁에 부치어서 가장을 살려 내고 추월을 설치하여 보리라.",{o:1});
   tip("‘설치(雪恥)’는 부끄러움을 씻는다는 뜻이에요. 곧 평양 감사가 될 참판의 어머니를 먼저 감동시키는 것, 이것이 아내의 계교예요.");
   await say("wife","좋은 진지를 차려 드리려면 찬값이 필요하다. 가진 건 바느질 솜씨뿐이니, 품을 팔자.",{think:1});
-  F.plan=1;setObj("삯바느질로 찬값을 모으자 (0/3) · 할멈, 주모, 새댁");
+  F.plan=1;setMood("hanyang");setObj("삯바느질로 찬값을 모으자 (0/3) · 할멈, 주모, 새댁");
 }
 async function w1Buy(n,id,item){
   const F=G.f;
@@ -2068,7 +2144,7 @@ async function w2Nopa(){
 }
 async function w2House(){
   const F=G.f;if(F.sawChun)return;
-  const cb=N("chunB"),ch=N("chu");
+  const cb=N("chunB"),ch=N("chu");setMood("sad");G.partyAt=null;
   await say("narr","비장은 떨리는 마음을 누르고 추월의 집 안마당에 들어섰다. 장독대 옆에서 물동이를 내려놓던 사내 하나가 황급히 고개를 숙였다.");
   await say("narr","춘풍의 거동이 기구하고 볼만하다. 봉두난발 덥수룩한데 얼굴조차 안 씻어 더러운 때가 덕지덕지. 십 년이나 안 빤 옷을 도룡도룡 누비어서 그렁저렁 얽어 입었으니, 그 추한 형상에 뉘가 아니 침을 뱉으리오.",{o:1});
   await say("bijang","저 몰골이… 정말 서방님이란 말인가. 새 갓 쓰고 싱글벙글 떠나던 그 사람이.",{think:1});
@@ -2353,7 +2429,7 @@ const C2={
       npc("nopa","nopa","이웃 노파",30,12,"d",async()=>{await say("nopa","추월이 집에 들어가는 사내치고 멀쩡히 나오는 걸 못 봤소. 조심하시오.")},{wander:1})
     );
     pyongExtras(m);
-    obj("chuGate").use=null;
+    obj("chuGate").use=null;G.partyAt=[35*T+8,6*T];
   },
   async intro(){
     await card("제2장","평양, 추월의 집","아내를 뿌리치고 한양을 떠난 춘풍. 말에는 이천오백 냥이 실려 있었다.\n때는 춘삼월, 평양까지 가는 길은 꽃으로 가득했다.","k2");
@@ -2377,6 +2453,7 @@ async function c2Chu(n){
       await notOriginal("chun","원작의 춘풍은 그러지 못했어요. 원문은 이렇게 말합니다. “허랑한 이춘풍이 장사에 뜻이 없고…” 춘풍은 추월에게 곧바로 빠져듭니다.");
     }
     await say("narr","허랑한 이춘풍이 장사에 뜻이 없고 이날부터 이천오백 냥을 마음대로 쓰는구나.",{o:1});
+    const gis=N("gis");if(gis){gis.dance=1}
     await say("narr","밤마다 잔치, 낮마다 선물. 추월은 교태를 부리며 하나씩 조르기 시작했다.");
     const items=[
       ["비단 옷감","통한단 쌍문초, 도리불수 능라단, 초록 저고리감만 날 사 주오.",400],
@@ -2393,7 +2470,7 @@ async function c2Chu(n){
       await say("chu",line,{o:1});
       const c=await choose("chun",`${nm}… 어떻게 할까? (주머니 ${G.purse.toLocaleString("ko-KR")}냥)`,["사 준다.","거절한다."]);
       if(c===1){refused++;await say("chu",refused===1?"어머, 서울 부자 나리께서 이것도 못 사 주오? 소녀가 서운하옵니다.":"흥, 서울 부자라더니 소문만 요란했나 봐요.");await say("chun","체면이 있지… 기생 앞에서 인색하다는 소리를 들을 수는 없다.",{think:1})}
-      G.purse-=cost;updateHUD();sfx("coin");
+      coinsFly(G.player,N("chu"),Math.max(4,Math.round(cost/60)));G.purse-=cost;updateHUD();sfx("coin");await sleep(450);
     }
     for(;;){const q=await choose("chun","그런데… 추월이 사 달라고 조른 것이 아닌 것은 무엇이었지?",["비단 옷감과 노리개","백통대, 은대, 금대 담뱃대","거문고와 가야금","동래 울산 미역과 김"],{think:1});if(q===2){await say("narr","맞아요. 거문고는 추월이 이미 가지고 있던 것이지요. 추월은 옷감과 노리개부터 그릇, 담뱃대, 쌀과 미역까지 살림 전체를 춘풍의 돈으로 채웠어요.");break}await say("narr","그건 추월이 조른 목록에 있었어요. 다시 떠올려 보세요.")}
     await say("narr","온가지로 헤어 내니 허랑한 이춘풍이 일호나 사양할까. 수천여 냥 돈을 비일비재 내어 주니 청산유수 아니어든 오랠손가. 일 년이 못 다 가서 낭탁이 비었구나.",{o:1});
@@ -2406,8 +2483,9 @@ async function c2Chu(n){
     await say("chun","우리 둘이 갓 만나서 원앙금침 마주 누워, 불원상리 굳은 언약 태산같이 언약하여, 대동강이 마르도록 떠나가지 말자더니, 이렇듯 깊은 맹세 농담인가 진정인가. 이제 이 말 웬 말인가.",{o:1});
     await say("chu","이 사람아, 내 말 좀 들어 보소. 청루 물정 몰랐던가. …… 노류장화는 인개가절이라. 평양 기생 추월 성식 몰랐던가. 자네가 가져온 돈냥 혼자 먹던가.",{o:1});
     tip("‘노류장화는 인개가절’: 기생은 누구나 꺾을 수 있는 꽃이라는 말로 추월은 자기 행동을 정당화해요. ‘자네가 가져온 돈냥 혼자 먹던가’ 하며 춘풍에게도 책임을 떠넘기지요.");
+    {const gis=N("gis");if(gis)gis.dance=0;G.partyAt=null;const chu=N("chu");lungeAt(chu,G.player);await sleep(130);sfx("slap");G.player.hurt=0.4;G.shake=3;FX.push({k:"hit",e:G.player,t0:performance.now()/1000,dur:0.7,word:"휙!",col:"#f07a6a"});await sleep(600)}
     await say("narr","추월은 춘풍의 등을 떠밀어 대문 밖으로 내쫓았다.");
-    G.flash=.6;G.player.look="chunB";G.player.tx=35;G.player.ty=12;G.player.dir="d";G.purse=0;updateHUD();
+    setMood("sad");G.flash=.6;G.player.look="chunB";G.player.tx=35;G.player.ty=12;G.player.dir="d";G.purse=0;updateHUD();
     await say("narr","평양 성내 걸인 되어 이 집 저 집 빌자 하니, 노소인민 아동주졸 이놈 저놈 꾸짖으니 걸식도 못 하리라. 어디로 가잔 말가.",{o:1});
     await say("chunB","빌어먹을 곳도 없다. 서울로 돌아갈 노자도 없고, 호조 빚은 목에 걸렸다. 갈 곳이라곤… 결국 그 집뿐이다.",{think:1});
     F.out=1;setObj("다시 추월의 집에 들어가 사정해 보자");return;
@@ -2473,6 +2551,7 @@ async function c3Chu(){
   if(!F.ate){await say("chu","거기 사환, 게으름 피우지 말고 물이나 길어 오시오.");return}
   if(F.party)return;
   await say("narr","주야로 한량들은 청산에 구름 모이듯 수륙재에 노승 모이듯, 개성부에 장사 모이듯, 추월의 집으로 모여 와서 온갖 희롱 다 하면서, 좋은 술, 별 안주에 배반이 낭자하며",{o:1});
+  G.partyAt=[35*T+8,6*T];for(const id of ["han1","han2","gis"]){const q=N(id);if(q)q.dance=1}
   await say("chu","사환은 뜰에 있으시오. 방에 올라오지 말고.");
   await say("narr","이때 춘풍의 거동 보소. 뜰아래서 방 안을 엿보니 눈에는 풍년이요, 입에는 흉년이라.",{o:1});
   tip("눈으로는 좋은 음식을 실컷 보지만(풍년) 입에 들어가는 것은 없다(흉년). 대구를 이룬 재치 있는 표현이에요.");
@@ -2490,7 +2569,7 @@ async function c3Chu(){
   await say("han1","서울 산다 하니 불쌍하다.",{o:1});
   await say("narr","하고 술 한 잔 가득 부어 주니, 춘풍이 갈지우갈하여 받아먹으니 가련하더라.",{o:1});
   tip("‘가련하더라’는 인물이 아니라 서술자의 평가예요. 판소리계 소설에서는 서술자가 이야기에 끼어들곤 해요.");
-  F.party=1;F.partyOn=0;
+  F.party=1;F.partyOn=0;G.partyAt=null;for(const id of ["han1","han2","gis"]){const q=N(id);if(q)q.dance=0}
   await card("며칠 뒤","새로 온 회계 비장","평양에 새 감사가 부임했다. 감사를 따라온 비장 가운데 회계 비장 하나가 추월의 집을 찾아왔다.\n추월은 새 손님의 주머니를 노리며 버선발로 뛰어나갔다.");
   G.night=false;G.snow=false;F.bijangIn=1;setMood("pyong");
   setObj("안마당에 온 회계 비장에게 가 보자");
