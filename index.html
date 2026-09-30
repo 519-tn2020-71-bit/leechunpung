@@ -665,6 +665,7 @@ function loadSave(){try{return JSON.parse(localStorage.getItem(SAVEKEY)||"null")
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 function writeSave(){try{const s=loadSave()||{};s.route=G.route;s.ch=G.ch;s.rec=G.rec;s.tips=G.tips;s.gloss=G.gloss;localStorage.setItem(SAVEKEY,JSON.stringify(s))}catch(e){}}
 
 function npc(id,look,name,x,y,dir,talk,opt){return Object.assign({id,look,name,tx:x,ty:y,hx:x,hy:y,dir:dir||"d",talk,moving:false,prog:0,queue:[],step:0,ph:Math.random()*10,wt:Math.random()*3},opt||{})}
@@ -1005,7 +1006,7 @@ const CREDITS=`<span class="eb">만든 곳·출처</span><h2>비장이 된 아�
 function openPanel(html){closePanel();UI.panel=true;UI.modal=true;const v=document.createElement("div");v.className="veil";v.id="panel";v.innerHTML=`<div class="sheet"><button class="close" data-close>닫기</button>${html}</div>`;$("#ui").appendChild(v);
   v.addEventListener("input",e=>{const r=e.target.closest("[data-vol]");if(!r)return;const val=+r.value/100;setVol(r.dataset.vol,val);const o=r.nextElementSibling;if(o)o.textContent=r.value+"%"});
   v.addEventListener("change",e=>{const r=e.target.closest("[data-vol=sfx]");if(r){const was=AU.sfxOn;AU.sfxOn=true;sfx("coin");AU.sfxOn=was}});
-  v.addEventListener("click",e=>{if(e.target===v||e.target.closest("[data-close]"))closePanel();const j=e.target.closest("[data-ch]");if(j){closePanel();document.querySelectorAll("#title").forEach(x=>x.remove());const [r,c]=j.dataset.ch.split(":");if(G.route!==r)G.rec=[];startChapter(r,+c)}if(e.target.closest("[data-title]")){closePanel();showTitle()}if(e.target.closest("[data-snd]")){setMusic(!AU.on);closePanel();$("#bMenu").click();return}if(e.target.closest("[data-sfxt]")){setSfx(!AU.sfxOn);closePanel();$("#bMenu").click();return}{const tr=e.target.closest("[data-try]");if(tr){const was=AU.sfxOn;AU.sfxOn=true;sfx(tr.dataset.try);AU.sfxOn=was;return}}if(e.target.closest("[data-credits]")){openPanel(CREDITS);return}if(e.target.closest("[data-gloss]")){G.gloss=!G.gloss;writeSave();closePanel();$("#bMenu").click()}})}
+  v.addEventListener("click",e=>{if(e.target===v||e.target.closest("[data-close]"))closePanel();const j=e.target.closest("[data-ch]");if(j){const [r,c]=j.dataset.ch.split(":");hardGo({route:r,ch:+c});return}if(e.target.closest("[data-title]")){hardGo("title");return}if(e.target.closest("[data-snd]")){setMusic(!AU.on);closePanel();$("#bMenu").click();return}if(e.target.closest("[data-sfxt]")){setSfx(!AU.sfxOn);closePanel();$("#bMenu").click();return}{const tr=e.target.closest("[data-try]");if(tr){const was=AU.sfxOn;AU.sfxOn=true;sfx(tr.dataset.try);AU.sfxOn=was;return}}if(e.target.closest("[data-credits]")){openPanel(CREDITS);return}if(e.target.closest("[data-gloss]")){G.gloss=!G.gloss;writeSave();closePanel();$("#bMenu").click()}})}
 function closePanel(){const p=$("#panel");if(p){p.remove();UI.panel=false;UI.modal=!!document.querySelector("#title")||!!document.querySelector(".veil,.dlg")}}
 $("#bRec").onclick=()=>{
   openPanel(`<span class="eb">기록첩</span><h2>원문 기록</h2><p class="note">붉은 낙관(原)이 찍힌 대사와 서술은 실제 「이춘풍전」의 문장이에요. 만난 원문이 여기에 모여요. 비평문을 쓸 때 근거로 쓰세요.</p>
@@ -1025,6 +1026,9 @@ $("#bMenu").onclick=()=>{openPanel(`<span class="eb">메뉴</span><h2>메뉴</h2
   <h3>조작법</h3><p class="note">이동: 방향키 또는 WASD · 말 걸기·넘기기: E, Space, Enter · 선택지: 숫자키나 ↑↓ · 휴대폰·태블릿: 화면 아래 버튼<br>머리 위에 노란 느낌표(!)가 뜬 사람이 지금 할 일과 관련 있어요.</p>
   <div class="row"><button class="btn" data-credits>만든 곳·출처</button><button class="btn" data-title>표지로</button></div>`)};
 function showCredits(){openPanel(CREDITS)}
+
+/* 진행 중인 장면을 완전히 끊고 새로 시작: 페이지를 다시 불러 해당 장으로 */
+function hardGo(to){writeSave();try{sessionStorage.setItem("bj-jump",JSON.stringify(to))}catch(err){}location.reload()}
 
 /* ═════════ 원문 현대어 풀이 ═════════ */
 const GLOSS=[
@@ -2320,7 +2324,7 @@ async function showEnding(){
   <h3>비평을 위한 물음</h3>
   <p class="note">1. 춘풍이 가져온 오천 냥은 누구의 돈이라고 할 수 있을까요?\n2. 아내는 왜 여자의 모습으로는 문제를 풀 수 없었을까요? 이 설정은 당대 사회에 대해 무엇을 말해 주나요?\n3. 추월의 ‘노류장화는 인개가절’이라는 말을 오늘날의 시각으로 평가해 보세요.\n4. 춘풍의 마지막 말 “이왕에 자넨 줄 알았으나”는 그가 정말 달라졌다는 뜻일까요?\n5. ${G.route==="wife"?"이번에는 춘풍이 되어 같은 사건을 겪어 보세요. 같은 장면이 어떻게 달라 보이나요?":"이번에는 아내가 되어 같은 사건을 겪어 보세요. 춘풍이 몰랐던 것이 무엇이었는지 보여요."}</p>
   <div class="row"><button class="btn" data-go="rec">기록첩 보기</button><button class="btn" data-go="other">${esc(ROUTES[other].name)}의 이야기로</button><button class="btn pri" data-go="title">표지로</button></div></div>`);
-  if(v==="rec"){showTitle();$("#bRec").click()}else if(v==="other"){document.querySelectorAll("#title").forEach(x=>x.remove());G.rec=[];startChapter(other,1)}else showTitle();
+  if(v==="rec"){showTitle();$("#bRec").click()}else if(v==="other"){hardGo({route:other,ch:1})}else hardGo("title");
 }
 
 /* ═════════ 표지 ═════════ */
@@ -2355,6 +2359,7 @@ function showTitle(){
     if(v==="resume"){el.remove();UI.modal=false;G.rec=sv.rec||[];startChapter(sv.route||"wife",sv.ch)}
   });
 }
-showTitle();
+(()=>{let j=null;try{j=JSON.parse(sessionStorage.getItem("bj-jump")||"null");sessionStorage.removeItem("bj-jump")}catch(err){}
+  if(j&&j.route){const sv=loadSave()||{};G.rec=(sv.route===j.route?sv.rec:[])||[];G.evid=[];startChapter(j.route,j.ch)}else showTitle()})();
 
 </script>
