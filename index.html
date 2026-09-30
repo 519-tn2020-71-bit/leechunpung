@@ -137,6 +137,10 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .tcard .credit{font-family:var(--ui);font-size:12.5px;color:#f1e6cc;margin-top:22px;line-height:1.85;display:inline-block;background:rgba(20,16,12,.8);border:1px solid rgba(227,194,122,.35);padding:10px 16px;border-radius:4px}
 .tcard .sub{text-shadow:0 2px 6px rgba(0,0,0,.85),0 0 2px #000}
 #panel{z-index:70}
+.vols{display:grid;gap:8px;margin:10px 0 4px;font-family:var(--ui);font-size:14px}
+.vols label{display:grid;grid-template-columns:90px 1fr 48px;align-items:center;gap:10px}
+.vols input{width:100%;accent-color:var(--indigo)}
+.vols output{font-variant-numeric:tabular-nums;color:var(--muted);text-align:right}
 .sfxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;margin-top:8px}
 .sfxgrid button{font-family:var(--ui);font-size:13px;text-align:left;background:var(--paper2);border:2px solid var(--line);padding:6px 10px}
 .sfxgrid button:hover{border-color:var(--indigo)}
@@ -659,6 +663,8 @@ function loadSave(){try{return JSON.parse(localStorage.getItem(SAVEKEY)||"null")
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 function writeSave(){try{const s=loadSave()||{};s.route=G.route;s.ch=G.ch;s.rec=G.rec;s.tips=G.tips;s.gloss=G.gloss;localStorage.setItem(SAVEKEY,JSON.stringify(s))}catch(e){}}
 
 function npc(id,look,name,x,y,dir,talk,opt){return Object.assign({id,look,name,tx:x,ty:y,hx:x,hy:y,dir:dir||"d",talk,moving:false,prog:0,queue:[],step:0,ph:Math.random()*10,wt:Math.random()*3},opt||{})}
@@ -997,6 +1003,8 @@ const CREDITS=`<span class="eb">만든 곳·출처</span><h2>비장이 된 아�
 <h3>제작 도구</h3><div class="list"><div class="item"><div class="t">Claude(Anthropic) · Codex(OpenAI)</div><div class="d">게임 코드와 글은 Claude, 그림은 Codex의 이미지 생성 기능으로 만들었어요.</div></div></div>`;
 /* ═════════ 패널 ═════════ */
 function openPanel(html){closePanel();UI.panel=true;UI.modal=true;const v=document.createElement("div");v.className="veil";v.id="panel";v.innerHTML=`<div class="sheet"><button class="close" data-close>닫기</button>${html}</div>`;$("#ui").appendChild(v);
+  v.addEventListener("input",e=>{const r=e.target.closest("[data-vol]");if(!r)return;const val=+r.value/100;setVol(r.dataset.vol,val);const o=r.nextElementSibling;if(o)o.textContent=r.value+"%"});
+  v.addEventListener("change",e=>{const r=e.target.closest("[data-vol=sfx]");if(r){const was=AU.sfxOn;AU.sfxOn=true;sfx("coin");AU.sfxOn=was}});
   v.addEventListener("click",e=>{if(e.target===v||e.target.closest("[data-close]"))closePanel();const j=e.target.closest("[data-ch]");if(j){closePanel();document.querySelectorAll("#title").forEach(x=>x.remove());const [r,c]=j.dataset.ch.split(":");if(G.route!==r)G.rec=[];startChapter(r,+c)}if(e.target.closest("[data-title]")){closePanel();showTitle()}if(e.target.closest("[data-snd]")){setMusic(!AU.on);closePanel();$("#bMenu").click();return}if(e.target.closest("[data-sfxt]")){setSfx(!AU.sfxOn);closePanel();$("#bMenu").click();return}{const tr=e.target.closest("[data-try]");if(tr){const was=AU.sfxOn;AU.sfxOn=true;sfx(tr.dataset.try);AU.sfxOn=was;return}}if(e.target.closest("[data-credits]")){openPanel(CREDITS);return}if(e.target.closest("[data-gloss]")){G.gloss=!G.gloss;writeSave();closePanel();$("#bMenu").click()}})}
 function closePanel(){const p=$("#panel");if(p){p.remove();UI.panel=false;UI.modal=!!document.querySelector("#title")||!!document.querySelector(".veil,.dlg")}}
 $("#bRec").onclick=()=>{
@@ -1010,6 +1018,7 @@ $("#bEvid").onclick=()=>{openPanel(`<span class="eb">증거첩</span><h2>모은 
 $("#bMenu").onclick=()=>{openPanel(`<span class="eb">메뉴</span><h2>메뉴</h2>
   <h3>설정</h3><div class="list"><button class="item" data-gloss style="text-align:left;cursor:pointer"><div class="t">현대어 풀이 · ${G.gloss?"켜짐":"꺼짐"}</div><div class="d">원문(原) 대사 아래에 쉬운 현대어 풀이를 함께 보여 줘요. 눌러서 켜고 끌 수 있어요.</div></button></div>
   <button class="item" data-snd style="text-align:left;cursor:pointer;width:100%;margin-top:8px"><div class="t">배경음 · ${AU.on?"켜짐":"꺼짐"}</div><div class="d">장면마다 바뀌는 국악풍 가락이에요. 게임 안에서 직접 합성해 연주해요.</div></button><button class="item" data-sfxt style="text-align:left;cursor:pointer;width:100%;margin-top:8px"><div class="t">효과음 · ${AU.sfxOn?"켜짐":"꺼짐"}</div><div class="d">대화 넘김, 발소리, 엽전, 곤장, 정답·오답 같은 소리예요.</div></button>
+  <div class="vols"><label>효과음 크기 <input type="range" min="0" max="300" step="10" value="${Math.round(AU.sfxVol*100)}" data-vol="sfx"><output>${Math.round(AU.sfxVol*100)}%</output></label><label>배경음 크기 <input type="range" min="0" max="200" step="10" value="${Math.round(AU.musicVol*100)}" data-vol="music"><output>${Math.round(AU.musicVol*100)}%</output></label></div>
   <div class="sfxgrid">${SFX_LIST.map(([k,n])=>`<button data-try="${k}">▶ ${n}</button>`).join("")}</div>
   <h3>장 고르기</h3>
   ${Object.entries(ROUTES).map(([rk,r])=>`<h3>${esc(r.name)}의 이야기</h3><div class="list">${r.chapters.map(([t,d],i)=>`<button class="item" data-ch="${rk}:${i+1}" style="text-align:left;cursor:pointer"><div class="t">제${i+1}장 · ${esc(t)}</div><div class="d">${esc(d)}</div></button>`).join("")}</div>`).join("")}
@@ -1292,8 +1301,8 @@ function dajimGame(){
 }
 
 /* ═════════ 배경음: 직접 합성하는 국악풍 가락 (외부 음원 없음) ═════════ */
-const AU={ctx:null,master:null,wet:null,on:true,sfxOn:true,pend:null,bus:null,mood:null,timer:null,next:0,step:0,song:null};
-(()=>{try{const sv=JSON.parse(localStorage.getItem("bijang-rpg-v2")||"null");if(sv&&sv.music===false)AU.on=false;if(sv&&sv.sfx===false)AU.sfxOn=false}catch(e){}})();
+const AU={ctx:null,master:null,wet:null,on:true,sfxOn:true,sfxVol:1,musicVol:1,sfxBus:null,pend:null,bus:null,mood:null,timer:null,next:0,step:0,song:null};
+(()=>{try{const sv=JSON.parse(localStorage.getItem("bijang-rpg-v2")||"null");if(sv&&sv.music===false)AU.on=false;if(sv&&sv.sfx===false)AU.sfxOn=false;if(sv&&typeof sv.sfxVol==="number")AU.sfxVol=sv.sfxVol;if(sv&&typeof sv.musicVol==="number")AU.musicVol=sv.musicVol}catch(e){}})();
 function auInit(){
   if(AU.ctx)return true;
   const C=window.AudioContext||window.webkitAudioContext;if(!C)return false;
@@ -1377,7 +1386,7 @@ function setMood(name){
   if(AU.mood===name)return;const ac=AU.ctx,m=MOODS[name];if(!m)return;
   AU.master.gain.cancelScheduledValues(ac.currentTime);AU.master.gain.setTargetAtTime(0,ac.currentTime,0.25);
   clearTimeout(AU.pend);AU.song=null;
-  AU.pend=setTimeout(()=>{AU.mood=name;AU.song=makeSong(m);AU.step=0;AU.next=ac.currentTime+0.15;AU.master.gain.setTargetAtTime(0.12*m.vol,ac.currentTime,0.6)},AU.mood?700:0);
+  AU.pend=setTimeout(()=>{AU.mood=name;AU.song=makeSong(m);AU.step=0;AU.next=ac.currentTime+0.15;AU.master.gain.setTargetAtTime(0.12*m.vol*AU.musicVol,ac.currentTime,0.6)},AU.mood?700:0);
   if(!AU.timer)AU.timer=setInterval(auTick,40);
 }
 function audioGesture(){if(!AU.on&&!AU.sfxOn)return;if(!auInit())return;if(!AU.on){if(AU.ctx.state==="suspended")AU.ctx.resume();return}if(AU.ctx.state==="suspended")AU.ctx.resume();if(AU.moodWanted&&AU.mood!==AU.moodWanted)setMood(AU.moodWanted)}
@@ -1389,11 +1398,16 @@ addEventListener("pointerdown",audioGesture,{capture:true});addEventListener("ke
 
 (()=>{const b=document.querySelector("#bSnd");if(b){b.textContent=AU.on?"♪ 배경음 켜짐":"♪ 배경음 꺼짐";b.onclick=()=>setMusic(!AU.on)}})();
 
-const SFXVOL={blip:2.2,click:2.2,step:6,page:2.2,tip:2,stitch:2.4,bubble:2.2,pull:2.2,coin:1.6,gain:1.6,correct:1.7,wrong:1.8,whack:1.2,gong:1.4,poof:1.8,splash:1.6,stamp:1.8};
+function setVol(kind,v){if(kind==="sfx")AU.sfxVol=v;else{AU.musicVol=v;if(AU.ctx&&AU.mood&&AU.on){const m=MOODS[AU.mood];AU.master.gain.setTargetAtTime(0.12*m.vol*v,AU.ctx.currentTime,0.1)}}
+  try{const sv=JSON.parse(localStorage.getItem("bijang-rpg-v2")||"{}")||{};sv[kind==="sfx"?"sfxVol":"musicVol"]=v;localStorage.setItem("bijang-rpg-v2",JSON.stringify(sv))}catch(e){}}
+
+const SFXVOL={blip:20,click:18,step:40,page:10,tip:7.5,stitch:14,bubble:13,pull:24,coin:4.6,gain:5,correct:5.5,wrong:15,whack:3.2,gong:1.9,poof:9,splash:5.5,stamp:5.5};
 /* ═════════ 효과음 (직접 합성) ═════════ */
 function sfx(name){
   if(!AU.sfxOn)return;if(!AU.ctx&&!auInit())return;const ac=AU.ctx;if(ac.state==="suspended")ac.resume();
-  const t=ac.currentTime+0.01,out=ac.createGain();out.gain.value=SFXVOL[name]||1.3;out.connect(ac.destination);
+  const t=ac.currentTime+0.01;
+  if(!AU.sfxBus){const c=ac.createDynamicsCompressor();c.threshold.value=-8;c.knee.value=6;c.ratio.value=10;c.attack.value=0.002;c.release.value=0.12;c.connect(ac.destination);AU.sfxBus=c}
+  const out=ac.createGain();out.gain.value=(SFXVOL[name]||3)*AU.sfxVol;out.connect(AU.sfxBus);
   if(AU.bus&&!/step|blip/.test(name)){AU.bus.gain.cancelScheduledValues(t);AU.bus.gain.setTargetAtTime(0.45,t,0.02);AU.bus.gain.setTargetAtTime(1,t+0.35,0.25)}
   const tone=(f,st,dur,type,vol,f2)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=type||"sine";o.frequency.setValueAtTime(f,t+st);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+st+dur);
     g.gain.setValueAtTime(0.0001,t+st);g.gain.exponentialRampToValueAtTime(vol,t+st+0.005);g.gain.exponentialRampToValueAtTime(0.0005,t+st+dur);o.connect(g);g.connect(out);o.start(t+st);o.stop(t+st+dur+0.05)};
