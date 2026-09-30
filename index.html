@@ -1841,6 +1841,10 @@ addEventListener("pointerdown",audioGesture,{capture:true});addEventListener("ke
 function setVol(kind,v){if(kind==="sfx")AU.sfxVol=v;else{AU.musicVol=v;if(AU.ctx&&AU.mood&&AU.on){const m=MOODS[AU.mood];AU.master.gain.setTargetAtTime(0.12*m.vol*v,AU.ctx.currentTime,0.1)}}
   try{const sv=JSON.parse(localStorage.getItem("bijang-rpg-v2")||"{}")||{};sv[kind==="sfx"?"sfxVol":"musicVol"]=v;localStorage.setItem("bijang-rpg-v2",JSON.stringify(sv))}catch(e){}}
 
+/* 다른 탭으로 가거나 창을 내리면 소리 멈춤, 돌아오면 다시 */
+document.addEventListener("visibilitychange",()=>{if(!AU.ctx)return;if(document.hidden){AU.ctx.suspend()}else if(AU.on||AU.sfxOn){AU.ctx.resume()}});
+addEventListener("pagehide",()=>{if(AU.ctx)AU.ctx.suspend()});
+
 const SFXVOL={slap:5,blip:20,click:18,step:40,page:10,tip:7.5,stitch:14,bubble:13,pull:24,coin:4.6,gain:5,correct:5.5,wrong:15,whack:3.2,gong:1.9,poof:9,splash:5.5,stamp:5.5};
 /* ═════════ 효과음 (직접 합성) ═════════ */
 function sfx(name){
