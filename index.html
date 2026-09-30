@@ -137,6 +137,9 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .tcard .credit{font-family:var(--ui);font-size:12.5px;color:#f1e6cc;margin-top:22px;line-height:1.85;display:inline-block;background:rgba(20,16,12,.8);border:1px solid rgba(227,194,122,.35);padding:10px 16px;border-radius:4px}
 .tcard .sub{text-shadow:0 2px 6px rgba(0,0,0,.85),0 0 2px #000}
 #panel{z-index:70}
+.sfxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;margin-top:8px}
+.sfxgrid button{font-family:var(--ui);font-size:13px;text-align:left;background:var(--paper2);border:2px solid var(--line);padding:6px 10px}
+.sfxgrid button:hover{border-color:var(--indigo)}
 .dajim{background:#fbf5e4 repeating-linear-gradient(#fbf5e4 0 30px,#efe3c4 30px 31px);border:2px solid var(--ink2);padding:14px 18px;margin:10px 0;font-size:16.5px;line-height:1.9}
 .dajim p{margin:4px 0;opacity:.55}.dajim p.cur{opacity:1;background:#fff3d6}
 .dajim b{font-weight:700;color:var(--muted)}.dajim b.ok{color:var(--indigo)}.dajim p:has(b.ok){opacity:1}
@@ -212,7 +215,7 @@ body.talking .pad,body.talking .act{display:none}
     <button class="hb" id="bEvid" hidden>증거첩<span class="n" id="nEvid">0</span></button>
     <button class="hb" id="bTip">배움첩<span class="n" id="nTip">0</span></button>
     <button class="hb" id="bRec">기록첩<span class="n" id="nRec">0</span></button>
-    <button class="hb" id="bSnd">♪ 소리 켜짐</button>
+    <button class="hb" id="bSnd">♪ 배경음 켜짐</button>
     <button class="hb" id="bMenu">메뉴</button>
   </div>
 </div>
@@ -653,6 +656,9 @@ function loadSave(){try{return JSON.parse(localStorage.getItem(SAVEKEY)||"null")
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 function writeSave(){try{const s=loadSave()||{};s.route=G.route;s.ch=G.ch;s.rec=G.rec;s.tips=G.tips;s.gloss=G.gloss;localStorage.setItem(SAVEKEY,JSON.stringify(s))}catch(e){}}
 
 function npc(id,look,name,x,y,dir,talk,opt){return Object.assign({id,look,name,tx:x,ty:y,hx:x,hy:y,dir:dir||"d",talk,moving:false,prog:0,queue:[],step:0,ph:Math.random()*10,wt:Math.random()*3},opt||{})}
@@ -991,7 +997,7 @@ const CREDITS=`<span class="eb">만든 곳·출처</span><h2>비장이 된 아�
 <h3>제작 도구</h3><div class="list"><div class="item"><div class="t">Claude(Anthropic) · Codex(OpenAI)</div><div class="d">게임 코드와 글은 Claude, 그림은 Codex의 이미지 생성 기능으로 만들었어요.</div></div></div>`;
 /* ═════════ 패널 ═════════ */
 function openPanel(html){closePanel();UI.panel=true;UI.modal=true;const v=document.createElement("div");v.className="veil";v.id="panel";v.innerHTML=`<div class="sheet"><button class="close" data-close>닫기</button>${html}</div>`;$("#ui").appendChild(v);
-  v.addEventListener("click",e=>{if(e.target===v||e.target.closest("[data-close]"))closePanel();const j=e.target.closest("[data-ch]");if(j){closePanel();document.querySelectorAll("#title").forEach(x=>x.remove());const [r,c]=j.dataset.ch.split(":");if(G.route!==r)G.rec=[];startChapter(r,+c)}if(e.target.closest("[data-title]")){closePanel();showTitle()}if(e.target.closest("[data-snd]")){setMusic(!AU.on);closePanel();$("#bMenu").click();return}if(e.target.closest("[data-credits]")){openPanel(CREDITS);return}if(e.target.closest("[data-gloss]")){G.gloss=!G.gloss;writeSave();closePanel();$("#bMenu").click()}})}
+  v.addEventListener("click",e=>{if(e.target===v||e.target.closest("[data-close]"))closePanel();const j=e.target.closest("[data-ch]");if(j){closePanel();document.querySelectorAll("#title").forEach(x=>x.remove());const [r,c]=j.dataset.ch.split(":");if(G.route!==r)G.rec=[];startChapter(r,+c)}if(e.target.closest("[data-title]")){closePanel();showTitle()}if(e.target.closest("[data-snd]")){setMusic(!AU.on);closePanel();$("#bMenu").click();return}if(e.target.closest("[data-sfxt]")){setSfx(!AU.sfxOn);closePanel();$("#bMenu").click();return}{const tr=e.target.closest("[data-try]");if(tr){const was=AU.sfxOn;AU.sfxOn=true;sfx(tr.dataset.try);AU.sfxOn=was;return}}if(e.target.closest("[data-credits]")){openPanel(CREDITS);return}if(e.target.closest("[data-gloss]")){G.gloss=!G.gloss;writeSave();closePanel();$("#bMenu").click()}})}
 function closePanel(){const p=$("#panel");if(p){p.remove();UI.panel=false;UI.modal=!!document.querySelector("#title")||!!document.querySelector(".veil,.dlg")}}
 $("#bRec").onclick=()=>{
   openPanel(`<span class="eb">기록첩</span><h2>원문 기록</h2><p class="note">붉은 낙관(原)이 찍힌 대사와 서술은 실제 「이춘풍전」의 문장이에요. 만난 원문이 여기에 모여요. 비평문을 쓸 때 근거로 쓰세요.</p>
@@ -1001,10 +1007,12 @@ $("#bTip").onclick=()=>{
   openPanel(`<span class="eb">배움첩</span><h2>배움 기록</h2><p class="note">이야기를 따라가며 떴던 ‘배움’ 알림이 모두 여기에 모여요. 판소리계 소설의 특징, 인물의 성격, 풍자의 장치를 복습해 보세요.</p>
   ${G.tips.length?Object.entries(groups).map(([k,arr])=>{const [r,c]=k.split(":");const rt=ROUTES[r];const chn=rt&&rt.chapters[c-1]?`제${c}장 · ${rt.chapters[c-1][0]}`:"";return `<h3>${esc(rt?rt.name:"")}${chn?" · "+esc(chn):""}</h3>${arr.map(t=>`<div class="rec tipr">${esc(t)}</div>`).join("")}`}).join(""):'<p class="note">아직 모은 배움이 없어요.</p>'}`)};
 $("#bEvid").onclick=()=>{openPanel(`<span class="eb">증거첩</span><h2>모은 증거</h2><div class="list">${G.evid.length?G.evid.map(id=>`<div class="item"><div class="t">${esc(EVID[id].t)}</div><div class="d">${esc(EVID[id].d)}</div></div>`).join(""):'<p class="note">아직 모은 증거가 없어요.</p>'}</div>`)};
-$("#bMenu").onclick=()=>{openPanel(`<span class="eb">메뉴</span><h2>장 고르기</h2>
-  ${Object.entries(ROUTES).map(([rk,r])=>`<h3>${esc(r.name)}의 이야기</h3><div class="list">${r.chapters.map(([t,d],i)=>`<button class="item" data-ch="${rk}:${i+1}" style="text-align:left;cursor:pointer"><div class="t">제${i+1}장 · ${esc(t)}</div><div class="d">${esc(d)}</div></button>`).join("")}</div>`).join("")}
+$("#bMenu").onclick=()=>{openPanel(`<span class="eb">메뉴</span><h2>메뉴</h2>
   <h3>설정</h3><div class="list"><button class="item" data-gloss style="text-align:left;cursor:pointer"><div class="t">현대어 풀이 · ${G.gloss?"켜짐":"꺼짐"}</div><div class="d">원문(原) 대사 아래에 쉬운 현대어 풀이를 함께 보여 줘요. 눌러서 켜고 끌 수 있어요.</div></button></div>
-  <button class="item" data-snd style="text-align:left;cursor:pointer;width:100%;margin-top:8px"><div class="t">배경음 · ${AU.on?"켜짐":"꺼짐"}</div><div class="d">장면마다 바뀌는 국악풍 가락이에요. 게임 안에서 직접 합성해 연주해요.</div></button>
+  <button class="item" data-snd style="text-align:left;cursor:pointer;width:100%;margin-top:8px"><div class="t">배경음 · ${AU.on?"켜짐":"꺼짐"}</div><div class="d">장면마다 바뀌는 국악풍 가락이에요. 게임 안에서 직접 합성해 연주해요.</div></button><button class="item" data-sfxt style="text-align:left;cursor:pointer;width:100%;margin-top:8px"><div class="t">효과음 · ${AU.sfxOn?"켜짐":"꺼짐"}</div><div class="d">대화 넘김, 발소리, 엽전, 곤장, 정답·오답 같은 소리예요.</div></button>
+  <div class="sfxgrid">${SFX_LIST.map(([k,n])=>`<button data-try="${k}">▶ ${n}</button>`).join("")}</div>
+  <h3>장 고르기</h3>
+  ${Object.entries(ROUTES).map(([rk,r])=>`<h3>${esc(r.name)}의 이야기</h3><div class="list">${r.chapters.map(([t,d],i)=>`<button class="item" data-ch="${rk}:${i+1}" style="text-align:left;cursor:pointer"><div class="t">제${i+1}장 · ${esc(t)}</div><div class="d">${esc(d)}</div></button>`).join("")}</div>`).join("")}
   <h3>조작법</h3><p class="note">이동: 방향키 또는 WASD · 말 걸기·넘기기: E, Space, Enter · 선택지: 숫자키나 ↑↓ · 휴대폰·태블릿: 화면 아래 버튼<br>머리 위에 노란 느낌표(!)가 뜬 사람이 지금 할 일과 관련 있어요.</p>
   <div class="row"><button class="btn" data-credits>만든 곳·출처</button><button class="btn" data-title>표지로</button></div>`)};
 function showCredits(){openPanel(CREDITS)}
@@ -1284,16 +1292,17 @@ function dajimGame(){
 }
 
 /* ═════════ 배경음: 직접 합성하는 국악풍 가락 (외부 음원 없음) ═════════ */
-const AU={ctx:null,master:null,wet:null,on:true,mood:null,timer:null,next:0,step:0,song:null};
-(()=>{try{const sv=JSON.parse(localStorage.getItem("bijang-rpg-v2")||"null");if(sv&&sv.music===false)AU.on=false}catch(e){}})();
+const AU={ctx:null,master:null,wet:null,on:true,sfxOn:true,pend:null,bus:null,mood:null,timer:null,next:0,step:0,song:null};
+(()=>{try{const sv=JSON.parse(localStorage.getItem("bijang-rpg-v2")||"null");if(sv&&sv.music===false)AU.on=false;if(sv&&sv.sfx===false)AU.sfxOn=false}catch(e){}})();
 function auInit(){
   if(AU.ctx)return true;
   const C=window.AudioContext||window.webkitAudioContext;if(!C)return false;
   const ac=new C();AU.ctx=ac;
   const comp=ac.createDynamicsCompressor();comp.connect(ac.destination);
-  AU.master=ac.createGain();AU.master.gain.value=0.0;AU.master.connect(comp);
+  AU.bus=ac.createGain();AU.bus.gain.value=1;AU.bus.connect(comp);
+  AU.master=ac.createGain();AU.master.gain.value=0.0;AU.master.connect(AU.bus);
   const d=ac.createDelay(1);d.delayTime.value=0.27;const fb=ac.createGain();fb.gain.value=0.32;const lp=ac.createBiquadFilter();lp.type="lowpass";lp.frequency.value=2200;
-  AU.wet=ac.createGain();AU.wet.gain.value=0.22;AU.wet.connect(d);d.connect(lp);lp.connect(fb);fb.connect(d);lp.connect(AU.master);
+  AU.wet=ac.createGain();AU.wet.gain.value=0;AU.wet.connect(d);d.connect(lp);lp.connect(fb);fb.connect(d);lp.connect(AU.master);
   return true;
 }
 function auOut(node,wet){node.connect(AU.master);if(wet)node.connect(AU.wet)}
@@ -1359,29 +1368,33 @@ function auTick(){
     if(h){if(h==="기덕"){gDrum("기",t,0.28);gDrum("덕",t+m.eighth*0.5,0.3)}else gDrum(h,t,h==="덩"||h==="쿵"?0.55:0.32)}
     for(const n of AU.song.notes)if(n.at===i){const f=degFreq(m,n.deg),dur=n.len*m.eighth;
       if(m.lead==="flute")gFlute(f*2,t,dur*1.05,0.16);else gPluck(f*2,t,Math.max(0.5,dur*1.4),n.accent?0.34:0.26);
-      if(m.flute&&m.lead!=="flute"&&n.len>=3)gFlute(f*2,t,dur,0.07);
-      if(m.lead==="flute"&&n.len>=2)gPluck(f,t,dur,0.14)}
+      
+      }
     AU.next+=m.eighth;AU.step++}
 }
 function setMood(name){
   AU.moodWanted=name;if(!AU.on||!AU.ctx)return;
   if(AU.mood===name)return;const ac=AU.ctx,m=MOODS[name];if(!m)return;
   AU.master.gain.cancelScheduledValues(ac.currentTime);AU.master.gain.setTargetAtTime(0,ac.currentTime,0.25);
-  setTimeout(()=>{AU.mood=name;AU.song=makeSong(m);AU.step=0;AU.next=ac.currentTime+0.1;AU.master.gain.setTargetAtTime(0.16*m.vol,ac.currentTime,0.6)},AU.mood?700:0);
+  clearTimeout(AU.pend);AU.song=null;
+  AU.pend=setTimeout(()=>{AU.mood=name;AU.song=makeSong(m);AU.step=0;AU.next=ac.currentTime+0.15;AU.master.gain.setTargetAtTime(0.12*m.vol,ac.currentTime,0.6)},AU.mood?700:0);
   if(!AU.timer)AU.timer=setInterval(auTick,40);
 }
-function audioGesture(){if(!AU.on)return;if(!auInit())return;if(AU.ctx.state==="suspended")AU.ctx.resume();if(AU.moodWanted&&AU.mood!==AU.moodWanted)setMood(AU.moodWanted)}
+function audioGesture(){if(!AU.on&&!AU.sfxOn)return;if(!auInit())return;if(!AU.on){if(AU.ctx.state==="suspended")AU.ctx.resume();return}if(AU.ctx.state==="suspended")AU.ctx.resume();if(AU.moodWanted&&AU.mood!==AU.moodWanted)setMood(AU.moodWanted)}
+function setSfx(on){AU.sfxOn=on;try{const sv=JSON.parse(localStorage.getItem("bijang-rpg-v2")||"{}")||{};sv.sfx=on;localStorage.setItem("bijang-rpg-v2",JSON.stringify(sv))}catch(e){}if(on)sfx("correct")}
 function setMusic(on){AU.on=on;try{const sv=JSON.parse(localStorage.getItem("bijang-rpg-v2")||"{}")||{};sv.music=on;localStorage.setItem("bijang-rpg-v2",JSON.stringify(sv))}catch(e){}
-  const b=$("#bSnd");if(b)b.textContent=on?"♪ 소리 켜짐":"♪ 소리 꺼짐";
+  const b=$("#bSnd");if(b)b.textContent=on?"♪ 배경음 켜짐":"♪ 배경음 꺼짐";
   if(on){audioGesture();const w=AU.moodWanted;AU.mood=null;if(w)setMood(w)}else if(AU.ctx){AU.master.gain.setTargetAtTime(0,AU.ctx.currentTime,0.2);AU.mood=null}}
 addEventListener("pointerdown",audioGesture,{capture:true});addEventListener("keydown",audioGesture,{capture:true});
 
-(()=>{const b=document.querySelector("#bSnd");if(b){b.textContent=AU.on?"♪ 소리 켜짐":"♪ 소리 꺼짐";b.onclick=()=>setMusic(!AU.on)}})();
+(()=>{const b=document.querySelector("#bSnd");if(b){b.textContent=AU.on?"♪ 배경음 켜짐":"♪ 배경음 꺼짐";b.onclick=()=>setMusic(!AU.on)}})();
 
+const SFXVOL={blip:2.2,click:2.2,step:6,page:2.2,tip:2,stitch:2.4,bubble:2.2,pull:2.2,coin:1.6,gain:1.6,correct:1.7,wrong:1.8,whack:1.2,gong:1.4,poof:1.8,splash:1.6,stamp:1.8};
 /* ═════════ 효과음 (직접 합성) ═════════ */
 function sfx(name){
-  if(!AU.on)return;if(!AU.ctx&&!auInit())return;const ac=AU.ctx;if(ac.state==="suspended")ac.resume();
-  const t=ac.currentTime+0.01,out=ac.createGain();out.gain.value=0.5;out.connect(ac.destination);
+  if(!AU.sfxOn)return;if(!AU.ctx&&!auInit())return;const ac=AU.ctx;if(ac.state==="suspended")ac.resume();
+  const t=ac.currentTime+0.01,out=ac.createGain();out.gain.value=SFXVOL[name]||1.3;out.connect(ac.destination);
+  if(AU.bus&&!/step|blip/.test(name)){AU.bus.gain.cancelScheduledValues(t);AU.bus.gain.setTargetAtTime(0.45,t,0.02);AU.bus.gain.setTargetAtTime(1,t+0.35,0.25)}
   const tone=(f,st,dur,type,vol,f2)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=type||"sine";o.frequency.setValueAtTime(f,t+st);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+st+dur);
     g.gain.setValueAtTime(0.0001,t+st);g.gain.exponentialRampToValueAtTime(vol,t+st+0.005);g.gain.exponentialRampToValueAtTime(0.0005,t+st+dur);o.connect(g);g.connect(out);o.start(t+st);o.stop(t+st+dur+0.05)};
   const noise=(st,dur,type,freq,vol,q,freq2)=>{const n=noiseSrc(t+st,dur),f=ac.createBiquadFilter(),g=ac.createGain();f.type=type;f.frequency.setValueAtTime(freq,t+st);if(freq2)f.frequency.exponentialRampToValueAtTime(freq2,t+st+dur);f.Q.value=q||1;
@@ -1432,9 +1445,12 @@ function drawFX(t){
   }
 }
 
+/* 효과음 들어 보기 */
+const SFX_LIST=[["blip","대화 넘기기"],["click","선택"],["step","발소리"],["coin","엽전"],["gain","증거 확보"],["tip","배움"],["correct","정답"],["wrong","오답"],["whack","곤장"],["gong","징(심문 시작)"],["poof","옷 갈아입기"],["stamp","도장·수결"],["stitch","바느질"],["pull","두레박 당기기"],["splash","물 쏟기"],["bubble","죽 끓기"]];
+
 /* ═════════ 이야기 구성 ═════════ */
 const ROUTES={
-  wife:{name:"춘풍의 아내",chapters:[["한양 다락골","아내의 계교, 그리고 남장"],["평양 성내","비장이 되어 증거를 모으다"],["평양 감영","논박전: 춘풍과 추월"],["다시 한양","다시 입은 비장 옷"]]},
+  wife:{name:"춘풍의 아내",chapters:[["한양 다락골","아내의 계교, 그리고 남장"],["평양 성내","비장이 되어 증거를 모으다"],["평양 감영","심문과 다짐: 춘풍과 추월"],["다시 한양","다시 입은 비장 옷"]]},
   chun:{name:"이춘풍",chapters:[["한양 다락골","나랏돈 이천 냥을 빌리다"],["평양, 추월의 집","이천오백 냥이 사라지다"],["사환 이춘풍","눈에는 풍년, 입에는 흉년"],["감영과 귀가","매, 오천 냥, 그리고 흰죽"]]}
 };
 function place(x,y,dir,look){Object.assign(G.player,{tx:x,ty:y,dir:dir||"d",moving:false,prog:0,look:look||G.player.look})}
