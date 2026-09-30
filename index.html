@@ -1057,13 +1057,13 @@ $("#bTip").onclick=()=>{
 $("#bEvid").onclick=()=>{openPanel(`<span class="eb">증거첩</span><h2>모은 증거</h2><div class="list">${G.evid.length?G.evid.map(id=>`<div class="item"><div class="t">${esc(EVID[id].t)}</div><div class="d">${esc(EVID[id].d)}</div></div>`).join(""):'<p class="note">아직 모은 증거가 없어요.</p>'}</div>`)};
 $("#bMenu").onclick=()=>{openPanel(`<span class="eb">메뉴</span><h2>메뉴</h2>
   <h3>설정</h3><div class="list"><button class="item" data-gloss style="text-align:left;cursor:pointer"><div class="t">현대어 풀이 · ${G.gloss?"켜짐":"꺼짐"}</div><div class="d">원문(原) 대사 아래에 쉬운 현대어 풀이를 함께 보여 줘요. 눌러서 켜고 끌 수 있어요.</div></button></div>
-  <button class="item" data-nav style="text-align:left;cursor:pointer;width:100%;margin-top:8px"><div class="t">미니맵·길 안내 화살표 · ${G.nav?"켜짐":"꺼짐"}</div><div class="d">오른쪽 위 작은 지도와, 다음에 갈 곳을 가리키는 노란 화살표예요. M 키로도 켜고 끌 수 있어요.</div></button>
+  <button class="item" data-nav style="text-align:left;cursor:pointer;width:100%;margin-top:8px"><div class="t">미니맵 · ${G.nav?"켜짐":"꺼짐"}</div><div class="d">오른쪽 위 작은 지도예요. 흰 점이 나, 깜빡이는 노란 점이 지금 할 일이에요. M 키로도 켜고 끌 수 있어요.</div></button>
   <button class="item" data-snd style="text-align:left;cursor:pointer;width:100%;margin-top:8px"><div class="t">배경음 · ${AU.on?"켜짐":"꺼짐"}</div><div class="d">장면마다 바뀌는 국악풍 가락이에요. 게임 안에서 직접 합성해 연주해요.</div></button><button class="item" data-sfxt style="text-align:left;cursor:pointer;width:100%;margin-top:8px"><div class="t">효과음 · ${AU.sfxOn?"켜짐":"꺼짐"}</div><div class="d">대화 넘김, 발소리, 엽전, 곤장, 정답·오답 같은 소리예요.</div></button>
   <div class="vols"><label>효과음 크기 <input type="range" min="0" max="300" step="10" value="${Math.round(AU.sfxVol*100)}" data-vol="sfx"><output>${Math.round(AU.sfxVol*100)}%</output></label><label>배경음 크기 <input type="range" min="0" max="200" step="10" value="${Math.round(AU.musicVol*100)}" data-vol="music"><output>${Math.round(AU.musicVol*100)}%</output></label></div>
   <div class="sfxgrid">${SFX_LIST.map(([k,n])=>`<button data-try="${k}">▶ ${n}</button>`).join("")}</div>
   <h3>장 고르기</h3>
   ${Object.entries(ROUTES).map(([rk,r])=>`<h3>${esc(r.name)}의 이야기</h3><div class="list">${r.chapters.map(([t,d],i)=>`<button class="item" data-ch="${rk}:${i+1}" style="text-align:left;cursor:pointer"><div class="t">제${i+1}장 · ${esc(t)}</div><div class="d">${esc(d)}</div></button>`).join("")}</div>`).join("")}
-  <h3>조작법</h3><p class="note">이동: 방향키 또는 WASD · 미니맵·길 안내: M · 말 걸기·넘기기: E, Space, Enter · 선택지: 숫자키나 ↑↓ · 휴대폰·태블릿: 화면 아래 버튼<br>머리 위에 노란 느낌표(!)가 뜬 사람이나 물건이 지금 할 일과 관련 있어요. 길을 잃으면 주인공 둘레의 노란 화살표와 미니맵의 깜빡이는 노란 점을 따라가세요.</p>
+  <h3>조작법</h3><p class="note">이동: 방향키 또는 WASD · 미니맵: M · 말 걸기·넘기기: E, Space, Enter · 선택지: 숫자키나 ↑↓ · 휴대폰·태블릿: 화면 아래 버튼<br>머리 위에 노란 느낌표(!)가 뜬 사람이나 물건이 지금 할 일과 관련 있어요. 길을 잃으면 미니맵의 깜빡이는 노란 점을 따라가세요.</p>
   <div class="row"><button class="btn" data-credits>만든 곳·출처</button><button class="btn" data-title>표지로</button></div>`)};
 function showCredits(){openPanel(CREDITS)}
 
@@ -1089,13 +1089,6 @@ function miniBase(m,s){if(m._mb&&m._mb.s===s)return m._mb.c;const c=document.cre
 function drawNav(t){
   const m=G.map,on=G.nav&&m&&!G.demo&&!$("#hud").hidden;
   mini.style.display=on?"block":"none";if(!on)return;
-  const q=G.busy?null:questTarget();
-  /* 화살표: 대상이 조금 떨어져 있을 때만, 주인공 둘레에서 대상 쪽을 가리킴 */
-  if(q&&q.d>T*2.5&&!UI.modal){const [px,py]=entPos(G.player);const sx=(px-G.cam.x+8)*SC,sy=(py-G.cam.y-4)*SC;
-    const a=Math.atan2(q.y-py-4,q.x-px-8),R=48+Math.sin(t*6)*4;
-    octx.save();octx.translate(sx+Math.cos(a)*R,sy+Math.sin(a)*R);octx.rotate(a);octx.scale(1.4,1.4);octx.scale(1.45,1.45);
-    octx.beginPath();octx.moveTo(13,0);octx.lineTo(-7,-10);octx.lineTo(-2,0);octx.lineTo(-7,10);octx.closePath();
-    octx.lineWidth=4;octx.strokeStyle="#1d1813";octx.stroke();octx.fillStyle="#f2c94c";octx.fill();octx.restore()}
   /* 미니맵 */
   const s=Math.max(3,Math.min(4,Math.floor(170/m.w))),W=m.w*s,H=m.h*s,dpr=Math.min(2,window.devicePixelRatio||1);
   if(mini.width!==W*dpr||mini.height!==H*dpr){mini.width=W*dpr;mini.height=H*dpr;mini.style.width=W+"px";mini.style.height=H+"px"}
