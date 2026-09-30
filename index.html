@@ -97,6 +97,53 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .mg .s-b1{grid-column:1;grid-row:1}.mg .s-b2{grid-column:2;grid-row:1}.mg .s-b3{grid-column:3;grid-row:1}.mg .s-f1{grid-column:1;grid-row:2}.mg .s-f2{grid-column:2/4;grid-row:2}.mg .s-s{grid-column:4;grid-row:1/3}
 .mg .mgmsg{min-height:1.6em;margin-top:8px}
 .lnk{background:none;border:0;color:#e3c27a;text-decoration:underline;font-family:var(--ui);font-size:12px;margin-top:6px;cursor:pointer}
+.tq{display:block;font-style:normal;font-size:12.5px;opacity:.8;margin-bottom:3px;border-left:2px solid currentColor;padding-left:7px}
+.mg .cloth2{position:relative;height:96px;margin-top:10px;background:var(--cl);border:2px solid var(--ink2);border-radius:4px;overflow:hidden;box-shadow:inset 0 -6px 0 rgba(0,0,0,.08)}
+.mg .cloth2 .weave{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.14) 0 2px,transparent 2px 5px),repeating-linear-gradient(90deg,rgba(0,0,0,.06) 0 2px,transparent 2px 5px)}
+.mg .cloth2 .seam2{position:absolute;left:5%;right:5%;top:58%;border-top:2px dashed rgba(60,40,20,.35)}
+.mg .cloth2 .st{position:absolute;top:calc(58% - 3px);height:5px;background:#b23a2a;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.35);animation:stIn .18s ease-out}
+.mg .cloth2 .st.out{animation:stOut .25s forwards}
+@keyframes stIn{from{transform:scaleX(0);transform-origin:left}to{transform:scaleX(1)}}
+@keyframes stOut{to{opacity:0;transform:translateY(10px) rotate(20deg)}}
+.mg .cloth2 .thr{position:absolute;top:calc(58% - 1px);height:3px;background:#b23a2a;opacity:.8;transition:left .15s,width .15s}
+.mg .cloth2 .needle{position:absolute;top:calc(58% - 62px);width:9px;height:76px;margin-left:-4px;filter:drop-shadow(0 0 1px #222) drop-shadow(2px 3px 0 rgba(0,0,0,.25));transform:rotate(-28deg);transform-origin:50% 90%;transition:left .15s}
+.mg .cloth2 .needle::before{content:"";position:absolute;left:1px;top:0;width:7px;height:100%;background:linear-gradient(90deg,#8d949c,#eef1f4 45%,#7d848c);border-radius:2px 2px 50% 50%/2px 2px 100% 100%}
+.mg .cloth2 .needle i{position:absolute;left:3px;top:6px;width:3px;height:10px;background:var(--cl);border-radius:1px}
+.mg .cloth2 .needle.dip{animation:dip .24s ease-in-out}
+@keyframes dip{0%{transform:rotate(-28deg) translateY(0)}45%{transform:rotate(-8deg) translateY(22px)}100%{transform:rotate(-28deg) translateY(0)}}
+.mg .cloth2 .needle.done{animation:lift .6s forwards}
+@keyframes lift{to{transform:rotate(-60deg) translate(-10px,-30px);opacity:0}}
+.mg .cloth2.tangle{animation:tangle .3s}
+@keyframes tangle{25%{transform:translateX(-5px) rotate(-.6deg)}75%{transform:translateX(5px) rotate(.6deg)}}
+.mg .cloth2.finish{box-shadow:0 0 0 4px #e3c27a,inset 0 -6px 0 rgba(0,0,0,.08);transition:box-shadow .3s}
+.mg .cloth2 .spark{position:absolute;top:calc(58% - 14px);width:28px;height:28px;margin-left:-14px;border-radius:50%;pointer-events:none;opacity:0}
+.mg .cloth2 .spark.on{animation:spark .35s ease-out}
+@keyframes spark{0%{opacity:.9;box-shadow:0 0 0 0 rgba(255,236,170,.9)}100%{opacity:0;box-shadow:0 0 0 14px rgba(255,236,170,0)}}
+.mg .sewbar{display:flex;justify-content:space-between;font-family:var(--ui);font-size:13px;margin-top:6px;min-height:1.4em}
+.mg .sewbar .combo{color:var(--seal);font-weight:700}
+.mg .sugi{position:relative;background:#f7f0dc;border:2px solid var(--ink2);padding:14px 16px 18px;margin-top:8px;font-family:var(--display);font-size:17px;line-height:1.9}
+.mg .sugi .orig{position:absolute;right:8px;top:6px}
+.mg .sugi p{margin:0}
+.mg .sugsign{display:inline-block;margin-top:8px;color:var(--seal);font-family:var(--ui);font-size:14px;animation:stIn .3s}
+.mg .sugsign i{font-style:normal;font-family:var(--display);font-size:22px;border:2px solid var(--seal);padding:0 6px;margin-left:6px}
+.mg .picks{display:grid;gap:6px;margin-top:8px}
+.mg .picks.grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+.mg .picks button{font-family:var(--ui);font-size:14px;text-align:left;background:var(--paper2);border:2px solid var(--line);padding:8px 10px;cursor:pointer}
+.mg .picks button.on{border-color:var(--indigo);background:#dfe6ef}
+.mg .picks button:hover{border-color:var(--indigo)}
+.mg .resp{margin-top:10px;font-family:var(--ui);font-size:14px;color:var(--seal)}
+.mg .brushwrap{display:flex;justify-content:center;margin-top:10px}
+.mg .brush{display:grid;justify-items:center;gap:4px;background:var(--paper2);border:2px solid var(--ink2);padding:8px 18px;cursor:pointer;touch-action:none;user-select:none;font-family:var(--ui);font-size:13px}
+.mg .brush svg{width:160px;height:70px}
+.mg .brush .stroke{fill:none;stroke:#1d1813;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.mg .route{display:flex;flex-wrap:wrap;gap:4px 0;align-items:center;margin:12px 0}
+.mg .route .stop{display:flex;align-items:center;font-family:var(--ui);font-size:13px}
+.mg .route .stop i{display:inline-block;width:18px;height:3px;background:var(--line)}
+.mg .route .stop:first-child i{display:none}
+.mg .route .stop b{font-weight:500;border:2px solid var(--line);background:var(--paper2);padding:3px 7px;min-width:34px;text-align:center}
+.mg .route .stop.on i{background:var(--indigo)}
+.mg .route .stop.on b{border-color:var(--indigo);background:#dfe6ef;color:var(--indigo)}
+.mg .route .stop.cur b{border-color:var(--seal);border-style:dashed}
 /* 알림 */
 .tip{position:fixed;left:50%;transform:translateX(-50%);top:calc(74px + env(safe-area-inset-top,0px));width:min(560px,calc(100% - 24px));background:#2b4a6f;color:#f1ead8;border:2px solid #16283d;box-shadow:0 4px 0 rgba(0,0,0,.35);padding:10px 14px;font-family:var(--ui);font-size:14px;line-height:1.6;z-index:30;display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .tip i{font-style:normal;font-family:var(--display);font-size:14px;border:1.5px solid #f1ead8;padding:0 5px;flex:none;margin-top:2px}
@@ -415,16 +462,24 @@ function sprite(lookKey,dir,f,blink){
 const AVA_OF={wife:"a_wife",bijang:"a_bijang",chun:"a_chun",chunB:"a_chunB",chu:"a_chu",mom:"a_mom",champ:"a_champ",sat:"a_sat",sar:"a_sar",guard:"a_sar",ajeon:"a_official",hojo:"a_official",madang:"a_man",seller:"a_man",seller2:"a_man",silk:"a_man",han1:"a_han",han2:"a_han",kid1:"a_kid",kid2:"a_kid",nopa:"a_old",halmeom:"a_old",anak1:"a_woman",anak2:"a_woman",jumo:"a_woman",saedaek:"a_woman",gisaeng2:"a_gisaeng"};
 const AVA_H={a_kid:31,a_old:36,a_mom:37};
 const AV={};
+function keyOut(a,W,H,bg){
+  const near=i=>Math.abs(a[i]-bg[0])+Math.abs(a[i+1]-bg[1])+Math.abs(a[i+2]-bg[2]);
+  const loose=i=>near(i)<110||(a[i]>150&&a[i+2]>150&&a[i+1]<120&&Math.abs(a[i]-a[i+2])<90);
+  const seen=new Uint8Array(W*H),st=[];
+  for(let x=0;x<W;x++){st.push(x,(H-1)*W+x)}for(let y=0;y<H;y++){st.push(y*W,y*W+W-1)}
+  while(st.length){const p=st.pop();if(seen[p])continue;seen[p]=1;const i=p*4;if(!loose(i))continue;a[i+3]=0;const x=p%W,y=(p-x)/W;
+    if(x>0)st.push(p-1);if(x<W-1)st.push(p+1);if(y>0)st.push(p-W);if(y<H-1)st.push(p+W)}
+  for(let i=0;i<a.length;i+=4)if(a[i+3]&&near(i)<70)a[i+3]=0;
+  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){const i=(y*W+x)*4;if(!a[i+3])continue;const r=a[i],gg=a[i+1],b=a[i+2];
+    if(r>gg+80&&b>gg+80&&r>170&&b>170&&[i-4,i+4,i-W*4,i+W*4].some(j=>!a[j+3]))a[i+3]=0}
+}
 function cutSheet(img,key){
   const W=img.naturalWidth,H=img.naturalHeight;if(!W||!H)return null;
   const c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d",{willReadFrequently:true});g.drawImage(img,0,0);
   const d=g.getImageData(0,0,W,H),a=d.data;
   const cs=[[2,2],[W-3,2],[2,H-3],[W-3,H-3]].map(([x,y])=>{const i=(y*W+x)*4;return[a[i],a[i+1],a[i+2]]});
   const bg=[0,1,2].map(k=>cs.reduce((s,c)=>s+c[k],0)/4);
-  const isBg=i=>{const r=a[i],gg=a[i+1],b=a[i+2];const dd=Math.abs(r-bg[0])+Math.abs(gg-bg[1])+Math.abs(b-bg[2]);return dd<110||(r>150&&b>150&&gg<120&&Math.abs(r-b)<90)};
-  for(let i=0;i<a.length;i+=4)if(isBg(i))a[i+3]=0;
-  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){const i=(y*W+x)*4;if(!a[i+3])continue;const r=a[i],gg=a[i+1],b=a[i+2];
-    if(r>gg+35&&b>gg+35){const nb=[i-4,i+4,i-W*4,i+W*4].some(j=>!a[j+3]);if(nb)a[i+3]=0}}
+  keyOut(a,W,H,bg);
   g.putImageData(d,0,0);
   const col=new Array(W).fill(0);for(let x=0;x<W;x++){let n=0;for(let y=0;y<H;y++)if(a[(y*W+x)*4+3])n++;col[x]=n}
   let runs=[],s=-1;for(let x=0;x<=W;x++){const on=x<W&&col[x]>2;if(on&&s<0)s=x;if(!on&&s>=0){runs.push([s,x-1]);s=-1}}
@@ -478,8 +533,7 @@ function cutProp(img,w){
   const W=img.naturalWidth,H=img.naturalHeight;const c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d",{willReadFrequently:true});g.drawImage(img,0,0);
   const d=g.getImageData(0,0,W,H),a=d.data;
   const cs=[[2,2],[W-3,2],[2,H-3],[W-3,H-3]].map(([x,y])=>{const i=(y*W+x)*4;return[a[i],a[i+1],a[i+2]]});const bg=[0,1,2].map(k=>cs.reduce((s,c)=>s+c[k],0)/4);
-  for(let i=0;i<a.length;i+=4){const r=a[i],gg=a[i+1],b=a[i+2];if(Math.abs(r-bg[0])+Math.abs(gg-bg[1])+Math.abs(b-bg[2])<110||(r>150&&b>150&&gg<120&&Math.abs(r-b)<90))a[i+3]=0}
-  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){const i=(y*W+x)*4;if(!a[i+3])continue;const r=a[i],gg=a[i+1],b=a[i+2];if(r>gg+35&&b>gg+35&&[i-4,i+4,i-W*4,i+W*4].some(j=>!a[j+3]))a[i+3]=0}
+  keyOut(a,W,H,bg);
   g.putImageData(d,0,0);
   let x0=W,x1=0,y0=H,y1=0;const col=new Array(W).fill(0),row=new Array(H).fill(0);
   for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(a[(y*W+x)*4+3]){col[x]++;row[y]++}
@@ -644,6 +698,10 @@ const OBJDRAW={
 const G={tips:[],gloss:true,route:"wife",ch:0,map:null,player:{tx:0,ty:0,dir:"d",moving:false,prog:0,look:"wife",step:0,ph:1},f:{},evid:[],money:0,purse:0,rec:[],busy:false,night:false,demo:true,cam:{x:0,y:0},flash:0};
 const SAVEKEY="bijang-rpg-v2";
 function loadSave(){try{return JSON.parse(localStorage.getItem(SAVEKEY)||"null")}catch(e){return null}}
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
@@ -846,7 +904,7 @@ const NAMES={narr:"",wife:"춘풍의 아내",bijang:"회계 비장",chun:"이춘
 function setBodyTalking(on){document.body.classList.toggle("talking",on)}
 function recAdd(who,t){if(!G.rec.some(r=>r.t===t)){G.rec.push({ch:G.ch,route:G.route,who:NAMES[who]||who,t,g:glossOf(t)||""});$("#nRec").textContent=G.rec.length;writeSave()}}
 function say(who,text,opt){
-  opt=opt||{};
+  opt=opt||{};if(who!=="narr"||opt.o)G.lastLine={who:opt.name||NAMES[who]||"",t:text};
   return new Promise(res=>{
     UI.modal=true;setBodyTalking(true);
     const name=who==="narr"?"":(opt.name||NAMES[who]||who);
@@ -864,7 +922,7 @@ function say(who,text,opt){
     tick();
   });
 }
-function choose(who,text,opts,opt){
+function choose(who,text,opts,opt){G.lastLine=null;
   opt=opt||{};
   return new Promise(res=>{
     UI.modal=true;setBodyTalking(true);
@@ -895,16 +953,18 @@ function sheet(html,opts){
     const f=v.querySelector(".btn.pri");f&&f.focus();
   });
 }
-function card(eb,title,body,img){return sheet(`<div class="sheet">${img?`<img class="cimg" src="art/${img}.jpg" alt="" onerror="this.remove()">`:""}<span class="eb">${esc(eb)}</span><h2>${esc(title)}</h2>${body?`<p>${esc(body)}</p>`:""}<div class="row"><button class="btn pri" data-go="1">계속 ▶</button></div></div>`)}
+function card(eb,title,body,img){G.lastLine=null;return sheet(`<div class="sheet">${img?`<img class="cimg" src="art/${img}.jpg" alt="" onerror="this.remove()">`:""}<span class="eb">${esc(eb)}</span><h2>${esc(title)}</h2>${body?`<p>${esc(body)}</p>`:""}<div class="row"><button class="btn pri" data-go="1">계속 ▶</button></div></div>`)}
 let tipTimer;
+const quoteOf=()=>{const l=G.lastLine;if(!l)return "";const t=l.t.replace(/\s+/g," ");return (l.who?l.who+": ":"")+"“"+(t.length>46?t.slice(0,46)+"…":t)+"”"};
 function tip(text){
-  if(!/방향키|노란 느낌표/.test(text)&&!G.tips.some(x=>x.t===text)){sfx("tip");G.tips.push({route:G.route,ch:G.ch,t:text});writeSave();const n=$("#nTip");if(n)n.textContent=G.tips.length;const b=$("#bTip");if(b){b.classList.remove("ping");void b.offsetWidth;b.classList.add("ping")}}
+  const q=/방향키|노란 느낌표|선택지에서|원작의 인물이/.test(text)?"":quoteOf();
+  if(!/방향키|노란 느낌표/.test(text)&&!G.tips.some(x=>x.t===text)){sfx("tip");G.tips.push({route:G.route,ch:G.ch,t:text,q});writeSave();const n=$("#nTip");if(n)n.textContent=G.tips.length;const b=$("#bTip");if(b){b.classList.remove("ping");void b.offsetWidth;b.classList.add("ping")}}
   document.querySelectorAll(".tip").forEach(x=>x.remove());
-  const el=document.createElement("div");el.className="tip";el.innerHTML=`<i>배움</i><span>${esc(text)}</span>`;$("#ui").appendChild(el);
+  const el=document.createElement("div");el.className="tip";el.innerHTML=`<i>배움</i><span>${q?`<em class="tq">${esc(q)}</em>`:""}${esc(text)}</span>`;$("#ui").appendChild(el);
   el.onclick=()=>el.remove();clearTimeout(tipTimer);tipTimer=setTimeout(()=>el.remove(),10000);
 }
 function toast(title,body){sfx("gain");const el=document.createElement("div");el.className="toast";el.innerHTML=`<b>${esc(title)}</b>${esc(body)}`;$("#ui").appendChild(el);setTimeout(()=>el.remove(),2200)}
-function setObj(t){G.obj=t;updateHUD()}
+function setObj(t){G.obj=t;G.lastLine=null;updateHUD()}
 function updateHUD(){
   const names=ROUTES[G.route]?ROUTES[G.route].chapters:[];
   $("#qch").textContent=G.ch&&names[G.ch-1]?`제${G.ch}장 · ${names[G.ch-1][0]}`:"";$("#qobj").textContent=G.obj||"";
@@ -1012,9 +1072,9 @@ $("#bRec").onclick=()=>{
   openPanel(`<span class="eb">기록첩</span><h2>원문 기록</h2><p class="note">붉은 낙관(原)이 찍힌 대사와 서술은 실제 「이춘풍전」의 문장이에요. 만난 원문이 여기에 모여요. 비평문을 쓸 때 근거로 쓰세요.</p>
   ${G.rec.length?G.rec.map(r=>{const g=r.g||glossOf(r.t);return `<div class="rec"><small>제${r.ch}장 · ${esc(r.who||"서술")}</small>${esc(r.t)}${g?`<div class="gl"><b>풀이</b>${esc(g)}</div>`:""}</div>`}).join(""):'<p class="note">아직 모은 원문이 없어요.</p>'}`)};
 $("#bTip").onclick=()=>{
-  const groups={};for(const x of G.tips){const k=(x.route||"wife")+":"+(x.ch||0);(groups[k]=groups[k]||[]).push(x.t)}
+  const groups={};for(const x of G.tips){const k=(x.route||"wife")+":"+(x.ch||0);(groups[k]=groups[k]||[]).push(x)}
   openPanel(`<span class="eb">배움첩</span><h2>배움 기록</h2><p class="note">이야기를 따라가며 떴던 ‘배움’ 알림이 모두 여기에 모여요. 판소리계 소설의 특징, 인물의 성격, 풍자의 장치를 복습해 보세요.</p>
-  ${G.tips.length?Object.entries(groups).map(([k,arr])=>{const [r,c]=k.split(":");const rt=ROUTES[r];const chn=rt&&rt.chapters[c-1]?`제${c}장 · ${rt.chapters[c-1][0]}`:"";return `<h3>${esc(rt?rt.name:"")}${chn?" · "+esc(chn):""}</h3>${arr.map(t=>`<div class="rec tipr">${esc(t)}</div>`).join("")}`}).join(""):'<p class="note">아직 모은 배움이 없어요.</p>'}`)};
+  ${G.tips.length?Object.entries(groups).map(([k,arr])=>{const [r,c]=k.split(":");const rt=ROUTES[r];const chn=rt&&rt.chapters[c-1]?`제${c}장 · ${rt.chapters[c-1][0]}`:"";return `<h3>${esc(rt?rt.name:"")}${chn?" · "+esc(chn):""}</h3>${arr.map(x=>`<div class="rec tipr">${x.q?`<em class="tq">${esc(x.q)}</em>`:""}${esc(x.t)}</div>`).join("")}`}).join(""):'<p class="note">아직 모은 배움이 없어요.</p>'}`)};
 $("#bEvid").onclick=()=>{openPanel(`<span class="eb">증거첩</span><h2>모은 증거</h2><div class="list">${G.evid.length?G.evid.map(id=>`<div class="item"><div class="t">${esc(EVID[id].t)}</div><div class="d">${esc(EVID[id].d)}</div></div>`).join(""):'<p class="note">아직 모은 증거가 없어요.</p>'}</div>`)};
 $("#bMenu").onclick=()=>{openPanel(`<span class="eb">메뉴</span><h2>메뉴</h2>
   <h3>설정</h3><div class="list"><button class="item" data-gloss style="text-align:left;cursor:pointer"><div class="t">현대어 풀이 · ${G.gloss?"켜짐":"꺼짐"}</div><div class="d">원문(原) 대사 아래에 쉬운 현대어 풀이를 함께 보여 줘요. 눌러서 켜고 끌 수 있어요.</div></button></div>
@@ -1174,7 +1234,40 @@ const GLOSS=[
 ["서리같이 호령하니","서릿발같이 호통치니, 추월은 기가 막혀 넋이 나간 듯 정신이 흐릿한 가운데 겁에 질려, 죽지 않으려고 애걸하며 아뢰기를,"],
 ["비장이 하는 말이","비장이 말하기를,"],
 ["하고 다짐을 써서 올리거늘","그러고는 죄를 인정하는 글을 써서 올리니, 그제야 비장이 춘풍과 추월을 형틀에서 풀어 주고, 춘풍을 다시 불러 조용히 약속하기를,"],
-["춘풍이 감사하여 내려서서","춘풍이 고마워하며 내려와 아뢰기를,"]
+["춘풍이 감사하여 내려서서","춘풍이 고마워하며 내려와 아뢰기를,"],
+["이처럼 허랑하고 조석을 이룰 수 없이","이렇게 허황하게 살아 아침저녁 끼니도 잇지 못할 만큼 재산을 다 써 버리자, 춘풍은 어쩔 수 없이 그제야 잘못을 뉘우치고 스스로를 꾸짖으며 아내에게 사과하고 정성껏 비는 말이,"],
+["자네 부디 노여 마오","여보, 제발 화내지 마오. 제발 서러워하지 마오. 내 마음을 돌아보니 지금이 옳고 예전이 잘못이었네(각금시이작비). 지난 일은 그만두고, 가난해서 못 살겠네. 어찌하면 좋단 말인가. 오늘부터 집안일을 모두 자네에게 맡길 테니, 자네 뜻대로 살림을 꾸려 먹고 입는 것이나 모자라지 않게 해 주오."],
+["춘풍의 처 하는 말이","춘풍의 아내가 말하기를,"],
+["부모조업 누만금을 주색을","부모님이 물려준 많은 재산을 술과 여자로 다 없애고 이 지경이 되었으니, 앞으로 내가 바느질과 길쌈, 베 짜기로 돈푼을 모은다 해도 (당신이 또 다 써 버릴 텐데) 무엇을 아낄 수 있겠소?"],
+["춘풍이 대답하되","춘풍이 대답하기를,"],
+["자네 말이 내 행세를","자네가 내 행실을 믿지 못하는 것이니, 앞으로 술과 여자, 노름을 하지 않겠다는 수기(다짐하는 글)를 써 주겠네."],
+["지필을 내어 수기를","종이와 붓을 꺼내어 수기를 쓴다."],
+["모년 모월 모일 기위전수기라","아무 해 아무 달 아무 날, 앞서 쓰는 수기이다. 이 수기를 쓰는 까닭은, 내가 바람을 피우고 방탕하게 지내 조상이 물려준 많은 재산을 기생집과 노름으로 다 날렸기 때문이다. 이제야 지금이 옳고 예전이 잘못인 줄 알았으나 뉘우쳐도 이미 늦었다. 오늘 뒤로 집안일을 모두 아내 김씨에게 맡긴다. 김씨가 살림을 맡은 뒤로는 아무리 많은 재물이라도 모두 김씨의 재물이요, 남편 이춘풍은 돈 한 푼, 곡식 한 말에도 손대지 않기로 이렇게 수기를 쓰니, 뒷날 만약 또 노름으로 망하거든 이 수기를 가지고 관청에 알려 바로잡으라. 쓴 사람은 남편 이춘풍이다."],
+["책명하여 주니","(수기 끝에) 이름을 써서 건네주니, 춘풍 아내의 모습을 보라."],
+["수기 말씀이 지차수기하고","수기에 ‘이 수기를 가지고 관청에 알려 바로잡으라’고 하였지만, 아내가 남편을 걸어 관청에 소송을 할 수 있겠소?"],
+["춘풍이 이 말 듣고 수기를 고쳐","춘풍이 이 말을 듣고 수기를 고쳐 쓰기를,"],
+["차여중 김씨전수기라","이것은 집안의 아내 김씨 앞으로 쓰는 수기이다. 이제부터 만약 또 잡된 짓을 하거든 ‘아비의 자식이 아니다(비부지자)’라고 불러도 좋으니, 이 문서를 증거로 삼으라."],
+["하여 주니, 김씨 받아 함롱에","이렇게 써 주니, 김씨가 받아 옷상자(함롱)에 넣어 두고 이날부터 살림을 맡아 꾸린다."],
+["침재 길쌈 능란하다","바느질과 길쌈 솜씨가 뛰어나다. 오 푼 받고 새 버선 짓기, 서 푼 받고 버선 볼 박기, 두 푼 받고 한삼(소매 끝에 다는 흰 천) 짓기, 서 푼 받고 헌 옷 깁기, 네 돈 받고 장옷 짓기, 닷 돈 받고 도포 짓기, 엿 돈 받고 천익(무관의 겉옷) 짓기, 일곱 돈 받고 이불 짓기, 한 냥 받고 돌찌 누비기, 두 냥 받고 바지 누비기, 세 냥 받고 긴 옷 누비기, 넉 냥 받고 관복 짓기,"],
+["겨울이면 무명나이","겨울이면 무명 짜기, 여름이면 삼베 길쌈, 가을이면 염색하기. 이렇게 사계절 내내 밤낮으로 쉬지 않고 사오 년 동안 모은 돈을 이자를 받고 빌려주어 수천 냥을 모았구나. 먹고 입을 것이 넉넉하고 살림이 풍족하여 아쉬울 것이 전혀 없다."],
+["이 때에 춘풍이 아내 덕에","이때 춘풍은 아내 덕분에 옷과 갓을 잘 차려입고, 기름진 음식을 배불리 먹고, 제 집 술로 날마다 취해 있구나. 대접을 받으며 배에 기름이 끼니 마음이 교만해져 예전 버릇이 저절로 나온다."],
+["떵떵거리고 내달아서 호조 돈","큰소리치며 나서서 호조(나라 살림을 맡은 관청)의 돈 이천 냥을 비싼 이자(대돈변)로 빌려 내어, 방물장수 행세를 하며 평양으로 장사하러 가려 하니, 춘풍 아내의 모습을 보라. 이 말을 듣고 크게 놀라 춘풍에게 하는 말이,"],
+["여보시오 서방님, 내 말 잠깐","여보시오 서방님, 내 말 좀 들어 보오. 스무 살 전에 부모님 재산을 다 날리고 그 뒤 오 년 동안 바깥일과 인연을 끊고 지내 세상 물정에도 어두운데, 평양 장사는 가지 마오. 평양 물정을 내가 들었소. 화려하고 사치스러우며, 곱게 꾸민 기생집의 미인들이 붉은 입술 흰 이를 반쯤 드러내고 노래 한 곡조로 아양을 떨어, 돈 많고 허황한 사내는 세워 두고 벗겨 먹는다 하오. 평양 물정이 이렇다니 제발 장사 가지 마오."],
+["지성으로 만류하니","정성을 다해 말리니 춘풍이 하는 말이,"],
+["나도 또한 사람이지","나도 사람인데, 스무 살 전에 집안을 망친 것이 뼈에 사무치게 원통하오. ‘천금을 다 써도 다시 돌아온다(천금진산 환부래)’고 했으니, 내가 늘 망하기만 하겠소? 빨리 다녀오겠네."],
+["춘풍 아내 이른 말이","춘풍의 아내가 이르기를,"],
+["연전에 치패하여","몇 해 전에 망하고 나서 돈 한 푼, 곡식 한 말에도 참견하지 않겠다며, 어기면 아비의 자식이 아니라고 수기를 써서 내 옷상자에 넣어 두었는데, 그새 잊었소? 먹고 입는 것은 나를 믿고 편히 앉아 먹으며 제발 가지 마오."],
+["춘풍이 이 말 듣고 대노하여","춘풍이 이 말을 듣고 크게 화가 나서, 어질고 착한 아내의 머리채를 비단 가게에서 비단 감듯 휘휘 칭칭 감아쥐고 이리 치고 저리 치며,"],
+["천리원정 장삿길에","천 리 먼 길 장사를 떠나는데 요망한 여편네가 이렇게 잔소리를 하니, 이런 변이 또 있는가?"],
+["제 아내 욱지르고","제 아내를 윽박지르고 집안 재물을 다 털어 말에 싣고 떠나니, 불쌍하다, 춘풍 아내가 아무리 여러 말로 말려도 막무가내였다."],
+["이 때 춘풍이 이천오백 냥","이때 춘풍이 이천오백 냥을 삯 낸 말에 실어 놓고 떠날 때, 좋은 말에 짐을 반쯤 싣고 호랑이 가죽 방석을 높이 깔고 올라앉아 내려간다."],
+["의기양양 내려갈 때","우쭐대며 내려가는데, 연소문과 무학재를 얼른 지나 평양 길로 내려가다가 청석골에 이르니, 정신이 맑아져 좌우 산천을 둘러본다. 때는 봄 삼월 좋은 시절이라. …… 늘어진 버드나무는 봄바람에 흥겨워 우쭐우쭐 춤을 춘다."],
+["동선령을 바삐 넘어","동선령 고개를 바삐 넘어 황주 병영을 구경하고, 중화에서 평양을 바라보며 형제교를 얼른 지나 십 리 숲길을 지나 대동강에 이르러 모란봉을 올려다보니, 그 아래 부벽루가 둘러 있고 경치도 좋구나. 대동문과 연광정, 천하 제일의 경치가 여기로다. …… 성안에 들어서니 집도 많고 거리도 화려하다."],
+["최성루 돌아들어","최성루를 돌아 좌우 산천을 구경하다 또 한쪽을 바라보니 옛 버릇이 저절로 살아난다. 이런 변이 또 있는가. 기생집 앞을 지나 객사 동쪽에 숙소를 정하고, 열두 짐이나 실어 온 돈을 차례로 들여놓고 사나흘 머물며 물정을 살피더니, 하루는 난간에 기대어 한 집을 바라보니 집 꾸밈도 좋거니와 그 집 주인의 모습을 보라. 뛰어난 미인 추월이라. 얼굴도 으뜸이요, 노래도 명창이요, 나이는 열다섯이라. 성안의 호걸과 팔도의 젊은 한량들이 한번 보면 삼백 석 재산 쓰기를 물 쓰듯 하는구나."],
+["춘풍의 거동 보소. 좋은 의복","춘풍의 모습을 보라. 좋은 옷을 차려입고, …… 벌과 나비가 꽃밭을 찾아가듯, 맹상군처럼 거드름 피우는 팔자걸음으로 중문 안에 들어서니, 추월의 모습을 보라."],
+["춘풍이 오는 양을 얼른 보고","(추월이) 춘풍이 오는 것을 얼른 보고 고운 얼굴을 번쩍 들어 섬돌 아래로 내려와, 춘풍의 비단 소매를 휘어잡고 난간 위로 오른다. 좌우를 살펴보니 집 꾸밈도 황홀하다. 사방이 입 구(口) 자 모양으로 반듯하고, 여섯 칸 대청 앞뒤로 툇마루가 있으며 이층 난간이 맵시 있다."],
+["방 안을 살펴보니 각장 장판","방 안을 살펴보니 두꺼운 장판에 꾸민 천장, 국화를 새긴 창문, 산수 병풍의 미인도가 아름답다."],
+["묵화로 죽엽 쳐서","먹으로 그린 대나무 잎 그림을 창문에 붙이고, 원앙 수놓은 이불과 잣 베개를 장 위에 개어 두었으며, 흰 벽의 글귀를 보니 동중서의 책문, 제갈량의 출사표, 적벽부와 양양가를 구석구석 붙였구나. 놋촛대와 등잔이 여기저기 놓였고, 요강과 재떨이, 청동 화로와 수박 모양 화로, 삼층 화류장(붉은 나무로 만든 장)이 드문드문 벌여 있으며, 벼루상, 무늬 좋은 돗자리(화문석), 다리 달린 옷걸이에 좋은 옷을 걸어 두고, 추월의 모습을 보라."]
 ];
 function glossOf(t){
   let best=null,len=0;
@@ -1191,13 +1284,30 @@ function shk(el){if(!el)return;el.classList.remove("shake");void el.offsetWidth;
 const PAD4=`<div class="pad4"><button data-a="u">↑</button><button data-a="l">←</button><button data-a="d">↓</button><button data-a="r">→</button></div>`;
 
 /* 땀 뜨기: 화살표 순서대로 누르기 */
-function stitchGame(len,title){
+function stitchGame(len,title,col){
   return new Promise(res=>{
-    const seq=Array.from({length:len},()=>"udlr"[Math.floor(Math.random()*4)]);let i=0;
-    const v=mgOpen(`<span class="eb">삯바느질 · 땀 뜨기</span><h2>${esc(title)}</h2><p class="note">화살표가 가리키는 방향키(또는 아래 버튼)를 순서대로 눌러 한 땀씩 꿰매요. 틀리면 한 땀 풀려요.</p>
-      <div class="cloth"><div class="seam"></div><div class="thread"></div></div><div class="seq"></div>${PAD4}`);
-    const paint=()=>{v.querySelector(".seq").innerHTML=seq.map((a,k)=>`<span class="arr${k<i?" ok":k===i?" cur":""}">${ARG[a]}</span>`).join("");v.querySelector(".thread").style.width=(i/len*100)+"%"};
-    const hit=a=>{if(a===seq[i]){i++;paint();sfx("stitch");if(i>=len){sfx("correct");setTimeout(()=>{mgClose(v);res()},350)}}else{sfx("wrong");i=Math.max(0,i-1);paint();shk(v.querySelector(".cloth"))}};
+    const seq=Array.from({length:len},()=>"udlr"[Math.floor(Math.random()*4)]);let i=0,combo=0;
+    const X=k=>6+k*(88/len),SW=88/len;
+    const v=mgOpen(`<span class="eb">삯바느질 · 땀 뜨기</span><h2>${esc(title)}</h2><p class="note">화살표가 가리키는 방향키(또는 아래 버튼)를 순서대로 눌러 한 땀씩 꿰매요. 틀리면 실이 엉켜 한 땀 풀려요.</p>
+      <div class="cloth2" style="--cl:${col||"#efe3c8"}"><div class="weave"></div><div class="seam2"></div><div class="stitches"></div><div class="thr"></div><div class="needle"><i></i></div><div class="spark"></div></div>
+      <div class="sewbar"><span class="combo"></span><span class="cnt"></span></div><div class="seq"></div>${PAD4}`);
+    const cl=v.querySelector(".cloth2"),st=v.querySelector(".stitches"),nd=v.querySelector(".needle"),th=v.querySelector(".thr");
+    const place=()=>{const x=X(i);nd.style.left=x+"%";th.style.left=(i?X(i-1)+SW*0.6:X(0))+"%";th.style.width=Math.max(0,x-(i?X(i-1)+SW*0.6:X(0)))+"%"};
+    const paint=()=>{v.querySelector(".seq").innerHTML=seq.map((a,k)=>`<span class="arr${k<i?" ok":k===i?" cur":""}">${ARG[a]}</span>`).join("");
+      v.querySelector(".cnt").textContent=`${i} / ${len} 땀`;v.querySelector(".combo").textContent=combo>=3?`손놀림이 척척! ×${combo}`:"";place()};
+    const hit=a=>{
+      if(i>=len)return;
+      if(a===seq[i]){
+        const s=document.createElement("span");s.className="st";s.style.left=X(i)+"%";s.style.width=SW*0.6+"%";st.appendChild(s);
+        nd.classList.remove("dip");void nd.offsetWidth;nd.classList.add("dip");
+        const sp=v.querySelector(".spark");sp.style.left=X(i)+SW*0.3+"%";sp.classList.remove("on");void sp.offsetWidth;sp.classList.add("on");
+        i++;combo++;paint();sfx("stitch");
+        if(i>=len){sfx("correct");nd.classList.add("done");cl.classList.add("finish");setTimeout(()=>{mgClose(v);res()},800)}
+      }else{
+        sfx("wrong");combo=0;cl.classList.remove("tangle");void cl.offsetWidth;cl.classList.add("tangle");
+        if(i>0){const last=st.lastElementChild;if(last){last.classList.add("out");setTimeout(()=>last.remove(),250)}i--}
+        paint();
+      }};
     paint();v.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b)hit(b.dataset.a)});
     UI.onKey=e=>{const a=ARR[e.code];if(a){hit(a);return true}return true};
   });
@@ -1302,6 +1412,221 @@ function dajimGame(){
     });
     UI.onKey=()=>true;
   });
+}
+
+/* ═════════ 다빈치맵 본에서 가져온 앞부분 (활동지에 없는 대목) ═════════ */
+const SUGI1="모년 모월 모일 기위전수기라. 우수기 단은 외입 방탕하기로 선세조업 누만금을 청루잡기로 진산하고, 각금시이작비하고서 회개에 막급이라. 차일 후로 가중지사를 진부어실 김씨 하거온. 김씨 치산 후로는 누만금지 재라도 진시 김씨지재요, 가부 이춘풍은 일푼전 일두속을 불부 담당지지로 여시 수기하오니, 일후에 약유 잡기지패 여든지차수기하고 관변정사라. 증필에 가부 이춘풍이라.";
+const SUGI2="차여중 김씨전수기라. 종금이후로 약유잡담이거든 가위 비부지자라, 지차문기 빙고사라.";
+
+/* 수기(각서) 보기·쓰기: 원문 문서 + 풀이 + (1차) 약속 고르기 + 수결 */
+function sugiGame(ver,asWriter){
+  return new Promise(res=>{
+    const text=ver===1?SUGI1:SUGI2;recAdd("chun",text);
+    const promises=[["집안일을 모두 아내 김씨에게 맡긴다",1],["아내가 모은 재물은 아무리 많아도 모두 아내의 것이다",1],["춘풍은 한 푼의 돈, 한 말의 곡식에도 손대지 않는다",1],["다시 노름으로 망하면 이 수기를 들고 관청에 가서 바로잡는다",1],["한 해에 한 번은 기생집에 가도 된다",0],["장사로 돈을 벌어 아내에게 갚는다",0]];
+    const pick=new Set();let stage=ver===1?"check":"sign",msg="";
+    const v=mgOpen("");const box=v.querySelector(".sheet");
+    const paint=()=>{
+      box.innerHTML=`<span class="eb">${ver===1?"수기(手記) · 춘풍이 스스로 쓴 다짐 글":"고쳐 쓴 수기"}</span><h2>${asWriter?"수기를 써라":"춘풍의 수기"}</h2>
+      <div class="sugi"><span class="orig" title="원문">原</span><p>${esc(text)}</p>${stage==="done"?'<span class="sugsign">수결 <i>春風</i></span>':""}</div>
+      ${G.gloss?`<div class="gl"><b>풀이</b>${esc(glossOf(text)||"")}</div>`:""}
+      ${stage==="check"?`<p class="note" style="margin-top:12px"><b>이 수기에서 춘풍이 약속한 것</b>을 모두 고르세요.</p><div class="picks">${promises.map(([t],k)=>`<button data-p="${k}" class="${pick.has(k)?"on":""}">${pick.has(k)?"☑":"☐"} ${esc(t)}</button>`).join("")}</div><div class="row"><button class="btn pri" data-chk>확인</button></div>`:""}
+      ${stage==="sign"?`<p class="note" style="margin-top:12px">${asWriter?"붓을 눌러 수결(서명)을 두세요.":"춘풍이 수결(서명)을 둡니다."} 아래 붓 버튼을 <b>꾹 누르고 있으면</b> 수결이 그려져요.</p><div class="brushwrap"><button class="brush" data-brush><svg viewBox="0 0 120 60"><path class="stroke" d="M8 40 C 25 10, 40 55, 55 25 S 85 10, 95 38 L 112 20"/></svg><span>꾹 눌러 수결 두기</span></button></div>`:""}
+      ${stage==="done"?`<div class="row"><button class="btn pri" data-go>계속 ▶</button></div>`:""}
+      ${msg?`<div class="resp">${msg}</div>`:""}`;
+      const br=box.querySelector("[data-brush]");
+      if(br){let t0=0,raf=0;const path=br.querySelector(".stroke"),L=path.getTotalLength();path.style.strokeDasharray=L;path.style.strokeDashoffset=L;
+        const step=()=>{const p=Math.min(1,(performance.now()-t0)/1100);path.style.strokeDashoffset=L*(1-p);if(p<1)raf=setTimeout(step,16);else{sfx("stamp");stage="done";msg="";setTimeout(paint,250)}};
+        const down=e=>{e.preventDefault();t0=performance.now();sfx("stitch");clearTimeout(raf);raf=setTimeout(step,16)};
+        const up=()=>{if(stage==="sign"){clearTimeout(raf);path.style.strokeDashoffset=L;msg="붓을 끝까지 누르고 있어야 수결이 완성돼요."}};
+        br.addEventListener("pointerdown",down);br.addEventListener("pointerup",up);br.addEventListener("pointerleave",up)}
+    };
+    paint();
+    box.addEventListener("click",e=>{
+      const p=e.target.closest("[data-p]");if(p){const k=+p.dataset.p;pick.has(k)?pick.delete(k):pick.add(k);sfx("click");paint();return}
+      if(e.target.closest("[data-chk]")){const want=promises.map((x,k)=>x[1]?k:-1).filter(k=>k>=0);const ok=want.every(k=>pick.has(k))&&pick.size===want.length;
+        if(ok){sfx("correct");stage="sign";msg=""}else{sfx("wrong");msg=pick.size<want.length?"빠진 약속이 있어요. 풀이를 다시 읽어 보세요.":"수기에 없는 약속이 섞여 있어요. 풀이를 다시 읽어 보세요.";shk(box)}paint();return}
+      if(e.target.closest("[data-go]")){mgClose(v);res()}
+    });
+    UI.onKey=()=>true;
+  });
+}
+
+/* 평양 가는 길: 원문에 나온 순서대로 지나간 곳 잇기 */
+function routeGame(){
+  return new Promise(res=>{
+    const R=["연소문","무학재","청석골","동선령","황주 병영","중화","형제교","십리장림","대동강","대동문"];
+    const order=[5,0,8,2,6,3,9,1,7,4];let i=0;
+    const v=mgOpen("");const box=v.querySelector(".sheet");
+    const paint=()=>{
+      box.innerHTML=`<span class="eb">평양 가는 길</span><h2>한양에서 평양까지</h2><p class="note">원문은 춘풍이 지나간 곳을 차례로 늘어놓아요. 서울 성문을 나서서 평양 대동문에 들기까지, <b>지나간 순서대로</b> 눌러 길을 이어 보세요.</p>
+      <div class="route">${R.map((n,k)=>`<span class="stop${k<i?" on":""}${k===i?" cur":""}"><i></i><b>${k<i?esc(n):"?"}</b></span>`).join("")}</div>
+      ${i<R.length?`<div class="picks">${order.filter(k=>k>=i).map(k=>`<button data-r="${k}">${esc(R[k])}</button>`).join("")}</div>`:`<p class="note">평양에 닿았어요.</p><div class="row"><button class="btn pri" data-go>계속 ▶</button></div>`}`;
+    };
+    paint();
+    box.addEventListener("click",e=>{
+      const b=e.target.closest("[data-r]");if(b){if(+b.dataset.r===i){i++;sfx(i>=R.length?"correct":"step");paint()}else{sfx("wrong");shk(b)}return}
+      if(e.target.closest("[data-go]")){mgClose(v);res()}
+    });
+    UI.onKey=()=>true;
+  });
+}
+
+/* 추월의 방: 원문에 나오는 살림만 고르기 */
+function roomGame(){
+  return new Promise(res=>{
+    const items=[["놋촛대",1],["가야금",0],["요강",1],["쟁기",0],["재떨이",1],["청동화로",1],["물레",0],["화류장",1],["가마솥",0],["원앙금침",1],["장기판",0],["화문석",1],["옷걸이",1],["활과 화살",0]];
+    const pick=new Set();let msg="";
+    const v=mgOpen("");const box=v.querySelector(".sheet");
+    const paint=()=>{
+      box.innerHTML=`<span class="eb">추월의 방 살펴보기</span><h2>무엇으로 채운 방일까</h2><p class="note">원문은 추월의 방을 살림살이 이름으로 줄줄이 늘어놓아요. 방금 읽은 원문에 <b>나온 살림만</b> 모두 고르세요.</p>
+      <div class="picks grid">${items.map(([t],k)=>`<button data-p="${k}" class="${pick.has(k)?"on":""}">${pick.has(k)?"☑":"☐"} ${esc(t)}</button>`).join("")}</div>
+      <div class="row"><button class="btn pri" data-chk>확인</button></div>${msg?`<div class="resp">${msg}</div>`:""}`;
+    };
+    paint();
+    box.addEventListener("click",e=>{
+      const p=e.target.closest("[data-p]");if(p){const k=+p.dataset.p;pick.has(k)?pick.delete(k):pick.add(k);sfx("click");paint();return}
+      if(e.target.closest("[data-chk]")){const want=items.map((x,k)=>x[1]?k:-1).filter(k=>k>=0);const miss=want.filter(k=>!pick.has(k)).length,extra=[...pick].filter(k=>!items[k][1]).length;
+        if(!miss&&!extra){sfx("correct");mgClose(v);tip("판소리계 소설은 살림살이, 옷차림, 음식 이름을 줄줄이 늘어놓아(나열) 장면을 생생하게 보여 줘요. 춘풍의 돈이 결국 이 방을 채우는 데 들어가지요.");res();return}
+        sfx("wrong");msg=`${miss?`빠진 살림이 ${miss}가지`:""}${miss&&extra?", ":""}${extra?`원문에 없는 것이 ${extra}가지`:""} 있어요.`;shk(box);paint()}
+    });
+    UI.onKey=()=>true;
+  });
+}
+
+/* ── 아내 편: 수기 장면(프롤로그)과 떠나는 장면 ── */
+async function w1Chun(n){
+  const F=G.f;
+  if(!F.sugi){
+    await say("narr","이처럼 허랑하고 조석을 이룰 수 없이 탕진한지라, 춘풍이 할 일 없어 그제야 회과자책 절로 나서 아내에게 사과하고 지성으로 비는 말이,",{o:1});
+    await say("chun","자네 부디 노여 마오. 자네 부디 설워 마소. 내 마음 생각하니 각금시이작비로세. 이왕지사 고사하고 가난하여 못 살겠네. 어찌하면 좋단 말고. 오늘부터 가중범사를 자네에게 맡길 것이니 자네 임의로 제가하여 의식이나 줄이지 말게 하소.",{o:1});
+    await say("narr","춘풍의 처 하는 말이,",{o:1});
+    await say("wife","부모조업 누만금을 주색을 다 없애고 이 지경이 되었으니, 이후에 혹시 침재 길쌈 방직하여 돈푼을 모을지라도 그 무엇을 아낄손가?",{o:1});
+    await say("narr","춘풍이 대답하되,",{o:1});
+    await say("chun","자네 말이 내 행세를 믿지 못하니, 이후 주색잡기 않기로 수기를 써 줌세.",{o:1});
+    await say("narr","지필을 내어 수기를 쓰는구나.",{o:1});
+    await sugiGame(1,false);
+    await say("narr","책명하여 주니, 춘풍 아내 거동 보소.",{o:1});
+    for(;;){const c=await choose("wife","수기를 받아 든 아내. 어떻게 할까?",["고맙게 받아 함롱에 넣는다.","수기 끝의 구절을 짚어 따진다."],{think:1});
+      if(c===1)break;await say("wife","잠깐. “이 수기를 들고 관청에 가서 바로잡으라”니… 아내가 남편을 걸어 관청에 송사를 할 수 있던가?",{think:1})}
+    await say("wife","수기 말씀이 지차수기하고 관변정사라 하였으나, 가장 걸어 송사할손가?",{o:1});
+    tip("아내는 남편을 관청에 고발할 수 없는 현실을 짚어요. 약속을 지키게 할 힘이 아내에게는 없다는 것, 뒤에서 아내가 ‘비장’이라는 힘을 얻으려 하는 까닭과 이어져요.");
+    await say("narr","춘풍이 이 말 듣고 수기를 고쳐,",{o:1});
+    await sugiGame(2,false);
+    await say("narr","하여 주니, 김씨 받아 함롱에 넣어두고 이 날부터 치가한다.",{o:1});
+    F.sugi=1;setObj("삯바느질로 살림을 일으키자 (0/3) · 할멈, 주모, 새댁");
+    tip("‘푼·돈·냥’은 엽전을 세는 단위예요. 열 푼이 한 돈, 열 돈이 한 냥이에요.");
+    return;
+  }
+  if(!F.rich){await say("chun","자네 바느질 솜씨 하나는 장안 제일일세. 나는 수기대로 한 푼도 손대지 않네.");return}
+  if(F.left)return;
+  await say("narr","떵떵거리고 내달아서 호조 돈 이천 냥을 대돈변으로 얻어 내어 방물군자인 체하고 평양으로 장사가려 하니, 춘풍 아내 거동 보소. 이 말 듣고 대경하여 춘풍더러 하는 말이,",{o:1});
+  for(;;){const c=await choose("wife","평양으로 장사를 가겠다는 남편. 어떻게 말릴까?",["평양이 어떤 곳인지 들은 대로 차근차근 일러 준다.","울며 매달린다.","말려 봐야 소용없으니 그냥 보낸다."],{think:1});
+    if(c===0)break;await notOriginal("wife","원작의 아내는 울거나 포기하지 않아요. 평양이 어떤 곳인지 들은 이야기를 들어 차근차근 말리지요.")}
+  await say("wife","여보시오 서방님, 내 말 잠깐 들어 보소. 이십 전에 부모조업 탕진하고 그 사이 오 년을 격단하고 앉았다가 물정도 소리한 데 평양장사 가지마오. 평양 물정 내 들었소. 번화 사치하고 분벽사창 청루미색 단순호치 반개하고 청가일곡으로 교태하여 돈 많고 허랑한 자는 제 세워두고 벗긴다는데 평양 물정 이렇다니 부디 장사 가지 마오.",{o:1});
+  await say("narr","지성으로 만류하니 춘풍이 하는 말이,",{o:1});
+  await say("chun","나도 또한 사람이지 이십 전 패가하고 원통하기 골수에 박혔으니 천금진산 환부래라 하였으니 낸들 매양 패가할까 속속이 다녀옴세.",{o:1});
+  for(;;){const c=await choose("wife","말이 통하지 않는다. 무엇을 떠올리게 할까?",["함롱에 넣어 둔 수기","부모님의 제삿날","동네 사람들의 눈"],{think:1});
+    if(c===0)break;await notOriginal("wife","원작의 아내는 춘풍이 제 손으로 써 준 ‘수기’를 떠올리게 해요. 앞에서 받아 둔 문서를 기억해 보세요.")}
+  await say("narr","춘풍 아내 이른 말이,",{o:1});
+  await say("wife","연전에 치패하여 일푼전 일두속을 참견 아니 할 뜻으로 비부지재라 수기 써서 내 함롱에 넣었거든 그 사이 잊었는가. 의식을 내게 믿고, 편안히 앉아 먹고 부디부디 가지 마소.",{o:1});
+  await say("narr","춘풍이 이 말 듣고 대노하여 어질고 착한 아내 머리채를 선전시전 비단 감듯 휘휘 칭칭 감아쥐고, 이리 치고 저리 치며,",{o:1});
+  await say("chun","천리원정 장삿길에 요망한 계집년이 잔말을 이리 하니, 이런 변 또 있는가?",{o:1});
+  await say("narr","제 아내 욱지르고 집안 재물 다 털어서 말에 싣고 떠날 적에 불쌍하다, 춘풍 아내 아무리 여러 말로 말리어도 막무가내일러라.",{o:1});
+  tip("활동지의 인물 정리 ‘남편의 권위를 내세우면서 아내에게 폭력을 휘두르고 위세를 부림’이 바로 이 장면이에요. 비평문의 근거로 쓸 수 있어요.");
+  n.fixed=1;await walk(n,"urrrrrrrrrrr");F.left=1;
+  await say("narr","이 때 춘풍이 이천오백 냥 삯말 내어 실어놓고 발행할 제 좋은 말 반부담에 갖추 차려 호피돋움 높이하고 내려간다.",{o:1});
+  tip("춘풍은 나랏돈(호조 돈) 이천 냥을 비싼 이자(대돈변)로 빌려 떠났어요. 이 빚이 뒤에서 중요한 열쇠가 돼요.");
+  await card("일 년 뒤","소식 없는 평양","봄이 가고 겨울이 왔다. 평양 간 남편에게서는 편지 한 장 없다.\n아내는 여전히 바느질로 하루하루를 버티며, 동네 빨래터에서 오가는 소문에 귀를 기울였다.");
+  setObj("빨래터(북서쪽 연못) 아낙들에게 평양 소식을 물어보자");
+}
+/* 삯바느질: 원문 품삯 목록에서 가져온 일감 */
+const SEW_A={halmeom:["오푼 받고 새버선 짓기","김 생원 댁 할멈","영감 새버선 한 켤레 지어 주게. 오 푼 쳐 주지.","#f4f0e6"],jumo:["닷돈 받고 도포하기","주모","손님 도포 한 벌 지어 주시오. 닷 돈 드리리다.","#dfe6ef"],saedaek:["네돈 받고 장옷 짓기","옆집 새댁","나들이할 때 쓸 장옷 한 벌 부탁해요. 네 돈 드릴게요.","#6b7fa6"]};
+const SEW_B={halmeom:["한냥 받고 돌찌누비",1,"영감 돌찌누비 한 벌 해 주겠소? 한 냥 주리다.","#c9a98a"],jumo:["두냥 받고 바지누비",2,"손님 바지를 누벼 주시오. 두 냥 드리리다.","#8a7c63"],saedaek:["세냥 받고 긴옷 누비",3,"겨울에 입을 긴 옷을 누벼 주시겠어요? 세 냥 드릴게요.","#5f7fa6"]};
+async function w1Sew(n,id){
+  const F=G.f,ids=["halmeom","jumo","saedaek"];
+  if(F.sugi&&!F.rich){
+    if(F["sewA_"+id]){await say(id,"자네 솜씨는 믿을 만하지.");return}
+    const [job,,ask,col]=SEW_A[id];await say(id,ask);
+    const lv=ids.filter(k=>F["sewA_"+k]).length;
+    await stitchGame(5+lv*2,job,col);F["sewA_"+id]=1;sfx("coin");
+    await say(id,"솜씨가 참 곱구려. 여기 삯이오.");
+    const k=ids.filter(k=>F["sewA_"+k]).length;
+    if(k<3){setObj(`삯바느질로 살림을 일으키자 (${k}/3) · 할멈, 주모, 새댁`);return}
+    await card("사오 년 뒤","아내의 치가(治家)","아내는 쉬지 않고 품을 팔았다. 새버선, 도포, 장옷에서 관복까지.");
+    await say("narr","침재 길쌈 능란하다. 오푼 받고 새버선 짓기, 서푼 받고 새김 볼 박기, 두푼 받고 한삼 짓기, 서푼 받고 헌옷 깁기, 네돈 받고 장옷 짓기, 닷돈 받고 도포하기, 엿돈 받고 천익 짓기, 일곱돈 받고 금침하기, 한냥 받고 돌찌누비, 두냥 받고 바지누비, 세냥 받고 긴옷 누비, 넉냥 받고 관복지며,",{o:1});
+    await say("narr","겨울이면 무명나이, 여름이면 삼베 길쌈, 가을이면 염색하기, 이렇게 사시장철 주야로 쉴새없이 사오 년을 모은 돈을 장변이며 월수 놓아 수천금을 모았고나. 의식이 넉넉하고 가세가 풍족하여 그릴 것이 바이 없다.",{o:1});
+    tip("품삯이 적은 일(오 푼 새버선)부터 큰일(넉 냥 관복)까지 차례로 늘어놓는 판소리식 나열이에요. 아내가 얼마나 쉬지 않고 일했는지 보여 줘요.");
+    await say("narr","이 때에 춘풍이 아내 덕에 의복관망 치레하고 고량진미 함포고복하여 제 집 술로 매일 장취하는구나. 가래침 고두 받고 곤자소니 기름지니 마음이 교만하여 이전 행실 절로 난다.",{o:1});
+    F.rich=1;
+    setObj("대문 앞의 춘풍에게 가 보자");return;
+  }
+  if(!F.plan){await say(id,{halmeom:"영감 버선이 또 해졌구먼.",jumo:"어서 오시오. 오늘은 국밥이 잘 되었소.",saedaek:"춘풍 댁, 바느질 솜씨가 좋다고 소문이 났던데요."}[id]);return}
+  if(F["sew_"+id]){await say(id,"다음에도 부탁하리다.");return}
+  const [job,won,ask,col]=SEW_B[id];await say(id,ask);
+  const lv=ids.filter(k=>F["sew_"+k]).length;
+  await stitchGame(6+lv*2,job,col);
+  G.money+=won;F["sew_"+id]=1;updateHUD();sfx("coin");
+  await say(id,`솜씨가 참 곱구려. 여기 ${["","한","두","세"][won]} 냥이오.`);
+  const k=ids.filter(k=>F["sew_"+k]).length;
+  if(k<3)setObj(`삯바느질로 찬값을 모으자 (${k}/3)`);
+  else{await say("wife","여섯 냥. 이 돈이면 대부인 마님 상을 제대로 차릴 수 있겠다. 한 푼도 남기지 말고 다 쓰자.",{think:1});setObj("시장(동쪽)에서 찬거리를 사자 · 생선, 쌀, 나물")}
+}
+
+/* ── 춘풍 편: 수기 쓰기와 떠나는 장면 ── */
+async function c1Sugi(){
+  await say("narr","이처럼 허랑하고 조석을 이룰 수 없이 탕진한지라, 춘풍이 할 일 없어 그제야 회과자책 절로 나서 아내에게 사과하고 지성으로 비는 말이,",{o:1});
+  await say("chun","자네 부디 노여 마오. 자네 부디 설워 마소. 내 마음 생각하니 각금시이작비로세. 이왕지사 고사하고 가난하여 못 살겠네. 어찌하면 좋단 말고. 오늘부터 가중범사를 자네에게 맡길 것이니 자네 임의로 제가하여 의식이나 줄이지 말게 하소.",{o:1});
+  await say("narr","춘풍의 처 하는 말이,",{o:1});
+  await say("wife","부모조업 누만금을 주색을 다 없애고 이 지경이 되었으니, 이후에 혹시 침재 길쌈 방직하여 돈푼을 모을지라도 그 무엇을 아낄손가?",{o:1});
+  await say("narr","춘풍이 대답하되,",{o:1});
+  await say("chun","자네 말이 내 행세를 믿지 못하니, 이후 주색잡기 않기로 수기를 써 줌세.",{o:1});
+  await say("narr","지필을 내어 수기를 쓰는구나.",{o:1});
+  await sugiGame(1,true);
+  await say("narr","책명하여 주니, 춘풍 아내 거동 보소.",{o:1});
+  await say("wife","수기 말씀이 지차수기하고 관변정사라 하였으나, 가장 걸어 송사할손가?",{o:1});
+  for(;;){const c=await choose("chun","아내가 수기의 허점을 짚는다. 어떻게 할까?",["“알았네, 고쳐 써 주지.”","“이만하면 됐지, 뭘 더 바라나!”"]);
+    if(c===0)break;await notOriginal("chun","원작의 춘풍은 이때만큼은 순순히 수기를 고쳐 써 줘요. 가난이 절박했던 때라 아내 말을 들을 수밖에 없었지요.")}
+  await say("narr","춘풍이 이 말 듣고 수기를 고쳐,",{o:1});
+  await sugiGame(2,true);
+  await say("narr","하여 주니, 김씨 받아 함롱에 넣어두고 이 날부터 치가한다.",{o:1});
+  await card("사오 년 뒤","아내 덕에","아내는 쉬지 않고 품을 팔아 살림을 다시 일으켰다. 춘풍은 그 덕에 배불리 먹고 입었다.");
+  await say("narr","침재 길쌈 능란하다. 오푼 받고 새버선 짓기, 서푼 받고 새김 볼 박기, 두푼 받고 한삼 짓기, 서푼 받고 헌옷 깁기, 네돈 받고 장옷 짓기, 닷돈 받고 도포하기, 엿돈 받고 천익 짓기, 일곱돈 받고 금침하기, 한냥 받고 돌찌누비, 두냥 받고 바지누비, 세냥 받고 긴옷 누비, 넉냥 받고 관복지며,",{o:1});
+  await say("narr","겨울이면 무명나이, 여름이면 삼베 길쌈, 가을이면 염색하기, 이렇게 사시장철 주야로 쉴새없이 사오 년을 모은 돈을 장변이며 월수 놓아 수천금을 모았고나. 의식이 넉넉하고 가세가 풍족하여 그릴 것이 바이 없다.",{o:1});
+  await say("narr","이 때에 춘풍이 아내 덕에 의복관망 치레하고 고량진미 함포고복하여 제 집 술로 매일 장취하는구나. 가래침 고두 받고 곤자소니 기름지니 마음이 교만하여 이전 행실 절로 난다.",{o:1});
+  tip("수기를 써 준 지 사오 년. 형편이 나아지자 춘풍은 ‘이전 행실’로 돌아가요. 수기가 지켜질까요?");
+  await say("chun","살 만해지니 몸이 근질거린다. 이번엔 큰 장사로 한몫 잡으리라. 밑천은… 호조 돈을 빌리면 되지. 호조 아전이 저잣거리에 나와 있다지.",{think:1});
+}
+async function c1Leave(){
+  await say("narr","떵떵거리고 내달아서 호조 돈 이천 냥을 대돈변으로 얻어 내어 방물군자인 체하고 평양으로 장사가려 하니, 춘풍 아내 거동 보소. 이 말 듣고 대경하여 춘풍더러 하는 말이,",{o:1});
+  await say("wife","여보시오 서방님, 내 말 잠깐 들어 보소. 이십 전에 부모조업 탕진하고 그 사이 오 년을 격단하고 앉았다가 물정도 소리한 데 평양장사 가지마오. 평양 물정 내 들었소. 번화 사치하고 분벽사창 청루미색 단순호치 반개하고 청가일곡으로 교태하여 돈 많고 허랑한 자는 제 세워두고 벗긴다는데 평양 물정 이렇다니 부디 장사 가지 마오.",{o:1});
+  await say("narr","지성으로 만류하니 춘풍이 하는 말이,",{o:1});
+  for(;;){const c=await choose("chun","아내가 평양의 물정을 들어 말린다. 뭐라고 할까?",["“자네 말이 옳네. 장사는 그만두지.”","“낸들 매양 패가할까? 속히 다녀옴세.”"]);
+    if(c===1)break;await notOriginal("chun","원작의 춘풍은 아내 말을 듣지 않아요. 젊어서 망한 것이 원통하다며 이번엔 다르다고 큰소리치지요.")}
+  await say("chun","나도 또한 사람이지 이십 전 패가하고 원통하기 골수에 박혔으니 천금진산 환부래라 하였으니 낸들 매양 패가할까 속속이 다녀옴세.",{o:1});
+  await say("narr","춘풍 아내 이른 말이,",{o:1});
+  await say("wife","연전에 치패하여 일푼전 일두속을 참견 아니 할 뜻으로 비부지재라 수기 써서 내 함롱에 넣었거든 그 사이 잊었는가. 의식을 내게 믿고, 편안히 앉아 먹고 부디부디 가지 마소.",{o:1});
+  for(;;){const c=await choose("chun","아내가 사오 년 전의 수기를 들이민다. 어떻게 할까?",["“내 손으로 쓴 수기다. 약속을 지키겠네.”","화를 내며 아내를 윽박지르고 떠난다."]);
+    if(c===1)break;await notOriginal("chun","원작의 춘풍은 제 손으로 쓴 수기를 지키지 않아요. 오히려 크게 화를 내며 아내에게 손찌검을 하고 떠나지요.")}
+  await say("narr","춘풍이 이 말 듣고 대노하여 어질고 착한 아내 머리채를 선전시전 비단 감듯 휘휘 칭칭 감아쥐고, 이리 치고 저리 치며,",{o:1});
+  await say("chun","천리원정 장삿길에 요망한 계집년이 잔말을 이리 하니, 이런 변 또 있는가?",{o:1});
+  await say("narr","제 아내 욱지르고 집안 재물 다 털어서 말에 싣고 떠날 적에 불쌍하다, 춘풍 아내 아무리 여러 말로 말리어도 막무가내일러라.",{o:1});
+  tip("활동지의 인물 정리 ‘남편의 권위를 내세우면서 아내에게 폭력을 휘두르고 위세를 부림’이 바로 이 장면이에요. 제 손으로 쓴 수기까지 어긴 것도 비평의 근거가 돼요.");
+}
+/* ── 춘풍 편 2장: 평양 가는 길, 추월의 방 ── */
+async function c2Road(){
+  await say("narr","이 때 춘풍이 이천오백 냥 삯말 내어 실어놓고 발행할 제 좋은 말 반부담에 갖추 차려 호피돋움 높이하고 내려간다.",{o:1});
+  await say("narr","의기양양 내려갈 때 연소문 얼른 지나서 무학재 얼른 지나 평양길 내려갈 제 청석골 다다르니, 정신이 쇄락하여 좌우 산천 바라보니, 이 때는 춘삼월 호시절이라. …… 늘어진 양류는 춘풍에 흥을 겨워 우쭐우쭐 춤을 춘다.",{o:1});
+  await say("narr","동선령을 바삐 넘어 황주 병영 구경하고, 중화로 평양을 바라보고 형제교를 얼른 지나 십리장림을 지나 대동강에 다다라서 모란봉 쳐다보니 그 아래 부벽루 둘러있고 물색도 좋을씨고. 대동문 연광정 제일강산이 여기로다. …… 성내에 들어서니 인가도 번성하고 물색도 번화하다.",{o:1});
+  await routeGame();
+  tip("원문은 지나는 곳의 이름을 차례로 늘어놓아 길을 따라가는 느낌을 줘요. 봄 경치와 함께 춘풍의 들뜬 마음이 드러나지요.");
+  await say("narr","최성루 돌아들어 좌우 산천 구경하고 또 한편 바라보니 옛 마음이 절로 난다. 이런 변이 또 있는가. 청루 앞을 썩 지나서 객사 동편 주인하고, 열두 바리 실어온 돈 차례로 들여놓고 삼사 일 유숙하며 물정을 살피더니, 하루는 난간에 의지하여 한 집을 바라보니 집치레도 좋거니와 저 집 주인 거동 보소. 일색 추월이라. 얼굴도 일색이요, 노래도 명창이요, 연광은 십오 세라. 성중의 호걸손과 팔도의 소년 한량 한번 보면 수 삼백 석 쓰기를 물같이 쓰는구나.",{o:1});
+}
+async function c2Room(){
+  await say("narr","춘풍의 거동 보소. 좋은 의복 …… 봉접이 꽃밭을 찾아가듯, 맹상군의 갈짓자 걸음으로 중문 안에 들어서니 추월의 거동 보소.",{o:1});
+  await say("narr","춘풍이 오는 양을 얼른 보고 옥안을 번듯 들어 계하에 내려서서 춘풍의 나삼을 휘어잡고 난간에 올라서서 좌우를 살펴보니 집치레도 황홀하다. 사면팔자 입구 자로 육간 대청 전후 퇴에 이층 난간 맵시 있다.",{o:1});
+  await say("narr","방 안을 살펴보니 각장 장판 소란 반자 국화 새긴 완자창과 산수병의 미인도가 아름답다.",{o:1});
+  await say("narr","묵화로 죽엽 쳐서 벽창문에 붙여 두고 원앙금침 잣베개를 지리장에 개어 놓고, 분벽주련 둘러보니 동중서의 책문이며 제갈량의 출사표며, 적벽부 양양가를 귀귀마다 붙였구나.놋촛대 광명두리 여기저기 놓여 있고 요강과 재떨이며, 청동화로 수박화로 삼층들이 화류장은 드문듬성 벌여 놓고, 벼루상의 양무머 리장목비며 용담 백담 화문석에 계자다리 옷걸이, 좋은 의상 내려 두고 추월의 거동 보소.",{o:1});
+  await roomGame();
 }
 
 /* ═════════ 배경음: 직접 합성하는 국악풍 가락 (외부 음원 없음) ═════════ */
@@ -1504,13 +1829,13 @@ const W1={
   setup(){
     const m=buildHanyang();G.map=m;place(8,21,"u","wife");G.petals=true;const F=G.f;
     m.npcs.push(
-      npc("chun","chun","이춘풍",9,16,"d",w1Chun,{show:()=>!F.left,mark:()=>!F.left,fixed:1}),
+      npc("chun","chun","이춘풍",9,16,"d",w1Chun,{show:()=>!F.left,mark:()=>!F.sugi||(F.rich&&!F.left),fixed:1}),
       npc("anak1","anak1","빨래하는 아낙",9,4,"l",w1Anak,{mark:()=>F.left&&!F.rumor}),
       npc("anak2","anak2","젊은 아낙",9,7,"l",w1Anak,{wander:1}),
       npc("madang","madang","마당쇠",22,10,"d",w1Madang,{mark:()=>F.rumor&&!F.plan}),
-      npc("halmeom","halmeom","김 생원 댁 할멈",12,10,"d",n=>w1Sew(n,"halmeom"),{wander:1,mark:()=>F.plan&&!F.sew_halmeom}),
-      npc("jumo","jumo","주모",29,7,"d",n=>w1Sew(n,"jumo"),{wander:1,mark:()=>F.plan&&!F.sew_jumo}),
-      npc("saedaek","saedaek","옆집 새댁",15,22,"d",n=>w1Sew(n,"saedaek"),{wander:1,mark:()=>F.plan&&!F.sew_saedaek}),
+      npc("halmeom","halmeom","김 생원 댁 할멈",12,10,"d",n=>w1Sew(n,"halmeom"),{wander:1,mark:()=>(F.sugi&&!F.rich&&!F.sewA_halmeom)||(F.plan&&!F.sew_halmeom)}),
+      npc("jumo","jumo","주모",29,7,"d",n=>w1Sew(n,"jumo"),{wander:1,mark:()=>(F.sugi&&!F.rich&&!F.sewA_jumo)||(F.plan&&!F.sew_jumo)}),
+      npc("saedaek","saedaek","옆집 새댁",15,22,"d",n=>w1Sew(n,"saedaek"),{wander:1,mark:()=>(F.sugi&&!F.rich&&!F.sewA_saedaek)||(F.plan&&!F.sew_saedaek)}),
       npc("fish","seller","생선 장수",26,19,"u",n=>w1Buy(n,"fish","조기 한 두름"),{mark:()=>sewDone()&&!F.buy_fish}),
       npc("rice","seller2","쌀장수",31,19,"u",n=>w1Buy(n,"rice","햅쌀 한 말"),{mark:()=>sewDone()&&!F.buy_rice}),
       npc("veg","anak1","나물 장수",36,19,"u",n=>w1Buy(n,"veg","산나물 한 바구니"),{mark:()=>sewDone()&&!F.buy_veg}),
@@ -1521,27 +1846,13 @@ const W1={
     obj("home").use=w1Home;obj("jars").use=async()=>{await say("narr","장독대다. 된장, 간장, 고추장 독이 가지런하다. 살림만큼은 아내가 알뜰히 꾸려 왔다.")};
   },
   async intro(){
-    await card("제1장","한양 다락골","숙종 시절, 서울 다락골. 방탕하게 살다 물려받은 재산을 모두 날린 이춘풍은 다시는 그러지 않겠다고 아내에게 다짐했다.\n아내는 삯바느질로 품을 팔아 빚을 갚고, 겨우 살림을 다시 일으켰다. 그런데 형편이 좀 나아지자 춘풍이 또 무언가를 꾸미고 있다.","c1");
+    await card("제1장","한양 다락골","숙종 시절, 서울 다락골. 이춘풍은 부모가 물려준 재산을 활쏘기, 투전, 기생집에서 모두 날려 버렸다.\n아침저녁 끼니조차 잇기 어려워진 어느 날, 춘풍이 풀 죽은 얼굴로 대문 앞에 서 있다.","c1");
     setObj("대문 앞의 남편 춘풍에게 말을 걸어 보자");
     tip("방향키나 WASD로 움직이고, 사람 앞에서 E(또는 Space)를 누르면 말을 걸어요.");
   }
 };
 const sewDone=()=>G.f.sew_halmeom&&G.f.sew_jumo&&G.f.sew_saedaek;
 const bought=()=>G.f.buy_fish&&G.f.buy_rice&&G.f.buy_veg;
-async function w1Chun(n){
-  await say("narr","대문 앞에 선 춘풍이 새 갓을 고쳐 쓰며 싱글벙글하고 있다. 저 얼굴을 아내는 안다. 또 무슨 일을 벌이려는 얼굴이다.");
-  await say("chun","여보게, 내 호조에서 돈 이천 냥을 얻었네. 집안 재물까지 보태어 평양 가서 큰 장사를 하고 오겠네.");
-  await say("wife","호조라면 나라 곳간인데… 나랏돈을 빌렸다고?",{think:1});
-  const c=await choose("wife","뭐라고 답할까?",["“나랏돈을 빌려 장사라니요. 가지 마오.”","“잘 다녀오시오. 큰돈 벌어 오시오.”"]);
-  if(c===1)await say("wife","아니다. 저 양반이 장사를 한다고? 기생집 문턱만 넘어도 정신을 잃는 사람이다. 말려야 한다.",{think:1});
-  await say("wife","여보, 한 번 패가한 것도 모자라 나랏돈까지 빌려 가오? 그 돈을 못 갚으면 목숨이 달아나요. 제발 가지 마오.");
-  await say("chun","계집이 무얼 안다고! 두고 보게, 내 수만금을 벌어 오리니.");
-  await say("narr","춘풍은 아내의 만류를 뿌리치고, 집안 재산에 호조에서 빌린 나랏돈 이천 냥을 보태어 평양으로 장사를 떠났다.");
-  tip("춘풍은 나랏돈(호조 돈) 이천 냥을 비싼 이자로 빌려 갔어요. 이 빚이 뒤에서 중요한 열쇠가 돼요.");
-  n.fixed=1;await walk(n,"urrrrrrrrrrr");G.f.left=1;
-  await card("일 년 뒤","소식 없는 평양","봄이 가고 겨울이 왔다. 평양 간 남편에게서는 편지 한 장 없다.\n아내는 여전히 바느질로 하루하루를 버티며, 동네 빨래터에서 오가는 소문에 귀를 기울였다.");
-  setObj("빨래터(북서쪽 연못) 아낙들에게 평양 소식을 물어보자");
-}
 async function w1Anak(n){
   const F=G.f;
   if(!F.left){await say(n.id,"오늘은 볕이 좋아 빨래가 잘 마르겠소.");return}
@@ -1577,26 +1888,13 @@ async function w1Madang(n){
   await say("wife","좋은 진지를 차려 드리려면 찬값이 필요하다. 가진 건 바느질 솜씨뿐이니, 품을 팔자.",{think:1});
   F.plan=1;setObj("삯바느질로 찬값을 모으자 (0/3) · 할멈, 주모, 새댁");
 }
-async function w1Sew(n,id){
-  const F=G.f;
-  if(!F.plan){await say(id,{halmeom:"영감 버선이 또 해졌구먼.",jumo:"어서 오시오. 오늘은 국밥이 잘 되었소.",saedaek:"춘풍 댁, 바느질 솜씨가 좋다고 소문이 났던데요."}[id]);return}
-  if(F["sew_"+id]){await say(id,"다음에도 부탁하리다.");return}
-  await say(id,{halmeom:"춘풍 댁, 우리 영감 저고리 한 벌 지어 주겠소? 삯은 넉넉히 쳐 주리다.",jumo:"손님 옷이 찢어졌는데 좀 기워 주시오. 급하오.",saedaek:"친정 가는 날 입을 치마저고리를 부탁해도 될까요?"}[id]);
-  const lv=["halmeom","jumo","saedaek"].filter(k=>F["sew_"+k]).length;
-  await stitchGame(5+lv*2,["영감의 저고리","찢어진 도포 깁기","새댁의 치마저고리"][lv]);
-  G.money+=10;F["sew_"+id]=1;updateHUD();sfx("coin");
-  await say(id,"솜씨가 참 곱구려. 여기 열 냥이오.");
-  const k=["halmeom","jumo","saedaek"].filter(k=>F["sew_"+k]).length;
-  if(k<3)setObj(`삯바느질로 찬값을 모으자 (${k}/3)`);
-  else{await say("wife","서른 냥. 이 돈이면 대부인 마님 상을 제대로 차릴 수 있겠다. 한 푼도 남기지 말고 다 쓰자.",{think:1});setObj("시장(동쪽)에서 찬거리를 사자 · 생선, 쌀, 나물")}
-}
 async function w1Buy(n,id,item){
   const F=G.f;
   if(!sewDone()){await say(id,"구경만 하시려오? 돈이 생기면 오시오.");return}
   if(F["buy_"+id]){await say(id,"좋은 것으로 골라 드렸소.");return}
-  const c=await choose(id,`${item}에 열 냥이오. 오늘 들어온 것 중에 제일 좋은 것이오.`,["사겠소.","다음에 오겠소."]);
+  const c=await choose(id,`${item}에 두 냥이오. 오늘 들어온 것 중에 제일 좋은 것이오.`,["사겠소.","다음에 오겠소."]);
   if(c===1)return;
-  G.money-=10;F["buy_"+id]=1;updateHUD();sfx("coin");
+  G.money-=2;F["buy_"+id]=1;updateHUD();sfx("coin");
   if(bought()){await say("narr","아내는 품삯을 모두 털어 산 찬거리로 조기를 굽고, 햅쌀로 밥을 짓고, 산나물을 무쳤다. 이제 대부인께 올릴 상을 차릴 차례다.");await tableGame();await say("wife","이만하면 마님께 부끄럽지 않은 상이다.",{think:1});setObj("참판 댁 대부인께 밥상을 올리자 (북쪽 기와집 안마당)")}
 }
 async function w1Mom(n){
@@ -1684,7 +1982,7 @@ const W2={
 };
 function checkEvid(){
   if(G.route!=="wife"||G.ch!==2)return;const need=["e1","e2","e4","e5","e7"];const n=need.filter(x=>G.evid.includes(x)).length;
-  if(n>=5&&!G.f.gateOpen){G.f.gateOpen=1;setObj("증거가 모였다. 추월의 집으로 가자 (북동쪽 기와집)");tip("대문이 열렸어요. 이제 추월의 집에서 춘풍을 직접 확인할 차례예요.")}
+  if(n>=5&&!G.f.gateOpen){G.f.gateOpen=1;setObj("증거가 모였다. 추월의 집으로 가자 (북동쪽 기와집)");tip("추월의 집 대문이 열렸어요. 이제 그 안에서 춘풍을 직접 확인할 차례예요.")}
   else if(!G.f.gateOpen&&G.f.metSat)setObj(`성내를 탐문하여 춘풍의 행적을 알아내자 (증거 ${n}/5)`);
 }
 async function w2Sat(){
@@ -1716,7 +2014,7 @@ async function w2Brass(){
   await say("brass","추월 아씨가 우리 가게에서도 한 짐 사 갔지요. 살림을 통째로 새로 들이는 줄 알았소.");
   await say("chu","동래반상, 안성유기 구첩반상 실굽다리 날 사 주오. 요강 타구 새옹 냄비 청동화로 날 사 주게.",{o:1,name:"추월 (유기 장수의 기억)"});
   await say("narr","온가지로 헤어 내니 허랑한 이춘풍이 일호나 사양할까. 수천여 냥 돈을 비일비재 내어 주니 청산유수 아니어든 오랠손가. 일 년이 못 다 가서 낭탁이 비었구나.",{o:1});
-  tip("비단에서 놋그릇, 요강까지! 추월은 살림 전체를 춘풍의 돈으로 채웠어요.");
+  tip("비단에서 놋그릇, 요강까지! 추월은 살림 전체를 춘풍의 돈으로 채웠고, 춘풍은 ‘일호나 사양할까(털끝만큼도 사양하지 않고)’ 다 내주었어요.");
 }
 async function w2Han1(){
   if(!G.f.metSat){await say("han1","나리도 한잔하시려오?");return}
@@ -1890,7 +2188,7 @@ async function w4Chun(n){
   if(!F.greet){
     await say("narr","해 질 녘, 대문 밖이 소란하다. 말방울 소리와 함께 새 옷을 차려입은 춘풍이 나타났다. 평양의 그 거지 몰골은 온데간데없다.");
     await say("wife","어이 그리 더디 온가? 장사에 이익은 많았으며 평안히 오시니까?",{o:1});
-    tip("아내는 다 알면서 모른 척 묻는 거예요. 춘풍이 사실대로 털어놓을까요?");
+    tip("‘장사에 이익은 많았느냐’는 아내의 물음. 아내는 평양 일을 다 알면서 모른 척 묻는 거예요. 춘풍이 사실대로 털어놓을까요?");
     await say("chun","그사이 잘 있었는가?",{o:1});
     F.greet=1;
     await say("narr","하고 열두 바리 실은 돈을 장사에서 남긴 듯이 여기저기 들여놓고 의기양양하는구나.",{o:1});
@@ -1976,17 +2274,17 @@ const C1={
     obj("jars").use=async()=>{await say("narr","장독대다. 아내가 알뜰히도 채워 놓았다.")};
   },
   async intro(){
-    await card("제1장","한양 다락골","나는 이춘풍. 서울 다락골 부잣집 외아들이었다.\n부모님이 한꺼번에 돌아가시자 나를 말릴 어른은 아무도 없었다. 활쏘기, 바둑, 투전, 기생집… 물려받은 재산은 티끌처럼 사라졌다.\n그 뒤로 아내가 품을 팔아 살림을 다시 일으켰다. 형편이 좀 나아지니, 슬슬 몸이 근질거린다.","c1");
+    await card("제1장","한양 다락골","나는 이춘풍. 서울 다락골 부잣집 외아들이었다.\n부모님이 한꺼번에 돌아가시자 나를 말릴 어른은 아무도 없었다. 활쏘기, 바둑, 투전, 기생집… 물려받은 재산은 티끌처럼 사라졌다.\n오늘도 한바탕 놀아 볼까.","c1");
     await say("narr","모화관 활쏘기와 장악원 풍류하기, 산영에 바둑 두기, 장기 골패 쌍륙 투전 …… 청루미색 달려들어 수천 금을 시각에 없이하니 천하 부자 석숭인들 그 무엇이 남을손가.",{o:1});
-    await say("chun","이번엔 다르다. 큰 장사를 해서 한몫 크게 잡는 거다. 평양이라면 돈이 굴러다닌다지. 아내에게 말을 꺼내 보자.",{think:1});
-    setObj("마당의 아내에게 평양 장사 이야기를 꺼내 보자");
+    await say("chun","오늘은 장악원에 가서 풍류나 즐겨 볼까. 나가기 전에 아내에게 한마디 해 두자.",{think:1});
+    setObj("마당의 아내에게 말을 걸어 보자");
     tip("당신은 이춘풍이에요. 선택지에서 원작의 춘풍답게 고르면 이야기가 이어지고, 다르게 고르면 원작의 춘풍이 어떤 사람인지 되짚어 줘요.");
   }
 };
 async function c1Wife(n){
   const F=G.f;
   if(!F.argued){
-    await say("chun","여보게, 내 평양 가서 큰 장사를 해 보려 하네.");
+    await say("chun","여보게, 오늘은 장악원에 풍류하러 가네. 저녁은 기다리지 말게.");
     await say("narr","아내의 바느질하던 손이 멈췄다.");
     await say("wife","여보소, 내 말 듣소. …… 마오마오 그리 마오, 주색잡기 좋아 마오. 자고로 외입한 사람 뉘 아니 탕패한가.",{o:1});
     await say("wife","미나리골 이패두는 청루미색 즐기다가 나중에 신세 글러지고, 동문 밖의 오청두도 투전잡기 즐기다가 말년에 걸인 되고, …… 모시전 김부자도 술 잘 먹고 허랑하기 장안에 유명터니 수만 금을 다 없애고 기름 장사 다니네.",{o:1});
@@ -2001,17 +2299,15 @@ async function c1Wife(n){
     await say("chun","술 잘 먹는 이태백은 …… 매일 장취하였어도 한림학사 다 지내고, …… 주색잡기 좋아하기 남아의 상사로다. 나도 이리 노닐다가 일품 벼슬하고 이름을 후세에 전하리라.",{o:1});
     tip("춘풍의 논리: 주색잡기와 성공·실패는 상관없다. ‘남아의 상사(사내에게 흔한 일)’라며 방탕을 정당화해요.");
     await say("wife","……이 사람에게는 무슨 말을 해도 소용이 없구나.",{think:1,name:"춘풍의 아내"});
-    await say("chun","잔소리는 귓등으로 흘리면 그만이고. 문제는 밑천이다. 집안 재산만으로는 큰 장사가 안 되지. 그렇다면… 나랏돈이다. 호조 아전이 저잣거리에 나와 있다지.",{think:1});
+    await say("narr","아내의 말은 춘풍의 귀에 들어가지 않았다. 춘풍은 그 뒤로도 놀기를 그치지 않았고, 마침내 집안에는 끼니 거리조차 남지 않았다.");
+    await c1Sugi();
     F.argued=1;setObj("저잣거리(동쪽 길가)의 호조 아전에게 돈을 빌리자");return;
   }
-  if(!F.loan){await say("wife","정말 가시려오? 한 번만 더 생각해 보시오.");return}
+  if(!F.loan){await say("wife","요즘은 술을 줄이셨지요? 수기에 쓴 대로만 사시면 됩니다.");return}
   if(F.left)return;
-  await say("wife","호조 돈을 빌렸다고요? 한 번 패가한 것도 모자라 나랏돈까지…! 그 돈을 못 갚으면 목숨이 달아나요. 제발 가지 마오.");
-  const c=await choose("chun","어떻게 할까?",["“계집이 무얼 안다고! 두고 보게, 내 수만금을 벌어 오리니.”","“자네 말이 맞네. 돈은 돌려주고 오겠네.”"]);
-  if(c===1){await notOriginal("chun","원작의 춘풍은 아내의 만류를 뿌리치고 떠나요. 아내를 ‘계집이 무얼 아느냐’며 무시하는 가부장적인 모습이 드러나는 대목이지요.");await say("chun","계집이 무얼 안다고! 두고 보게, 내 수만금을 벌어 오리니.")}
-  await say("narr","춘풍은 아내의 만류를 뿌리치고, 집안 재산에 호조에서 빌린 나랏돈 이천 냥을 보태어 평양으로 장사를 떠났다.");
+  await c1Leave();
   F.left=1;
-  await toNext("제1장 한양 다락골",["부모가 세상을 떠나고, 춘풍이 물려받은 재산을 탕진한다.","아내가 방탕을 말리지만 춘풍은 이태백을 들며 맞선다.","춘풍이 호조에서 나랏돈 이천 냥을 빌린다.","아내의 만류를 뿌리치고 평양으로 장사를 떠난다."]);
+  await toNext("제1장 한양 다락골",["부모가 세상을 떠나고, 춘풍이 물려받은 재산을 탕진한다.","아내가 방탕을 말리지만 춘풍은 이태백을 들며 맞선다.","가난해진 춘풍이 주색잡기를 않겠다는 수기를 써서 아내에게 준다.","아내의 삯바느질로 살림이 넉넉해지자, 춘풍이 호조 돈 이천 냥을 빌린다.","아내가 수기를 들어 말리자 춘풍은 아내를 때리고 평양으로 떠난다."]);
 }
 async function c1Hojo(){
   const F=G.f;
@@ -2046,7 +2342,8 @@ const C2={
     obj("chuGate").use=null;
   },
   async intro(){
-    await card("제2장","평양, 추월의 집","평양에 닿은 춘풍은 장사할 곳을 찾아 성안을 돌았다. 짐바리에는 이천오백 냥이 실려 있었다.\n그런데 북동쪽 기와집 담 너머로 거문고 소리가 흘러나왔다.","k2");
+    await card("제2장","평양, 추월의 집","아내를 뿌리치고 한양을 떠난 춘풍. 말에는 이천오백 냥이 실려 있었다.\n때는 춘삼월, 평양까지 가는 길은 꽃으로 가득했다.","k2");
+    await c2Road();
     await say("narr","이때 서울 부상대고 이춘풍이 수천 냥 싣고 와서 뒷집에 주인 했다는 말을 듣고, 추월이 넌짓 춘풍을 홀리려고 …… 녹의홍상 다시 입고 천연히 앉은 모양,",{o:1});
     tip("추월은 춘풍이 ‘수천 냥’을 싣고 왔다는 소문을 먼저 들었어요. 추월의 관심이 어디에 있는지 기억해 두세요.");
     await say("chun","장사는 내일 해도 늦지 않지. 저 거문고 소리의 주인부터 보자.",{think:1});
@@ -2058,6 +2355,7 @@ async function c2Chu(n){
   if(!F.met){
     await say("narr","얼굴 태도 청천명월 같고, 모란화 아침 이슬에 반쯤 핀 형상이요, 그 절묘한 맵시는 해당화가 그늘 속의 그림이요, 월궁의 항아로다.",{o:1});
     await say("narr","제가 본디 계집이라 하면 화약 한 섬을 지고 모닥불에 보금자리 치고 …… 일신의 정신 있는 대로 모다 그리간다.",{o:1});
+    await c2Room();
     await say("chu","서울에서 오신 나리시지요? 먼 길 오셨는데 쉬었다 가시어요.");
     for(;;){
       const c=await choose("chun","어떻게 할까?",["“장사하러 온 몸이니, 장사부터 하고 오겠소.”","“오늘은 여기서 쉬어 가겠네.”"]);
@@ -2085,7 +2383,7 @@ async function c2Chu(n){
     }
     for(;;){const q=await choose("chun","그런데… 추월이 사 달라고 조른 것이 아닌 것은 무엇이었지?",["비단 옷감과 노리개","백통대, 은대, 금대 담뱃대","거문고와 가야금","동래 울산 미역과 김"],{think:1});if(q===2){await say("narr","맞아요. 거문고는 추월이 이미 가지고 있던 것이지요. 추월은 옷감과 노리개부터 그릇, 담뱃대, 쌀과 미역까지 살림 전체를 춘풍의 돈으로 채웠어요.");break}await say("narr","그건 추월이 조른 목록에 있었어요. 다시 떠올려 보세요.")}
     await say("narr","온가지로 헤어 내니 허랑한 이춘풍이 일호나 사양할까. 수천여 냥 돈을 비일비재 내어 주니 청산유수 아니어든 오랠손가. 일 년이 못 다 가서 낭탁이 비었구나.",{o:1});
-    tip(refused?"거절해 봐도 결국 사 주게 되지요. 체면과 허영 때문에 거절하지 못하는 것, 그게 춘풍이에요.":"한 번도 거절하지 않았어요. 원문도 ‘일호나 사양할까(털끝만큼도 사양하지 않는다)’라고 해요.");
+    tip(refused?"추월이 조를 때 거절해 봐도 춘풍은 결국 다 사 주었어요. 체면과 허영 때문에 거절하지 못하는 것, 그게 춘풍이에요. 원문의 ‘일호나 사양할까’도 ‘털끝만큼도 사양하지 않았다’는 뜻이에요.":"추월이 조르는 대로 춘풍은 하나도 거절하지 않고 다 사 주었어요. 원문의 ‘일호나 사양할까’가 바로 ‘털끝만큼도 사양하지 않았다’는 뜻이에요.");
     F.met=1;F.spent=1;
     await card("일 년 뒤","텅 빈 주머니","잔치는 끝났다. 이천오백 냥은 비단과 노리개, 놋그릇과 담뱃대가 되어 추월의 집에 남았다.\n그리고 어느 날 아침, 추월의 얼굴이 달라져 있었다.");
     await say("narr","추월의 거동 보소. 춘풍의 재물을 빼앗고 괄시하여 내쫓으니 춘풍의 슬픈 거동 가련하다.",{o:1});
@@ -2188,7 +2486,7 @@ async function c3Bijang(n){
   await say("narr","간사한 추월이는 회계 비장 호리려고 마음먹어 회계 비장 엿보면서 교태하여 수작타가 각별히 차담상을 차려 만반진수 들이거늘,",{o:1});
   await say("chunB","저 상을 보니… 나도 저렇게 대접받던 때가 있었지. 저 비장도 곧 나처럼 되겠구나.",{think:1});
   await say("narr","춘풍이 제 아내인 줄을 꿈에나 알랴마는 비장이야 모를쏜가.",{o:1});
-  tip("서술자가 비밀을 알려 주고 있어요. 춘풍은 모르지만, 이 비장은 누구일까요?");
+  tip("‘제 아내인 줄을 꿈에나 알랴마는’: 서술자가 독자에게만 비밀을 알려 주고 있어요. 춘풍은 모르지만, 이 비장은 누구일까요?");
   await say("narr","비장이 약간 먹고 사환하는 걸인 놈을 상째로 내어 주며 하는 말이,",{o:1});
   await say("bijang","불쌍하다, 저 걸인 놈아. 네가 본디 걸인이냐? 어이 그리 추물이냐?",{o:1});
   for(;;){
