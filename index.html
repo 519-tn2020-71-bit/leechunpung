@@ -2756,7 +2756,7 @@ function showTitle(){
       </div><div class="acts" style="margin-top:14px"><button class="btn" data-t="back">뒤로</button></div></div>`
     :`<div class="tcard"><div class="eb">이춘풍전 서사 RPG</div><h1>비장이 된 아내</h1><p class="sub">방탕한 남편을 구하러, 아내는 남장을 하고 평양으로 간다</p>
     <div class="acts">${sv&&sv.ch?`<button class="btn pri" data-t="resume">이어 하기 · ${esc((ROUTES[sv.route]||ROUTES.wife).name)} 제${sv.ch}장</button><button class="btn" data-t="new">새로 시작</button>`:`<button class="btn pri" data-t="new">이야기 시작</button>`}<button class="btn" data-t="menu">장 고르기 · 조작법</button></div>
-    <div class="credit">작자 미상 판소리계 소설 「이춘풍전」을 바탕으로 새로 꾸민 이야기예요<br>실제 원문은 붉은 낙관 <i>原</i>으로 표시해요 · 그림은 AI로 생성했고, 배경음은 게임 안에서 직접 합성해요<br>만든이 경포고등학교 한예지<br><button class="lnk" data-t="credits">만든 곳·출처 보기</button></div></div>`;
+    <div class="credit">작자 미상 판소리계 소설 「이춘풍전」을 바탕으로 새로 꾸민 이야기예요<br>실제 원문은 붉은 낙관 <i>原</i>으로 표시해요 · 그림은 AI로 생성했고, 배경음은 게임 안에서 직접 합성해요<br><button class="lnk" data-t="credits">만든 곳·출처 보기</button></div></div>`;
     const f=el.querySelector(".btn.pri,.route");f&&f.focus();
   };
   paint(false);
