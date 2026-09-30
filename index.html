@@ -637,6 +637,7 @@ function loadSave(){try{return JSON.parse(localStorage.getItem(SAVEKEY)||"null")
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
+(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 function writeSave(){try{const s=loadSave()||{};s.route=G.route;s.ch=G.ch;s.rec=G.rec;s.tips=G.tips;s.gloss=G.gloss;localStorage.setItem(SAVEKEY,JSON.stringify(s))}catch(e){}}
 
 function npc(id,look,name,x,y,dir,talk,opt){return Object.assign({id,look,name,tx:x,ty:y,hx:x,hy:y,dir:dir||"d",talk,moving:false,prog:0,queue:[],step:0,ph:Math.random()*10,wt:Math.random()*3},opt||{})}
@@ -940,7 +941,7 @@ function debate(cfg){
       v.innerHTML=`<div class="bt"><div class="top"><div class="pc"><img src="art/${PORT[cfg.look]||""}.jpg" alt="" onerror="this.remove()"></div><div><span class="note" style="letter-spacing:.14em">논박전 · 증거로 변명을 꺾어라</span><div class="who">${esc(cfg.name)}</div>
         <div class="gauge">버팀 ${cfg.claims.map((_,i)=>`<span class="pip${i<ci||(i===ci&&state==="won")?" off":""}"></span>`).join("")}<span style="margin-left:14px">비장의 위엄</span> <span class="heart">${"◆".repeat(hearts)}${"◇".repeat(3-hearts)}</span></div></div></div>
         <div class="claim"><div class="lab"><span>${esc(cfg.name)}의 말</span>${c.o?'<span class="orig" title="원문">原</span>':""}</div>${esc(c.t)}${c.o&&G.gloss&&glossOf(c.t)?`<div class="gl"><b>풀이</b>${esc(glossOf(c.t))}</div>`:""}</div>
-        ${state==="won"?`<div class="resp win">${c.wo?'<span class="orig" style="display:inline-grid;place-items:center;width:24px;height:24px;border:2px solid var(--seal);color:var(--seal);font-family:var(--display);font-size:12px;transform:rotate(-6deg);margin-right:6px">原</span>':""}<b>회계 비장</b> “${esc((c.winBy&&c.winBy[used])||c.win)}”${c.wo&&G.gloss&&glossOf(c.win)?`<div class="gl"><b>풀이</b>${esc(glossOf(c.win))}</div>`:""}</div><div class="row"><button class="btn pri" data-next>${ci===cfg.claims.length-1?"논박 끝 ▶":"다음 변명 ▶"}</button></div>`:
+        ${state==="won"?`${c.pre?`<div class="resp win"><b>회계 비장</b> “${esc(c.pre)}”</div>`:""}<div class="resp win">${c.wo?'<span class="orig" style="display:inline-grid;place-items:center;width:24px;height:24px;border:2px solid var(--seal);color:var(--seal);font-family:var(--display);font-size:12px;transform:rotate(-6deg);margin-right:6px">原</span>':""}<b>회계 비장</b> “${esc((c.winBy&&c.winBy[used])||c.win)}”${c.wo&&G.gloss&&glossOf(c.win)?`<div class="gl"><b>풀이</b>${esc(glossOf(c.win))}</div>`:""}</div><div class="row"><button class="btn pri" data-next>${ci===cfg.claims.length-1?"논박 끝 ▶":"다음 변명 ▶"}</button></div>`:
         `<p class="note" style="margin-top:12px">이 말을 뒤집을 증거를 고르세요.</p><div class="ev">${G.evid.map(id=>`<button data-ev="${id}" class="${wrongs.includes(id)?"no":""}" ${wrongs.includes(id)?"disabled":""}><b>${esc(EVID[id].t)}</b><span>${esc(EVID[id].d)}</span></button>`).join("")}</div>${msg?`<div class="resp">${msg}</div>`:""}`}
       </div>`};
     paint();
@@ -1658,7 +1659,7 @@ async function w3Trial(){
     {t:"춘풍이 가져온 돈 소녀가 어찌 아오리까?",o:1,ok:["e2","e6","e7"],retort:"소녀는 정말 모르는 일이옵니다.",hint:"춘풍의 돈이 추월에게 흘러갔다는 기록이나 증언, 또는 추월 스스로 한 말을 떠올려 보세요.",win:"비단 가게 장부에 네가 조른 것이 다 적혀 있다. 비단, 노리개, 놋그릇까지 춘풍이 값을 치렀지!",winBy:{e6:"춘풍이 ‘내 집 주인 추월이와 일 년을 함께 놀고 나니 한 푼도 없어졌다’ 하였다. 그 돈을 모른다니 말이 되느냐!",e7:"춘풍을 내쫓으며 ‘자네가 가져온 돈냥 혼자 먹던가’ 했다지? 함께 썼다고 제 입으로 말해 놓고 이제 와서 모른다 하느냐!"}},
     {t:"춘풍은 제 발로 와서 제 돈을 제 마음대로 썼을 뿐이옵니다. 소녀와는 상관없는 일이오.",ok:["e6","e2"],winBy:{e2:"상관없다? 비단이며 노리개며 구첩반상이며 ‘날 사 주오’ 하고 조른 것이 누구냐! 장부에 다 적혀 있다."},retort:"누가 그럽디까? 증거가 있소?",hint:"춘풍이 돈을 누구와 어떻게 썼다고 털어놓았나요? 추월이 무엇을 사 달라고 졸랐는지도 떠올려 보세요.",win:"춘풍이 ‘추월이와 일 년을 함께 놀고 나니 한 푼도 없어졌다’ 하였다. 네 집에서, 너와 함께 쓴 돈이다!"},
     {t:"돈이 떨어진 뒤에도 소녀가 불쌍히 여겨 식구처럼 거두어 먹이고 있사옵니다.",ok:["e5","e7","e4"],winBy:{e4:"식구라? 뜰에서 물을 긷게 하고, 손님들 앞에서 ‘내 집 사환하는 놈’이라 부른다지. 한량들이 다 들었다!"},retort:"소녀처럼 인정 많은 기생이 또 어디 있사오리까.",hint:"춘풍이 이 집에서 어떤 대접을 받는지, 어떻게 쫓겨났는지 본 사람이 있었지요.",win:"식구라? ‘아가씨’ 소리를 시키고 누룽지를 숟가락도 없이 먹인다지. 돈이 떨어지자 ‘노류장화’ 운운하며 내쫓은 것도 들은 사람이 있다!"},
-    {t:"기생이 손님 돈 받는 것이 무슨 죄요? 그것이 나랏돈인 줄 소녀가 어찌 알았겠소?",ok:["e1"],retort:"손님 돈이 나랏돈인지 기생이 어찌 알겠소?",hint:"그 돈이 원래 어디에서 나온 돈이었지요?",wo:1,win:"여담절각이라 하는 말을 네 아느냐? 불같은 호조 돈을 영문이 물어 주랴, 본관에서 물어 주랴? 백성에게 수렴하랴? 네 이 지경에 무슨 잔말을 하랴?"}
+    {t:"설령 소녀가 그 돈을 받았다 한들, 호조에서 돈을 빌린 건 춘풍이옵니다. 빌린 사람이 갚아야지, 어찌 소녀가 물어내야 하옵니까?",ok:["e1"],retort:"빌린 사람이 갚는 게 세상 이치 아니옵니까?",hint:"그 돈은 누구의 돈이고, 갚지 않으면 어떻게 된다고 했지요? 지금 춘풍에게 갚을 돈이 남아 있을까요?",pre:"이 돈은 호조의 나랏돈이다. 사오 년째 한 푼도 갚지 않아 ‘춘풍을 잡아 죽이라’는 공문까지 내려왔다. 그런데 춘풍은 지금 한 푼도 없는 거지다. 그 돈을 춘풍이 어찌 갚느냐? 돈이 사라진 곳은 네 집이다.",wo:1,win:"여담절각이라 하는 말을 네 아느냐? 불같은 호조 돈을 영문이 물어 주랴, 본관에서 물어 주랴? 백성에게 수렴하랴? 네 이 지경에 무슨 잔말을 하랴?"}
   ]});
   tip("‘여담절각’은 ‘네 집 담 때문에 내 소뿔이 부러졌다’는 말. 비장은 춘풍이 망한 책임을 추월의 집에 지웁니다.");
   await say("narr","군뢰 등이 두 눈을 부릅뜨고 형장을 높이 들어, 백일청천에 벼락 치듯, 만첩청산 울리듯 금장 소리 호통치며",{o:1});
