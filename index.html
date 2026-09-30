@@ -162,6 +162,8 @@ body.talking #mini{opacity:.35}
 .mg .cards button.on{background:#f7f0dc;color:var(--text);border-color:var(--gold);animation:stIn .25s}
 .mg .cards button.on span{color:var(--muted)}
 .mg .picks button:disabled{opacity:.6;cursor:default}
+.ek{font-weight:700;color:#2a1d10;background:linear-gradient(transparent 58%,rgba(242,201,76,.6) 58%);padding:0 1px}
+.eb2{font-weight:700;color:var(--seal)}
 /* 알림 */
 .tip{position:fixed;left:50%;transform:translateX(-50%);top:calc(74px + env(safe-area-inset-top,0px));width:min(560px,calc(100% - 24px));background:#2b4a6f;color:#f1ead8;border:2px solid #16283d;box-shadow:0 4px 0 rgba(0,0,0,.35);padding:10px 14px;font-family:var(--ui);font-size:14px;line-height:1.6;z-index:30;display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .tip i{font-style:normal;font-family:var(--display);font-size:14px;border:1.5px solid #f1ead8;padding:0 5px;flex:none;margin-top:2px}
@@ -911,10 +913,10 @@ function say(who,text,opt){
     el.innerHTML=portHTML(who)+`<div class="nm">${name?`<b>${esc(name)}</b>`:`<span class="think" style="letter-spacing:.14em">${opt.o?"서술 · 원문":"이야기"}</span>`}${opt.think?`<span class="think">속마음</span>`:""}${opt.o?`<span class="orig" title="원문">原</span>`:""}</div><div class="tx${who==="narr"?" narr":""}"></div>${opt.o&&G.gloss&&glossOf(text)?`<div class="gl" hidden><b>풀이</b>${esc(glossOf(text))}</div>`:""}`;
     $("#ui").appendChild(el);
     const tx=el.querySelector(".tx");const full=(opt.o&&who!=="narr"&&!opt.think)?"“"+text+"”":(opt.think?"‘"+text+"’":text);
-    let i=0,done=false;const chars=[...full];
-    const tick=()=>{if(done)return;i+=2;tx.textContent=chars.slice(0,i).join("");if(i>=chars.length){finish()}else setTimeout(tick,18)};
-    const finish=()=>{done=true;tx.textContent=full;const gl=el.querySelector(".gl");if(gl)gl.hidden=false;if(!el.querySelector(".more"))el.insertAdjacentHTML("beforeend",'<span class="more">▼ 계속</span>')};
-    const next=()=>{if(!done){finish();return}sfx("blip");el.remove();UI.modal=false;UI.onKey=null;setBodyTalking(false);res()};
+    let i=0,done=false,doneAt=0;const chars=[...full];
+    const segs=emphSegs(full);const tick=()=>{if(done)return;i+=2;tx.innerHTML=segHTML(segs,i);if(i>=chars.length){finish()}else setTimeout(tick,18)};
+    const finish=()=>{done=true;doneAt=performance.now();tx.innerHTML=segHTML(segs,1e9);const gl=el.querySelector(".gl");if(gl)gl.hidden=false;if(!el.querySelector(".more"))el.insertAdjacentHTML("beforeend",'<span class="more">▼ 계속</span>')};
+    const next=()=>{if(!done){finish();return}if(performance.now()-doneAt<(opt.o?450:250))return;sfx("blip");el.remove();UI.modal=false;UI.onKey=null;setBodyTalking(false);res()};
     el.addEventListener("click",next);
     UI.onKey=e=>{if(["KeyE","Space","Enter","KeyZ"].includes(e.code)){next();return true}return false};
     if(opt.o)recAdd(who,text);
@@ -1132,7 +1134,7 @@ function openHist(){
   const v=document.createElement("div");v.className="veil";v.id="hist";
   const L=(G.hist||[]);
   v.innerHTML=`<div class="sheet"><button class="close" data-hclose>닫기</button><span class="eb">앞 대화 다시 보기</span><h2>이 장에서 나눈 말</h2><p class="note">위에서 아래로 시간 순서예요. 붉은 낙관(原)이 원문이에요.</p>
-    <div class="hlist">${L.length?L.map(x=>`<div class="rec${x.o?"":" plain"}"><small>${esc(x.nm||"서술")}${x.th?" · 속마음":""}${x.o?' <span class="seal-s">原</span>':""}</small>${esc(x.th?"‘"+x.t+"’":x.t)}</div>`).join(""):'<p class="note">아직 나눈 말이 없어요.</p>'}</div></div>`;
+    <div class="hlist">${L.length?L.map(x=>`<div class="rec${x.o?"":" plain"}"><small>${esc(x.nm||"서술")}${x.th?" · 속마음":""}${x.o?' <span class="seal-s">原</span>':""}</small>${segHTML(emphSegs(x.th?"‘"+x.t+"’":x.t),1e9)}</div>`).join(""):'<p class="note">아직 나눈 말이 없어요.</p>'}</div></div>`;
   $("#ui").appendChild(v);const list=v.querySelector(".sheet");list.scrollTop=list.scrollHeight;
   const close=()=>{v.remove();UI.onKey=prev};
   v.addEventListener("click",ev=>{if(ev.target===v||ev.target.closest("[data-hclose]"))close()});
@@ -1152,6 +1154,26 @@ async function scuffle(att,vic,words){
 /* 엽전이 날아가는 연출 */
 function coinsFly(from,to,n){const [ax,ay]=entPos(from),[bx,by]=entPos(to);
   for(let i=0;i<(n||6);i++){const pr={k:"coin",x0:ax+8,y0:ay-4,x1:bx+8+Math.random()*6-3,y1:by-2,x:ax+8,y:ay-4,life:0.55};addPart(pr);pr.age=-i*0.08}}
+
+/* ═════════ 대화 속 중요한 말 강조 (원문 글자는 그대로, 모양만) ═════════ */
+const EMPH_K=["주색잡기 좋아하기 남아의 상사로다","수기를 써 줌세","가장 걸어 송사할손가","이전 행실 절로 난다","그 사이 잊었는가","요망한 계집년","막무가내일러라",
+ "의기양양","옛 마음이 절로 난다","장사에 뜻이 없고","일호나 사양할까","낭탁이 비었구나","노류장화는 인개가절","자네가 가져온 돈냥 혼자 먹던가",
+ "‘아가씨’ 말이 절로 나고 존대가 절로 난다","생불여사라 가련하다","눈에는 풍년이요, 입에는 흉년이라","가련하더라","우리 처자 그리워라",
+ "추월을 설치하여 보리라","비장 한몫 주시기 바라나이다","없는 오라비 있다 하고","회계 비장 그 말이야 사또밖에 뉘가 알리","제 아내인 줄을 꿈에나 알랴마는",
+ "차마 못 치겠다","여담절각","오천 냥을 모두 보내 바치라","서울에 올라오거든 문안하여라","장사에서 남긴 듯이","평양 감영 내 작은집",
+ "네 지어미는 어디 가고, 나에게 내외를 하느냐","이 멍청아","이왕에 자넨 줄 알았으나","막중국전을 대돈변으로","수천 냥 싣고 와서","거동 보소"];
+const EMPH_B=["호조 돈","나랏돈","이천오백 냥","이천 냥","오천 냥","수만금","수기","사환"];
+function emphSegs(s){
+  const mark=new Array(s.length).fill(0);
+  const put=(list,v)=>{for(const w of [...list].sort((a,b)=>b.length-a.length)){let k=s.indexOf(w);while(k>=0){if(!mark.slice(k,k+w.length).some(Boolean))for(let j=k;j<k+w.length;j++)mark[j]=v;k=s.indexOf(w,k+w.length)}}};
+  put(EMPH_K,1);put(EMPH_B,2);
+  const segs=[];let cur=null;for(let j=0;j<s.length;j++){if(!cur||cur.c!==mark[j]){cur={t:"",c:mark[j]};segs.push(cur)}cur.t+=s[j]}
+  return segs.map(x=>({t:[...x.t],c:x.c}));
+}
+function segHTML(segs,n){let out="",left=n;
+  for(const x of segs){if(left<=0)break;const part=x.t.slice(0,left).join("");left-=x.t.length;
+    out+=x.c===1?`<b class="ek">${esc(part)}</b>`:x.c===2?`<b class="eb2">${esc(part)}</b>`:esc(part)}
+  return out}
 
 /* ═════════ 원문 현대어 풀이 ═════════ */
 const GLOSS=[
