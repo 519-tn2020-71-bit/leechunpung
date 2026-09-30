@@ -913,10 +913,10 @@ function say(who,text,opt){
     el.innerHTML=portHTML(who)+`<div class="nm">${name?`<b>${esc(name)}</b>`:`<span class="think" style="letter-spacing:.14em">${opt.o?"서술 · 원문":"이야기"}</span>`}${opt.think?`<span class="think">속마음</span>`:""}${opt.o?`<span class="orig" title="원문">原</span>`:""}</div><div class="tx${who==="narr"?" narr":""}"></div>${opt.o&&G.gloss&&glossOf(text)?`<div class="gl" hidden><b>풀이</b>${esc(glossOf(text))}</div>`:""}`;
     $("#ui").appendChild(el);
     const tx=el.querySelector(".tx");const full=(opt.o&&who!=="narr"&&!opt.think)?"“"+text+"”":(opt.think?"‘"+text+"’":text);
-    let i=0,done=false,doneAt=0;const chars=[...full];
+    let i=0,done=false;const chars=[...full];
     const segs=emphSegs(full);const tick=()=>{if(done)return;i+=2;tx.innerHTML=segHTML(segs,i);if(i>=chars.length){finish()}else setTimeout(tick,18)};
-    const finish=()=>{done=true;doneAt=performance.now();tx.innerHTML=segHTML(segs,1e9);const gl=el.querySelector(".gl");if(gl)gl.hidden=false;if(!el.querySelector(".more"))el.insertAdjacentHTML("beforeend",'<span class="more">▼ 계속</span>')};
-    const next=()=>{if(!done){finish();return}if(performance.now()-doneAt<(opt.o?450:250))return;sfx("blip");el.remove();UI.modal=false;UI.onKey=null;setBodyTalking(false);res()};
+    const finish=()=>{done=true;tx.innerHTML=segHTML(segs,1e9);const gl=el.querySelector(".gl");if(gl)gl.hidden=false;if(!el.querySelector(".more"))el.insertAdjacentHTML("beforeend",'<span class="more">▼ 계속</span>')};
+    const next=()=>{if(!done){finish();return}sfx("blip");el.remove();UI.modal=false;UI.onKey=null;setBodyTalking(false);res()};
     el.addEventListener("click",next);
     UI.onKey=e=>{if(["KeyE","Space","Enter","KeyZ"].includes(e.code)){next();return true}return false};
     if(opt.o)recAdd(who,text);
