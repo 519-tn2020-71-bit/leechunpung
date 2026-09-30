@@ -699,31 +699,6 @@ const G={tips:[],gloss:true,route:"wife",ch:0,map:null,player:{tx:0,ty:0,dir:"d"
 const SAVEKEY="bijang-rpg-v2";
 function loadSave(){try{return JSON.parse(localStorage.getItem(SAVEKEY)||"null")}catch(e){return null}}
 (()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
-(()=>{const sv=loadSave();if(sv){G.tips=sv.tips||[];G.gloss=sv.gloss!==false}})();
 function writeSave(){try{const s=loadSave()||{};s.route=G.route;s.ch=G.ch;s.rec=G.rec;s.tips=G.tips;s.gloss=G.gloss;localStorage.setItem(SAVEKEY,JSON.stringify(s))}catch(e){}}
 
 function npc(id,look,name,x,y,dir,talk,opt){return Object.assign({id,look,name,tx:x,ty:y,hx:x,hy:y,dir:dir||"d",talk,moving:false,prog:0,queue:[],step:0,ph:Math.random()*10,wt:Math.random()*3},opt||{})}
@@ -1946,7 +1921,7 @@ async function w1Home(){
   await say("narr","춘풍의 처, 없는 오라비 있다 하고, 제가 손수 가려고 여자 의상 벗어 놓고 남자 의복 치장한다.",{o:1});
   sfx("poof");G.flash=1;G.player.look="bijang";G.player.dir="d";F.dressed=1;await sleep(500);
   await card("남장(男裝)","아내, 회계 비장이 되다","거울 속에는 전립을 쓰고 동달이를 입은 낯선 사내가 서 있었다. 평양 감사를 따라가는 회계 비장이다.\n춘풍은 끝까지 이 비밀을 알아채지 못한다. 이 이야기를 하는 당신만 안다.\n\n여성이 관직을 가질 수 없던 시대, 남장은 아내가 스스로 문제를 풀기 위해 택한 방법이었다. 「홍계월전」의 남장이 나라를 구하는 수단이라면, 여기서는 가정을 구하는 수단이다.");
-  await toNext("제1장 한양 다락골",["춘풍이 호조 돈 이천 냥을 빌려 평양으로 장사를 떠난다.","빨래터에서 춘풍이 추월의 사환이 되었다는 소문을 듣는다.","참판이 평양 감사 후보라는 말을 듣고 계교를 세운다.","삯바느질로 번 돈으로 대부인의 밥상을 올린다.","‘오라비’를 내세워 비장 자리를 얻고 남장을 한다."]);
+  await toNext("제1장 한양 다락골",["가난해진 춘풍이 주색잡기를 않겠다는 수기를 써 준다.","아내가 삯바느질로 살림을 일으키자, 춘풍이 호조 돈을 빌려 평양으로 떠난다.","빨래터에서 춘풍이 추월의 사환이 되었다는 소문을 듣는다.","참판이 평양 감사 후보라는 말을 듣고 계교를 세운다.","삯바느질로 번 돈으로 대부인의 밥상을 올린다.","‘오라비’를 내세워 비장 자리를 얻고 남장을 한다."]);
 }
 
 const W2={
@@ -2270,7 +2245,7 @@ const C1={
     );
     hanyangExtras(m,F);
     obj("desk").use=c1Hojo;
-    obj("home").use=async()=>{await say("narr","우리 집이다. 아내가 품을 팔아 다시 일으킨 살림이다. …이 정도면 한 번 더 크게 놀아 볼 만하지.")};
+    obj("home").use=async()=>{await say("narr",G.f.argued?"우리 집이다. 아내가 품을 팔아 다시 일으킨 살림이다. …이 정도면 한 번 더 크게 놀아 볼 만하지.":"우리 집이다. 부모님이 물려주신 집이지만, 살림은 날이 갈수록 비어 간다.")};
     obj("jars").use=async()=>{await say("narr","장독대다. 아내가 알뜰히도 채워 놓았다.")};
   },
   async intro(){
