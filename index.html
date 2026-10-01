@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>비장이 된 아내</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -277,6 +282,8 @@ body.talking .pad,body.talking .act{display:none}
 }
 @media (prefers-reduced-motion:reduce){.dlg .more,.toast,.shake{animation:none}}
 </style>
+</head>
+<body>
 
 <canvas id="cv"></canvas>
 <div class="hud" id="hud" hidden>
@@ -767,7 +774,7 @@ function interact(){
   const o=G.map.objs.find(o=>o.use&&!(o.hide&&o.hide())&&x>=o.x&&x<o.x+o.w&&y>=o.y&&y<o.y+o.h);
   if(o){run(()=>o.use(o));return}
 }
-async function run(fn){if(G.busy)return;G.busy=true;try{await fn()}catch(err){console.error(err)}G.busy=false;updateHUD()}
+async function run(fn){if(G.busy)return;G.busy=true;try{await fn()}catch(err){console.error(err)}G.skip=false;G.busy=false;updateHUD()}
 
 /* ═════════ 갱신 ═════════ */
 const STEP=0.2;
@@ -908,6 +915,7 @@ function setBodyTalking(on){document.body.classList.toggle("talking",on)}
 function recAdd(who,t){if(!G.rec.some(r=>r.t===t)){G.rec.push({ch:G.ch,route:G.route,who:NAMES[who]||who,t,g:glossOf(t)||""});$("#nRec").textContent=G.rec.length;writeSave()}}
 function say(who,text,opt){
   opt=opt||{};histAdd(who,text,opt);if(who!=="narr"||opt.o)G.lastLine={who:opt.name||NAMES[who]||"",t:text};
+  const seenB=typeof seenLine==="function"&&!G.demo&&seenLine(text);if(G.skip){if(seenB){if(opt.o)recAdd(who,text);return Promise.resolve()}G.skip=false}
   return new Promise(res=>{
     UI.modal=true;setBodyTalking(true);
     const name=who==="narr"?"":(opt.name||NAMES[who]||who);
@@ -919,13 +927,15 @@ function say(who,text,opt){
     const segs=emphSegs(full);const tick=()=>{if(done)return;i+=2;tx.innerHTML=segHTML(segs,i);if(i>=chars.length){finish()}else setTimeout(tick,18)};
     const finish=()=>{done=true;tx.innerHTML=segHTML(segs,1e9);const gl=el.querySelector(".gl");if(gl)gl.hidden=false;if(!el.querySelector(".more"))el.insertAdjacentHTML("beforeend",'<span class="more">▼ 계속</span>')};
     const next=()=>{if(!done){finish();return}sfx("blip");el.remove();UI.modal=false;UI.onKey=null;setBodyTalking(false);res()};
-    el.addEventListener("click",next);
+    if(seenB)el.insertAdjacentHTML("afterbegin",'<button class="skipb" data-skip>이미 본 대목 넘기기 ▶▶</button>');
+    if(opt.o&&typeof wsTag==="function"&&wsTag(text)){const nm=el.querySelector(".nm");if(nm)nm.insertAdjacentHTML("beforeend",`<span class="wsb">활동지 지문 ${wsTag(text)}</span>`)}
+    el.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-skip]")){G.skip=true;done=true}next()});
     UI.onKey=e=>{if(["KeyE","Space","Enter","KeyZ"].includes(e.code)){next();return true}return false};
     if(opt.o)recAdd(who,text);
     tick();
   });
 }
-function choose(who,text,opts,opt){G.lastLine=null;
+function choose(who,text,opts,opt){G.lastLine=null;G.skip=false;
   opt=opt||{};
   return new Promise(res=>{
     UI.modal=true;setBodyTalking(true);
@@ -946,7 +956,7 @@ function choose(who,text,opts,opt){G.lastLine=null;
   });
 }
 function sheet(html,opts){
-  sfx("page");
+  G.skip=false;sfx("page");
   return new Promise(res=>{
     UI.modal=true;setBodyTalking(true);
     const v=document.createElement("div");v.className="veil";v.innerHTML=html;$("#ui").appendChild(v);
@@ -1365,7 +1375,7 @@ function glossOf(t){
 /* ═════════ 미니게임 모음 ═════════ */
 const ARR={ArrowUp:"u",KeyW:"u",ArrowDown:"d",KeyS:"d",ArrowLeft:"l",KeyA:"l",ArrowRight:"r",KeyD:"r"};
 const ARG={u:"↑",d:"↓",l:"←",r:"→"};
-function mgOpen(html){UI.modal=true;setBodyTalking(true);const v=document.createElement("div");v.className="veil";v.innerHTML=`<div class="sheet mg">${html}</div>`;$("#ui").appendChild(v);return v}
+function mgOpen(html){G.skip=false;UI.modal=true;setBodyTalking(true);const v=document.createElement("div");v.className="veil";v.innerHTML=`<div class="sheet mg">${html}</div>`;$("#ui").appendChild(v);return v}
 function mgClose(v){v.remove();UI.modal=false;UI.onKey=null;setBodyTalking(false)}
 function shk(el){if(!el)return;el.classList.remove("shake");void el.offsetWidth;el.classList.add("shake")}
 const PAD4=`<div class="pad4"><button data-a="u">↑</button><button data-a="l">←</button><button data-a="d">↓</button><button data-a="r">→</button></div>`;
@@ -2063,6 +2073,13 @@ function certSheet(){return new Promise(res=>{const E=G.ex;UI.modal=true;setBody
   v.addEventListener("click",e=>{if(e.target.closest("[data-done]")){v.remove();UI.modal=!!document.querySelector("#title,.veil,.dlg");UI.onKey=null;setBodyTalking(false);res()}});
 })}
 
+/* ── 이미 본 대목 넘기기: 이 기기에서 한 번 본 말에는 넘기기 단추가 붙는다 ── */
+let SEEN=null;
+function seenLine(t){const E=G.ex;if(!E)return false;if(!SEEN)SEEN=new Set(E.seen||[]);let h=5381;for(let i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;if(SEEN.has(h))return true;SEEN.add(h);(E.seen=E.seen||[]).push(h);return false}
+(()=>{const st=document.createElement("style");st.textContent=`.dlg .skipb{position:absolute;right:10px;top:-38px;font-family:var(--ui);font-size:13px;padding:6px 12px;background:rgba(241,234,216,.96);border:2px solid var(--ink2);box-shadow:0 3px 0 rgba(0,0,0,.35);cursor:pointer}
+.dlg .skipb:hover{background:#fff3d6}
+.dlg .wsb{font-family:var(--ui);font-size:11.5px;color:#fff;background:var(--indigo);padding:2px 8px;border-radius:10px;margin-left:8px;white-space:nowrap}`;document.head.appendChild(st)})();
+
 /* 이춘풍전 소품 그림 설정 */
 const PICSHEETS=[["b_it1",["sugi","gongmun","book","cloth","fish","rice"]],["b_it2",["veg","tray","porridge","bowl","cup","bucket"]],["b_it3",["purse","coin","silk","brass","chest"]]];
 const PICALIAS={gongmun:["dajim"]};
@@ -2109,13 +2126,19 @@ for(const [k,fn] of Object.entries(PICPROPS)){const old=OBJDRAW[k];OBJDRAW[k]=(o
 /* 지닌 것 표시에도 같은 그림을 씀 */
 paintBag=function(){const el=document.getElementById("bag");if(!el)return;const hud=document.getElementById("hud");
   const a=(!G.player||G.demo||(hud&&hud.hidden))?[]:holdList(G.player).filter(id=>HELD[id]);
-  const sk=document.getElementById("skills");const ref=sk&&!sk.hidden?sk:hud&&hud.firstElementChild;if(ref){const b=ref.getBoundingClientRect().bottom;if(b>20&&b<220)el.style.top=Math.round(b+8)+"px"}
+  const sk=document.getElementById("skills"),narrow=innerWidth<=560;let base=hud&&!hud.hidden?(narrow?hud:hud.firstElementChild).getBoundingClientRect().bottom:0;
+  if(base>20&&base<320){if(sk&&!sk.hidden){sk.style.top=narrow?Math.round(base+6)+"px":"";base=sk.getBoundingClientRect().bottom}el.style.top=Math.round(base+8)+"px";
+    document.documentElement.style.setProperty("--below",Math.round(!narrow&&a.length?base+8+34:base)+"px")}
   const key=a.map(id=>id+(ITEMPIC[id]?"*":"")).join(",");el.hidden=!a.length;if(key===BAGKEY)return;BAGKEY=key;
   el.innerHTML=a.length?"<b>지닌 것</b>"+a.map(id=>`<span class="bi"><canvas width="48" height="66" data-i="${id}"></canvas>${HELD[id].n}</span>`).join(""):"";
   el.querySelectorAll("canvas").forEach(c=>{const id=c.dataset.i,g=c.getContext("2d"),p=ITEMPIC[id];
     if(p){const s=Math.min(44/p.width,62/p.height),w=p.width*s,h=p.height*s;g.imageSmoothingQuality="high";g.drawImage(p,(48-w)/2,(66-h)/2,w,h)}
     else{HC=g;try{g.scale(3,3);const sp=HELD[id];const tall=id==="spear"||id==="flag";if(tall){g.scale(0.62,0.62);sp.px(9,25,0)}else if(sp.pos){g.scale(0.58,0.58);sp.px(13,18,0)}else sp.px(8,id==="broom"?12:16,0)}finally{HC=null}}});
 };
+
+(()=>{const st=document.createElement("style");st.textContent=`.dlg .nm{flex-wrap:wrap;row-gap:2px}.dlg .nm b,.dlg .nm .think{white-space:nowrap}
+@media (max-width:560px){.tip{top:calc(var(--below,156px) + 8px);font-size:13px}.hb,.money{padding:5px 8px;font-size:12px}#bag{display:none!important}#mini{transform:none!important;bottom:calc(104px + env(safe-area-inset-bottom,0px))!important}.dlg .skipb{font-size:12px;padding:5px 9px}}`;document.head.appendChild(st)})();
+(()=>{const st=document.createElement("style");st.textContent="@media (max-height:480px){#bag{display:none!important}}";document.head.appendChild(st)})();
 
 /* ═════════ 이야기 구성 ═════════ */
 const ROUTES={
@@ -3001,3 +3024,5 @@ function showTitle(){
   if(j&&j.route){const sv=loadSave()||{};G.rec=(sv.route===j.route?sv.rec:[])||[];G.evid=[];startChapter(j.route,j.ch)}else showTitle()})();
 
 </script>
+</body>
+</html>
