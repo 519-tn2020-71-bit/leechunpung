@@ -2009,7 +2009,7 @@ function paintBag(){const el=document.getElementById("bag");if(!el)return;const 
   el.innerHTML=a.length?"<b>지닌 것</b>"+a.map(id=>`<span class="bi"><canvas width="16" height="22" data-i="${id}"></canvas>${HELD[id].n}</span>`).join(""):"";
   el.querySelectorAll("canvas").forEach(c=>{HC=c.getContext("2d");try{HELD[c.dataset.i].d(8,16,0)}finally{HC=null}});
 }
-setInterval(paintBag,400);
+setInterval(()=>paintBag(),400);
 /* 돈 궤짝 */
 OBJDRAW.chest=(o,sx,sy)=>{Px(sx,sy+4,16,11,KO);Px(sx+1,sy+5,14,9,"#8e5a34");Px(sx+1,sy+5,14,3,"#a8744a");Px(sx+1,sy+8,14,1,"#3a2a18");Px(sx+7,sy+8,2,3,"#f2c94c");Px(sx+3,sy+2,3,3,"#f2c94c");Px(sx+9,sy+1,3,3,"#f2c94c");Px(sx+6,sy+3,2,2,"#8a6a1f")};
 /* 눈 오는 밤의 바람 소리 */
@@ -2062,6 +2062,60 @@ function certSheet(){return new Promise(res=>{const E=G.ex;UI.modal=true;setBody
   UI.onKey=()=>false;
   v.addEventListener("click",e=>{if(e.target.closest("[data-done]")){v.remove();UI.modal=!!document.querySelector("#title,.veil,.dlg");UI.onKey=null;setBodyTalking(false);res()}});
 })}
+
+/* 이춘풍전 소품 그림 설정 */
+const PICSHEETS=[["b_it1",["sugi","gongmun","book","cloth","fish","rice"]],["b_it2",["veg","tray","porridge","bowl","cup","bucket"]],["b_it3",["purse","coin","silk","brass","chest"]]];
+const PICALIAS={gongmun:["dajim"]};
+const PICSPEC={sugi:["h",14,"bot"],gongmun:["h",14,"bot"],dajim:["h",14,"bot"],book:["h",12,"bot"],cloth:["w",14,"bot"],fish:["h",13,"bot"],rice:["h",13,"bot"],veg:["w",14,"bot"],
+  tray:["w",18,"bot"],porridge:["w",14,"bot"],bowl:["w",11,"bot"],cup:["w",8,"bot"],bucket:["h",14,"bot"],purse:["h",13,"bot"],coin:["h",8,"bot"],silk:["w",14,"bot"],brass:["w",13,"bot"],chest:["w",17,"bot"]};
+const PICPROPS={chest:(o,sx,sy)=>drawPic("chest",sx+8,sy+15)};
+
+/* ═════════ 소품 그림: 한 줄에 여러 개 그린 그림을 잘라, 점으로 찍은 소품 대신 씀 ═════════ */
+/* PICSHEETS·PICSPEC·PICPROPS 는 이 파일 앞에서 놀이마다 따로 정함. 그림을 못 읽거나 개수가 안 맞으면 점 그림을 그대로 씀 */
+const ITEMPIC={};
+function cutRow(img,ids){
+  const W=img.naturalWidth,H=img.naturalHeight;if(!W||!H)return false;
+  const c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d",{willReadFrequently:true});g.drawImage(img,0,0);
+  const d=g.getImageData(0,0,W,H),a=d.data;
+  const cs=[[2,2],[W-3,2],[2,H-3],[W-3,H-3]].map(([x,y])=>{const i=(y*W+x)*4;return[a[i],a[i+1],a[i+2]]});
+  keyOut(a,W,H,[0,1,2].map(k=>cs.reduce((s,q)=>s+q[k],0)/4));
+  /* 이어진 덩어리마다 번호를 매겨 물건을 가름 (옆 물건과 좌우로 겹쳐도 됨) */
+  const lab=new Int32Array(W*H);let comps=[];const st=[];
+  for(let p0=0;p0<W*H;p0++){if(!a[p0*4+3]||lab[p0])continue;const id=comps.length+1;const cm={x0:W,x1:0,y0:H,y1:0,n:0,ls:[id]};lab[p0]=id;st.push(p0);
+    while(st.length){const p=st.pop(),x=p%W,y=(p-x)/W;cm.n++;if(x<cm.x0)cm.x0=x;if(x>cm.x1)cm.x1=x;if(y<cm.y0)cm.y0=y;if(y>cm.y1)cm.y1=y;
+      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=W||ny>=H)continue;const q=ny*W+nx;if(a[q*4+3]&&!lab[q]){lab[q]=id;st.push(q)}}}
+    comps.push(cm)}
+  comps=comps.filter(m=>m.n>=20);
+  const gap=(p,q)=>Math.max(0,Math.max(p.x0,q.x0)-Math.min(p.x1,q.x1))+Math.max(0,Math.max(p.y0,q.y0)-Math.min(p.y1,q.y1));
+  while(comps.length>ids.length){let bi=0,bj=1,bg=1e9;for(let i=0;i<comps.length;i++)for(let j=i+1;j<comps.length;j++){const v=gap(comps[i],comps[j]);if(v<bg||(v===bg&&comps[i].n+comps[j].n<comps[bi].n+comps[bj].n)){bg=v;bi=i;bj=j}}
+    if(bg>W*0.04)return false;const p=comps[bi],q=comps[bj];comps.splice(bj,1);Object.assign(p,{x0:Math.min(p.x0,q.x0),x1:Math.max(p.x1,q.x1),y0:Math.min(p.y0,q.y0),y1:Math.max(p.y1,q.y1),n:p.n+q.n,ls:p.ls.concat(q.ls)})}
+  if(comps.length!==ids.length)return false;
+  comps.sort((p,q)=>(p.x0+p.x1)-(q.x0+q.x1));
+  ids.forEach((id,k)=>{const m=comps[k],w=m.x1-m.x0+1,h=m.y1-m.y0+1,set=new Set(m.ls);
+    const t=document.createElement("canvas");t.width=w;t.height=h;const tg=t.getContext("2d"),td=tg.createImageData(w,h),ta=td.data;
+    for(let y=0;y<h;y++)for(let x=0;x<w;x++){const p=(m.y0+y)*W+m.x0+x;if(set.has(lab[p])){const i=p*4,j=(y*w+x)*4;ta[j]=a[i];ta[j+1]=a[i+1];ta[j+2]=a[i+2];ta[j+3]=a[i+3]}}
+    tg.putImageData(td,0,0);
+    const sp=PICSPEC[id]||["h",12,"bot"],sc=(sp[1]*Q*2)/(sp[0]==="w"?w:h);
+    const o=document.createElement("canvas");o.width=Math.max(1,Math.round(w*sc));o.height=Math.max(1,Math.round(h*sc));const og=o.getContext("2d");og.imageSmoothingEnabled=true;og.imageSmoothingQuality="high";og.drawImage(t,0,0,w,h,0,0,o.width,o.height);
+    ITEMPIC[id]=o;for(const al of (PICALIAS[id]||[]))ITEMPIC[al]=o});
+  return true;
+}
+for(const [file,ids] of PICSHEETS){const img=new Image();img.onload=()=>{try{if(!cutRow(img,ids))console.warn("소품 그림을 자르지 못함:",file)}catch(e){console.warn("소품 그림 오류:",file,e)}};img.src="art/"+file+".png"}
+/* (x,y)는 손 위치. 그림은 놀이 점 하나에 화면 점 Q×2개 밀도로 그려 둠 */
+function drawPic(id,x,y,g){const c=ITEMPIC[id],sp=PICSPEC[id]||["h",12,"bot"],w=c.width/(Q*2),h=c.height/(Q*2),k=sp[2];
+  const top=k==="grip"?y-h*0.72:k==="mid"?y-h/2:y+1-h;const q=g||ctx;const sm=q.imageSmoothingEnabled;q.imageSmoothingEnabled=true;q.drawImage(c,x-w/2,top,w,h);q.imageSmoothingEnabled=sm}
+for(const [id,h] of Object.entries(HELD)){const px=h.d;h.px=px;h.d=(x,y,t)=>{if(!HC&&ITEMPIC[id])drawPic(id,x,y);else px(x,y,t)}}
+for(const [k,fn] of Object.entries(PICPROPS)){const old=OBJDRAW[k];OBJDRAW[k]=(o,sx,sy,t)=>{if(ITEMPIC[k])fn(o,sx,sy,t);else if(old)old(o,sx,sy,t)}}
+/* 지닌 것 표시에도 같은 그림을 씀 */
+paintBag=function(){const el=document.getElementById("bag");if(!el)return;const hud=document.getElementById("hud");
+  const a=(!G.player||G.demo||(hud&&hud.hidden))?[]:holdList(G.player).filter(id=>HELD[id]);
+  const sk=document.getElementById("skills");const ref=sk&&!sk.hidden?sk:hud&&hud.firstElementChild;if(ref){const b=ref.getBoundingClientRect().bottom;if(b>20&&b<220)el.style.top=Math.round(b+8)+"px"}
+  const key=a.map(id=>id+(ITEMPIC[id]?"*":"")).join(",");el.hidden=!a.length;if(key===BAGKEY)return;BAGKEY=key;
+  el.innerHTML=a.length?"<b>지닌 것</b>"+a.map(id=>`<span class="bi"><canvas width="48" height="66" data-i="${id}"></canvas>${HELD[id].n}</span>`).join(""):"";
+  el.querySelectorAll("canvas").forEach(c=>{const id=c.dataset.i,g=c.getContext("2d"),p=ITEMPIC[id];
+    if(p){const s=Math.min(44/p.width,62/p.height),w=p.width*s,h=p.height*s;g.imageSmoothingQuality="high";g.drawImage(p,(48-w)/2,(66-h)/2,w,h)}
+    else{HC=g;try{g.scale(3,3);const sp=HELD[id];const tall=id==="spear"||id==="flag";if(tall){g.scale(0.62,0.62);sp.px(9,25,0)}else if(sp.pos){g.scale(0.58,0.58);sp.px(13,18,0)}else sp.px(8,id==="broom"?12:16,0)}finally{HC=null}}});
+};
 
 /* ═════════ 이야기 구성 ═════════ */
 const ROUTES={
