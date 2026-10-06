@@ -2080,6 +2080,11 @@ function seenLine(t){const E=G.ex;if(!E)return false;if(!SEEN)SEEN=new Set(E.see
 .dlg .skipb:hover{background:#fff3d6}
 .dlg .wsb{font-family:var(--ui);font-size:11.5px;color:#fff;background:var(--indigo);padding:2px 8px;border-radius:10px;margin-left:8px;white-space:nowrap}`;document.head.appendChild(st)})();
 
+/* ── 배움 알림이 시야를 오래 가리지 않게 ── */
+(()=>{const t0=tip;let tm=null;tip=function(text){t0(text);G.tipSteps=0;G.tipAt=performance.now();const el=document.querySelector(".tip");if(!el)return;clearTimeout(tipTimer);clearTimeout(tm);
+    const ms=Math.max(4000,Math.min(8000,2200+String(text).length*55));tm=setTimeout(()=>{el.style.transition="opacity .5s";el.style.opacity="0";setTimeout(()=>el.remove(),520)},ms)};
+  const m0=tryMove;tryMove=function(ent,d){const r=m0(ent,d);if(r&&ent===G.player&&!UI.modal){G.tipSteps=(G.tipSteps||0)+1;if(G.tipSteps>=5&&performance.now()-(G.tipAt||0)>2500)document.querySelectorAll(".tip").forEach(x=>x.remove())}return r}})();
+
 /* 이춘풍전 소품 그림 설정 */
 const PICSHEETS=[["b_it1",["sugi","gongmun","book","cloth","fish","rice"]],["b_it2",["veg","tray","porridge","bowl","cup","bucket"]],["b_it3",["purse","coin","silk","brass","chest"]]];
 const PICALIAS={gongmun:["dajim"]};
